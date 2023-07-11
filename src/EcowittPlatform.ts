@@ -3,6 +3,7 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { GW1000 } from './GW1000';
+import { GW1100 } from './GW1100';
 import { GW2000C } from './GW2000C';
 import { WH25 } from './WH25';
 import { WH31 } from './WH31';
@@ -172,8 +173,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   registerAccessories(dataReport) {
-    const stationTypeInfo = dataReport?.stationtype.match(/(EasyWeather|GW1[01]00(?:[AB]?)|GW2000C)_?(.*)/);
-    const modelInfo = dataReport?.model.match(/(HP2551CA|GW1[01]00|GW2000C)[AB]?_?(.*)/);
+    const stationTypeInfo = dataReport?.stationtype.match(/(EasyWeather|GW[12][01]00(?:[ABC]?))_?(.*)/);
+    const modelInfo = dataReport?.model.match(/(HP2551CA|GW[12][01]00)[ABC]?_?(.*)/);
 
     this.log.info('stationTypeInfo:', JSON.stringify(stationTypeInfo));
     this.log.info('modelInfo:', JSON.stringify(modelInfo));
