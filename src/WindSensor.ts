@@ -19,6 +19,28 @@ export class WindSensor extends MotionSensor {
 
   //----------------------------------------------------------------------------
 
+  public updateDirectionAndSpeed(winddir: number, windspeedmph: number, threshold: number) {
+
+    if (!isFinite(winddir)) {
+      this.updateStatusActive(false);
+      this.updateName('N/A');
+      return;
+    }
+
+    if (!isFinite(windspeedmph)) {
+      this.updateStatusActive(false);
+      this.updateName('N/A');
+      return;
+    }
+
+    const beaufort = WindUtil.toBeafort(windspeedmph);
+    const speed = this.formatSpeed(windspeedmph);
+
+    this.updateStatusActive(true);
+    this.updateMotionDetected(beaufort.force >= threshold);
+    this.updateName(`${this.name}: ${speed} ${winddir}° ${WindUtil.toSector(winddir)}`);
+  }
+
   public updateDirection(winddir: number) {
 
     if (!isFinite(winddir)) {
@@ -42,7 +64,16 @@ export class WindSensor extends MotionSensor {
     }
 
     const beaufort = WindUtil.toBeafort(windspeedmph);
+    const speed = this.formatSpeed(windspeedmph);
 
+    this.updateStatusActive(true);
+    this.updateName(`${this.name}: ${speed}`);
+    this.updateMotionDetected(beaufort.force >= threshold);
+  }
+
+  formatSpeed(windspeedmph: number) {
+
+    const beaufort = WindUtil.toBeafort(windspeedmph);
     let speed: string;
 
     switch (this.platform.config?.ws?.wind?.units) {
@@ -67,10 +98,7 @@ export class WindSensor extends MotionSensor {
         speed = beaufort.description;
         break;
     }
-
-    this.updateStatusActive(true);
-    this.updateName(`${this.name}: ${speed}`);
-    this.updateMotionDetected(beaufort.force >= threshold);
+    return speed;
   }
 
   //----------------------------------------------------------------------------

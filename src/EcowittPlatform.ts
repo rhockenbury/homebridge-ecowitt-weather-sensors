@@ -3,8 +3,10 @@ import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { GW1000 } from './GW1000';
+import { GW2000C } from './GW2000C';
 import { WH25 } from './WH25';
 import { WH31 } from './WH31';
+import { WH40 } from './WH40';
 import { WH41 } from './WH41';
 import { WH51 } from './WH51';
 import { WH55 } from './WH55';
@@ -170,8 +172,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   registerAccessories(dataReport) {
-    const stationTypeInfo = dataReport?.stationtype.match(/(EasyWeather|GW1000)_?(.*)/);
-    const modelInfo = dataReport?.model.match(/(HP2551CA|GW1000)_(.*)/);
+    const stationTypeInfo = dataReport?.stationtype.match(/(EasyWeather|GW1[01]00(?:[AB]?)|GW2000C)_?(.*)/);
+    const modelInfo = dataReport?.model.match(/(HP2551CA|GW1[01]00|GW2000C)[AB]?_?(.*)/);
 
     this.log.info('stationTypeInfo:', JSON.stringify(stationTypeInfo));
     this.log.info('modelInfo:', JSON.stringify(modelInfo));
@@ -194,10 +196,27 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           }
           break;
 
+        case 'GW1100':
+          this.baseStationInfo.hardwareRevision = dataReport.stationtype;
+          this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
+          if (!this.config?.thbin?.hide) {
+            this.addSensorType(true, 'GW1100');
+          }
+          break;
+
         case 'HP2551CA':
           this.baseStationInfo.softwareRevision = dataReport.stationtype;
           this.baseStationInfo.firmwareRevision = modelInfo[2];
           break;
+      }
+    }
+
+    if (dataReport?.model === 'GW2000C') {
+      this.baseStationInfo.hardwareRevision = dataReport.stationtype;
+      this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
+      if (!this.config?.thbin?.hide) {
+        this.log.info('Adding GW2000C');
+        this.addSensorType(true, 'GW2000C');
       }
     }
 
@@ -214,6 +233,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         this.addSensorType(dataReport[`batt${channel}`] !== undefined, 'WH31', channel);
       }
     }
+
+    this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
 
     if (!this.config?.pm25?.hide) {
       for (let channel = 1; channel <= 4; channel++) {
@@ -270,7 +291,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
       {
         // the accessory does not yet exist, so we need to create it
-        this.log.info('Adding new accessory type:', sensor.type, 'channel:', sensor.channel);
+        this.log.info('Adding new accessory type:', sensor.type, (sensor.channel > 0 ? 'channel: ' + sensor.channel.toString() : ''));
 
         // create a new sensor accessory
         const accessory = new this.api.platformAccessory(sensor.type, uuid);
@@ -280,8 +301,16 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         //accessory.context.sensorInfo = sensorInfo;
 
         switch (sensor.type) {
+          case 'GW2000C':
+            sensor.accessory = new GW2000C(this, accessory);
+            break;
+
           case 'GW1000':
             sensor.accessory = new GW1000(this, accessory);
+            break;
+
+          case 'GW1100':
+            sensor.accessory = new GW1100(this, accessory);
             break;
 
           case 'WH25':
@@ -290,6 +319,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
           case 'WH31':
             sensor.accessory = new WH31(this, accessory, sensor.channel);
+            break;
+
+          case 'WH40':
+            sensor.accessory = new WH40(this, accessory);
             break;
 
           case 'WH41':
@@ -330,7 +363,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.log.info('Report time:', dateUTC);
 
     for (const sensor of this.baseStationInfo.sensors) {
-      this.log.info('Updating:', sensor.type, 'channel:', sensor.channel);
+      this.log.info('Updating:', sensor.type, (sensor.channel > 0 ? 'channel: ' + sensor.channel.toString() : ''));
       sensor.accessory.update(dataReport);
     }
   }

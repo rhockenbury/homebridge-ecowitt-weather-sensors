@@ -1,6 +1,8 @@
 
 # Ecowitt Sensors Homebridge Plugin
 
+This is a fork of [https://github.com/spatialdude/homebridge-ecowitt](https://github.com/spatialdude/homebridge-ecowitt) with a dependency update and the addition of support for the GW2000C.
+
 A Homebridge plugin providing support for a wide range of **Ecowitt** sensors.
 
 The plugin operates as a service that listens for data reports from an Ecowitt WiFi Gateway or Weather Display Console.
@@ -12,6 +14,9 @@ Features include -
 * Configurable display units
 
 ## Release Notes
+
+* 1.2.0
+  * Added GW2000C gateway
 
 * 1.1.0
   * Added rain detection thresholds
