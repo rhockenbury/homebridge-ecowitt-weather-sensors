@@ -18,7 +18,8 @@ export class EcowittAccessory {
       .setCharacteristic(this.platform.Characteristic.SerialNumber, platform.baseStationInfo.serialNumber)
       .setCharacteristic(this.platform.Characteristic.HardwareRevision, platform.baseStationInfo.hardwareRevision)
       .setCharacteristic(this.platform.Characteristic.SoftwareRevision, platform.baseStationInfo.softwareRevision)
-      .setCharacteristic(this.platform.Characteristic.FirmwareRevision, platform.baseStationInfo.firmwareRevision);
+      .setCharacteristic(this.platform.Characteristic.FirmwareRevision, platform.baseStationInfo.firmwareRevision)
+      .addOptionalCharacteristic(this.platform.Characteristic.ConfiguredName);
   }
 
   //----------------------------------------------------------------------------

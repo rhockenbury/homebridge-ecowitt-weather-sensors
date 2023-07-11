@@ -135,6 +135,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.log.info('Data report:', JSON.stringify(dataReport, undefined, 2));
 
     if (!this.lastDataReport) {
+      this.log.info('Registering accessories');
       this.lastDataReport = dataReport;
       this.registerAccessories(dataReport);
     } else {
@@ -168,6 +169,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   unregisterAccessories() {
     this.log.info('Unregistering cached accessories:', this.accessories.length);
     this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.accessories);
+    this.accessories.length = 0;
   }
 
   //----------------------------------------------------------------------------
@@ -275,85 +277,69 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       if (existingAccessory) {
         // the accessory already exists
         this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
-
-        // if you need to update the accessory.context then you should run `api.updatePlatformAccessories`. eg.:
-        // existingAccessory.context.device = device;
-        // this.api.updatePlatformAccessories([existingAccessory]);
-
-        // create the accessory handler for the restored accessory
-        // this is imported from `platformAccessory.ts`
-        //new EcowittAccessory(this, existingAccessory);
-
-        // it is possible to remove platform accessories at any time using `api.unregisterPlatformAccessories`, eg.:
-        // remove platform accessories when no longer present
-        this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [existingAccessory]);
-        this.log.info('Removing existing accessory from cache:', existingAccessory.displayName);
-        //} else {
-      }
-      {
-        // the accessory does not yet exist, so we need to create it
-        this.log.info('Adding new accessory type:', sensor.type, (sensor.channel > 0 ? 'channel: ' + sensor.channel.toString() : ''));
-
+        this.createAccessory(sensor, existingAccessory);
+      } else {
         // create a new sensor accessory
         const accessory = new this.api.platformAccessory(sensor.type, uuid);
-
-        // store a copy of the device object in the `accessory.context`
-        // the `context` property can be used to store any data about the accessory you may need
-        //accessory.context.sensorInfo = sensorInfo;
-
-        switch (sensor.type) {
-          case 'GW2000C':
-            sensor.accessory = new GW2000C(this, accessory);
-            break;
-
-          case 'GW1000':
-            sensor.accessory = new GW1000(this, accessory);
-            break;
-
-          case 'GW1100':
-            sensor.accessory = new GW1100(this, accessory);
-            break;
-
-          case 'WH25':
-            sensor.accessory = new WH25(this, accessory);
-            break;
-
-          case 'WH31':
-            sensor.accessory = new WH31(this, accessory, sensor.channel);
-            break;
-
-          case 'WH40':
-            sensor.accessory = new WH40(this, accessory);
-            break;
-
-          case 'WH41':
-            sensor.accessory = new WH41(this, accessory, sensor.channel);
-            break;
-
-          case 'WH51':
-            sensor.accessory = new WH51(this, accessory, sensor.channel);
-            break;
-
-          case 'WH55':
-            sensor.accessory = new WH55(this, accessory, sensor.channel);
-            break;
-
-          case 'WH57':
-            sensor.accessory = new WH57(this, accessory);
-            break;
-
-          case 'WH65':
-            sensor.accessory = new WH65(this, accessory);
-            break;
-
-          default:
-            this.log.error('Unhandled sensor type:', sensor.type);
-            break;
-        }
-
-        // link the sensor accessory to the platform
+        this.createAccessory(sensor, accessory);        
+        
+        this.log.info('Adding new accessory type:', sensor.type, 'channel:', sensor.channel);
+          // link the sensor accessory to the platform
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
+
       }
+    }
+  }
+
+  createAccessory(sensor,accessory){
+    switch (sensor.type) {
+      case 'GW2000C':
+        sensor.accessory = new GW2000C(this, accessory);
+        break;
+
+      case 'GW1000':
+        sensor.accessory = new GW1000(this, accessory);
+        break;
+
+      case 'GW1100':
+        sensor.accessory = new GW1100(this, accessory);
+        break;
+
+      case 'WH25':
+        sensor.accessory = new WH25(this, accessory);
+        break;
+
+      case 'WH31':
+        sensor.accessory = new WH31(this, accessory, sensor.channel);
+        break;
+
+      case 'WH40':
+        sensor.accessory = new WH40(this, accessory);
+        break;
+
+      case 'WH41':
+        sensor.accessory = new WH41(this, accessory, sensor.channel);
+        break;
+
+      case 'WH51':
+        sensor.accessory = new WH51(this, accessory, sensor.channel);
+        break;
+
+      case 'WH55':
+        sensor.accessory = new WH55(this, accessory, sensor.channel);
+        break;
+
+      case 'WH57':
+        sensor.accessory = new WH57(this, accessory);
+        break;
+
+      case 'WH65':
+        sensor.accessory = new WH65(this, accessory);
+        break;
+
+      default:
+        this.log.error('Unhandled sensor type:', sensor.type);
+        break;
     }
   }
 
