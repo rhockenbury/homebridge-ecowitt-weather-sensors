@@ -26,6 +26,13 @@
         "default": "/data/report",
         "description": "Host path which will receive data reports"
       },
+      "unregister": {
+        "title": "Unregister",
+        "type": "boolean",
+        "required": true,
+        "default": false,
+        "description": "Removes existing accessories and reregisters with defaults (only enable when you're sure this is what you want)"
+      },    
       "ws": {
         "type": "object",
         "properties": {

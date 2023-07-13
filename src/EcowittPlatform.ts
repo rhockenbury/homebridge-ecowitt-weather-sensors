@@ -73,6 +73,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.log.info('Creating data report service');
     this.log.info('  Port:', this.config.port);
     this.log.info('  Path:', this.config.path);
+    this.log.info('  Unregister:', this.config.unregister);
 
     this.dataReportServer = restify.createServer();
     this.dataReportServer.use(restify.plugins.bodyParser());
@@ -95,7 +96,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     this.api.on('didFinishLaunching', () => {
 
-      this.unregisterAccessories();
+      if (this.config.unregister){
+        this.unregisterAccessories();
+      }
+
 
       this.dataReportServer.listen(this.config.port, () => {
         this.log.info('Listening for data reports on: %s', this.dataReportServer.url);

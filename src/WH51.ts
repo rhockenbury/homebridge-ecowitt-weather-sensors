@@ -15,12 +15,12 @@ export class WH51 extends EcowittAccessory {
   ) {
     super(platform, accessory);
 
+    this.name = this.platform.config?.soil?.[`name${this.channel}`] || `CH${this.channel} Soil Moisture`;
+
     this.setModel(
       'WH51',
       'Wireless Soil Moisture Sensor');
     this.setSerialNumber(`CH${this.channel}`);
-
-    this.name = this.platform.config?.soil?.[`name${this.channel}`] || `CH${this.channel} Soil Moisture`;
 
     this.battery = this.addBattery(this.name);
 
@@ -28,6 +28,7 @@ export class WH51 extends EcowittAccessory {
     || this.accessory.addService(this.platform.Service.HumiditySensor);
 
     this.setName(this.soilMoistureSensor, this.name);
+    this.setConfiguredName(this.name);
     this.setStatusActive(this.soilMoistureSensor, false);
   }
 
