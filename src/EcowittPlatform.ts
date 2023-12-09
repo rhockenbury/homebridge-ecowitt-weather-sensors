@@ -4,7 +4,7 @@ import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { GW1000 } from './GW1000';
 import { GW1100 } from './GW1100';
-import { GW2000C } from './GW2000C';
+import { GW2000 } from './GW2000';
 import { WH25 } from './WH25';
 import { WH31 } from './WH31';
 import { WH40 } from './WH40';
@@ -196,18 +196,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     if (Array.isArray(modelInfo)) {
       switch (modelInfo[1]) {
         case 'GW1000':
-          this.baseStationInfo.hardwareRevision = dataReport.stationtype;
-          this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
-          if (!this.config?.thbin?.hide) {
-            this.addSensorType(true, 'GW1000');
-          }
-          break;
-
         case 'GW1100':
+        case 'GW2000':
           this.baseStationInfo.hardwareRevision = dataReport.stationtype;
           this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
           if (!this.config?.thbin?.hide) {
-            this.addSensorType(true, 'GW1100');
+            this.addSensorType(true, modelInfo[1]);
           }
           break;
 
@@ -215,15 +209,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           this.baseStationInfo.softwareRevision = dataReport.stationtype;
           this.baseStationInfo.firmwareRevision = modelInfo[2];
           break;
-      }
-    }
-
-    if (dataReport?.model === 'GW2000C') {
-      this.baseStationInfo.hardwareRevision = dataReport.stationtype;
-      this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
-      if (!this.config?.thbin?.hide) {
-        this.log.info('Adding GW2000C');
-        this.addSensorType(true, 'GW2000C');
       }
     }
 
@@ -285,20 +270,20 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       } else {
         // create a new sensor accessory
         const accessory = new this.api.platformAccessory(sensor.type, uuid);
-        this.createAccessory(sensor, accessory);        
-        
+        this.createAccessory(sensor, accessory);
+
         this.log.info('Adding new accessory type:', sensor.type, 'channel:', sensor.channel);
-          // link the sensor accessory to the platform
+        // link the sensor accessory to the platform
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
 
       }
     }
   }
 
-  createAccessory(sensor,accessory){
+  createAccessory(sensor, accessory){
     switch (sensor.type) {
-      case 'GW2000C':
-        sensor.accessory = new GW2000C(this, accessory);
+      case 'GW2000':
+        sensor.accessory = new GW2000(this, accessory);
         break;
 
       case 'GW1000':

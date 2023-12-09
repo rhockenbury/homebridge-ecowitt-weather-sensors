@@ -21,7 +21,7 @@ const uvInfos = [
 
 //------------------------------------------------------------------------------
 
-export class GW2000C extends ThermoHygroBaroSensor {
+export class GW2000 extends ThermoHygroBaroSensor {
   protected solarRadiation!: Service;
   protected uvIndex!: Service;
   protected uvThreshold: number;
@@ -52,7 +52,7 @@ export class GW2000C extends ThermoHygroBaroSensor {
     super(platform, accessory);
 
     this.setModel(
-      'GW2000C',
+      'GW2000',
       'Solar Powered 7-in-1 Outdoor Sensor');
 
     this.accessory.getService(this.platform.Service.AccessoryInformation)!
@@ -123,31 +123,31 @@ export class GW2000C extends ThermoHygroBaroSensor {
     const rainHide = this.platform.config?.ws?.rain?.hide || [];
 
     if (!rainHide.includes('Rate')) {
-      this.rainRate = new RainSensor(platform, accessory, 'Rain Rate');
+      this.rainRate = new RainSensor(platform, accessory, 'Piezo Rain Rate');
     }
 
     if (!rainHide.includes('Event')) {
-      this.eventRain = new RainSensor(platform, accessory, 'Event Rain');
+      this.eventRain = new RainSensor(platform, accessory, 'Piezo Event Rain');
     }
 
     if (!rainHide.includes('Hourly')) {
-      this.hourlyRain = new RainSensor(platform, accessory, 'Hourly Rain');
+      this.hourlyRain = new RainSensor(platform, accessory, 'Piezo Hourly Rain');
     }
 
     if (!rainHide.includes('Daily')) {
-      this.dailyRain = new RainSensor(platform, accessory, 'Daily Rain');
+      this.dailyRain = new RainSensor(platform, accessory, 'Piezo Daily Rain');
     }
 
     if (!rainHide.includes('Weekly')) {
-      this.weeklyRain = new RainSensor(platform, accessory, 'Weekly Rain');
+      this.weeklyRain = new RainSensor(platform, accessory, 'Piezo Weekly Rain');
     }
 
     if (!rainHide.includes('Monthly')) {
-      this.monthlyRain = new RainSensor(platform, accessory, 'Monthly Rain');
+      this.monthlyRain = new RainSensor(platform, accessory, 'Piezo Monthly Rain');
     }
 
     if (!rainHide.includes('Yearly')) {
-      this.yearlyRain = new RainSensor(platform, accessory, 'Yearly Rain');
+      this.yearlyRain = new RainSensor(platform, accessory, 'Piezo Yearly Rain');
     }
 
     // if (!rainHide.includes('Total')) {
@@ -156,7 +156,7 @@ export class GW2000C extends ThermoHygroBaroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info('WH65 Update');
+    this.platform.log.info('WH90 Update');
     this.platform.log.info('  wh90batt:', dataReport.wh90batt);
     this.platform.log.info('  ws90cap_volt:', dataReport.ws90cap_volt);
     this.platform.log.info('  tempf:', dataReport.tempf);
