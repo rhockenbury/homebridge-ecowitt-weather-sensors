@@ -27,7 +27,7 @@ export class WH40 extends EcowittAccessory {
       'WH40',
       'Self-Emptying Rain Collector Rainfall Sensor');
 
-    this.name = "Rainfall Sensor"
+    this.name = 'Rainfall Sensor';
     this.battery = this.addBattery(this.name);
 
     const rainHide = this.platform.config?.ws?.rain?.hide || [];
@@ -64,7 +64,7 @@ export class WH40 extends EcowittAccessory {
   update(dataReport) {
     const rainbatt = dataReport.wh40batt;
 
-    this.platform.log.info(`WH40 Update`);
+    this.platform.log.info('WH40 Update');
     this.platform.log.info('  wh40batt:', rainbatt);
 
     this.platform.log.info('  rainratein:', dataReport.rainratein);
