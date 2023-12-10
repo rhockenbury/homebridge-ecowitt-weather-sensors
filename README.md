@@ -1,7 +1,7 @@
 
 # Ecowitt Sensors Homebridge Plugin
 
-This is a fork of [https://github.com/spatialdude/homebridge-ecowitt](https://github.com/spatialdude/homebridge-ecowitt) with a dependency update and the addition of support for the GW2000C.
+This is a fork of [https://github.com/spatialdude/homebridge-ecowitt](https://github.com/spatialdude/homebridge-ecowitt) with a dependency update and the addition of support for the GW2000.
 
 A Homebridge plugin providing support for a wide range of **Ecowitt** sensors.
 
@@ -14,6 +14,10 @@ Features include -
 * Configurable display units
 
 ## Release Notes
+
+* 1.5.0
+  * Corrected Node 18 support
+  * Made GW2000 support generic rather than specific to the rev. C
 
 * 1.2.0
   * Added GW2000C gateway
