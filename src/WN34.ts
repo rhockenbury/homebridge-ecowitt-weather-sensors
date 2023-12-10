@@ -20,14 +20,14 @@ export class WN34 extends EcowittAccessory {
       'Wireless Multi-channel Thermometer Sensor');
     this.setSerialNumber(`CH${this.channel}`);
 
-    const name = this.platform.config?.tf?.[`name${this.channel}`];
+    const name = this.platform.config?.tf_ch?.[`name${this.channel}`];
 
     this.setName(this.temperatureSensor, name || `CH${this.channel} Temperature`);
   }
 
   update(dataReport) {
-    const batt = dataReport[`batt${this.channel}`];
-    const tempf = dataReport[`ch${this.channel}`];
+    const batt = dataReport[`tf_batt${this.channel}`];
+    const tempf = dataReport[`tf_ch${this.channel}`];
 
     this.platform.log.info(`WH31 Channel ${this.channel} Update`);
     this.platform.log.info('  batt:', batt);

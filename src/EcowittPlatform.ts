@@ -253,7 +253,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     if (!this.config?.tf?.hide) {
       for (let channel = 1; channel <= 8; channel++) {
-        this.addSensorType(dataReport[`batt${channel}`] !== undefined, 'WN34', channel);
+        this.addSensorType(dataReport[`tf_batt${channel}`] !== undefined, 'WN34', channel);
       }
     }
 
