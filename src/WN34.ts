@@ -31,16 +31,15 @@ export class WN34 extends EcowittAccessory {
     const batt = dataReport[`tf_batt${this.channel}`];
     const tempf = dataReport[`tf_ch${this.channel}`];
 
-    this.platform.log.info(`WH31 Channel ${this.channel} Update`);
+    this.platform.log.info(`WN34 Channel ${this.channel} Update`);
     this.platform.log.info('  tf_batt:', batt);
     this.platform.log.info('  tf_ch:', tempf);
 
-    const batteryLevel = parseFloat(batt) / 5;
-    this.platform.log.info('  batteryLevel:', batteryLevel);
-    const lowBattery = batteryLevel <= 0.2;
+    const voltage = parseFloat(batt);
+    const lowBattery = voltage <= 1.1;
 
-    this.updateBatteryLevel(this.battery, batteryLevel);
-    this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
+    this.updateBatteryLevel(this.battery, voltage / 1.6 * 100);
+    this.updateStatusLowBattery(this.battery, lowBattery);
 
     this.updateTemperature(tempf);
     this.updateStatusActive(this.temperatureSensor, true);
