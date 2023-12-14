@@ -277,6 +277,48 @@
           }
         }
       },
+      "tf": {
+        "type": "object",
+        "properties": {
+          "hide": {
+            "title": "Hide",
+            "type": "boolean",
+            "default": false
+          },
+          "name1": {
+            "title": "Channel 1",
+            "type": "string"
+          },
+          "name2": {
+            "title": "Channel 2",
+            "type": "string"
+          },
+          "name3": {
+            "title": "Channel 3",
+            "type": "string"
+          },
+          "name4": {
+            "title": "Channel 4",
+            "type": "string"
+          },
+          "name5": {
+            "title": "Channel 5",
+            "type": "string"
+          },
+          "name6": {
+            "title": "Channel 6",
+            "type": "string"
+          },
+          "name7": {
+            "title": "Channel 7",
+            "type": "string"
+          },
+          "name8": {
+            "title": "Channel 8",
+            "type": "string"
+          }
+        }
+      },
       "soil": {
         "type": "object",
         "properties": {

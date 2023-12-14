@@ -36,9 +36,9 @@ export class WN34 extends EcowittAccessory {
     this.platform.log.info('  tf_ch:', tempf);
 
     const batteryLevel = parseFloat(batt) / 5;
+    this.platform.log.info('  batteryLevel:', batteryLevel);
     const lowBattery = batteryLevel <= 0.2;
 
-    this.addBattery(batt);
     this.updateBatteryLevel(this.battery, batteryLevel);
     this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
 
