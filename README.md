@@ -94,6 +94,7 @@ After the gateway or display console has been configuration has been updated, se
 * WH55 - Wireless Water Leak Detection Sensor with Loud Audio Alarm
 * WH57 - Wireless Lightning Detection Sensor
 * WH65 - Solar Powered 7-in-1 Outdoor Sensor
+* WN34 - Multi-Channel Temperature Sensor
 
 ## Sensor Notes
 
@@ -138,6 +139,11 @@ After the gateway or display console has been configuration has been updated, se
 * Can be hidden via plugin settings
   
 ### Multi-Channel Thermometer/Hygrometer Sensors
+* Can be hidden via plugin settings
+* Up to 8 sensors supported
+* Sensors can be individually named via the plugin settings
+
+### Multi-Channel Thermometer Sensors
 * Can be hidden via plugin settings
 * Up to 8 sensors supported
 * Sensors can be individually named via the plugin settings

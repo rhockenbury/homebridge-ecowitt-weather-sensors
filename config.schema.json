@@ -548,6 +548,32 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
+      "title": "Multi-Channel Thermometer Sensors",
+      "items": [
+        "tf.hide",
+        {
+          "type": "fieldset",
+          "notitle": true,
+          "condition": {
+            "functionBody": "return !model.tf.hide;"
+          },
+          "items": [
+            "tf.name1",
+            "tf.name2",
+            "tf.name3",
+            "tf.name4",
+            "tf.name5",
+            "tf.name6",
+            "tf.name7",
+            "tf.name8"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "expandable": true,
+      "expanded": false,
       "title": "Lightning Detection Sensor",
       "items": [
         "lightning.hide",
