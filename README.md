@@ -15,7 +15,7 @@ Features include -
 
 ## Release Notes
 
-* 1.5.0
+* 1.2.5
   * Corrected Node 18 support
   * Made GW2000 support generic rather than specific to the rev. C
 
