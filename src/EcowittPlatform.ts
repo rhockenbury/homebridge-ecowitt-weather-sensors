@@ -13,6 +13,7 @@ import { WH51 } from './WH51';
 import { WH55 } from './WH55';
 import { WH57 } from './WH57';
 import { WH65 } from './WH65';
+import { WN34 } from './WN34';
 
 import * as restify from 'restify';
 import * as crypto from 'crypto';
@@ -250,6 +251,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
     }
 
+    if (!this.config?.tf?.hide) {
+      for (let channel = 1; channel <= 8; channel++) {
+        this.addSensorType(dataReport[`tf_batt${channel}`] !== undefined, 'WN34', channel);
+      }
+    }
+
     this.log.info('StationInfo:', JSON.stringify(this.baseStationInfo, undefined, 2));
 
     for (const sensor of this.baseStationInfo.sensors) {
@@ -324,6 +331,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       case 'WH65':
         sensor.accessory = new WH65(this, accessory);
+        break;
+
+      case 'WN34':
+        sensor.accessory = new WN34(this, accessory, sensor.channel);
         break;
 
       default:
