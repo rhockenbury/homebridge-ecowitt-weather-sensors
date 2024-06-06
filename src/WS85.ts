@@ -1,13 +1,16 @@
-import { PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
+import { Service, PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
 import { EcowittPlatform } from "./EcowittPlatform";
-import { ThermoHygroSensor } from "./ThermoHygroSensor";
+import { EcowittAccessory } from "./EcowittAccessory";
 
 import { WindSensor } from "./WindSensor";
 import { RainSensor } from "./RainSensor";
 
 //------------------------------------------------------------------------------
 
-export class WS85 extends ThermoHygroSensor {
+export class WS85 extends EcowittAccessory {
+  protected name: string;
+  protected battery: Service;
+
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
@@ -29,6 +32,11 @@ export class WS85 extends ThermoHygroSensor {
     super(platform, accessory);
 
     this.setModel("WS85", "3-in-1 Solar Weather Sensor");
+    this.name = "WS-85";
+
+    // Battery
+
+    this.battery = this.addBattery(this.name, false);
 
     // Wind
 
@@ -110,13 +118,13 @@ export class WS85 extends ThermoHygroSensor {
     this.platform.log.info("  mrain_piezo:", dataReport.mrain_piezo);
     this.platform.log.info("  yrain_piezo:", dataReport.yrain_piezo);
 
-    this.updateStatusActive(this.temperatureSensor, true);
+    // Battery
 
-    const lowBattery =
-      dataReport.wh85batt === "1" || dataReport.ws85batt === "1";
+    const voltage = parseFloat(dataReport.wh85batt || dataReport.ws85batt);
+    const lowBattery = voltage <= 1.1;
 
-    this.updateTemperature(dataReport.tempinf);
-    this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
+    this.updateBatteryLevel(this.battery, (voltage / 1.6) * 100);
+    this.updateStatusLowBattery(this.battery, lowBattery);
 
     // Wind
 

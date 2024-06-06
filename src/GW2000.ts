@@ -17,7 +17,7 @@ export class GW2000 extends ThermoHygroBaroSensor {
 
     this.setModel(
       "GW2000",
-      "IOT Wi-Fi Hub with Built-in Indoor Temp/Humidity/Barometric"
+      "Gateway with Indoor Temperature, Humidity and Barometric Sensor"
     );
 
     this.accessory
@@ -48,6 +48,7 @@ export class GW2000 extends ThermoHygroBaroSensor {
         nameInHum,
         this.platform.serviceUuid(nameInHum)
       );
+    this.indoorHumidity.displayName = nameInHum;
 
     this.setName(this.indoorTemperature, "Indoor Temperature");
     this.setName(this.indoorHumidity, "Indoor Humidity");

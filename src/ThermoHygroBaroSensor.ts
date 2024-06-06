@@ -1,9 +1,9 @@
-import { /*Service,*/ PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroSensor } from './ThermoHygroSensor';
-import { OccupancySensor } from './OccupancySensor';
+import { /*Service,*/ PlatformAccessory } from "homebridge";
+import { EcowittPlatform } from "./EcowittPlatform";
+import { ThermoHygroSensor } from "./ThermoHygroSensor";
+import { OccupancySensor } from "./OccupancySensor";
 
-import * as Utils from './Utils.js';
+import * as Utils from "./Utils.js";
 
 //------------------------------------------------------------------------------
 
@@ -13,19 +13,33 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
 
   constructor(
     protected readonly platform: EcowittPlatform,
-    protected readonly accessory: PlatformAccessory,
+    protected readonly accessory: PlatformAccessory
   ) {
     super(platform, accessory);
 
-    this.absolutePressureSensor = new OccupancySensor(platform, accessory, 'Absolute Pressure');
-    this.relativePressureSensor = new OccupancySensor(platform, accessory, 'Relative Pressure');
+    this.absolutePressureSensor = new OccupancySensor(
+      platform,
+      accessory,
+      "Absolute Pressure"
+    );
+    this.absolutePressureSensor.setConfiguredName("Ecowitt Absolute Pressure");
+    this.relativePressureSensor = new OccupancySensor(
+      platform,
+      accessory,
+      "Relative Pressure"
+    );
+    this.relativePressureSensor.setConfiguredName("Ecowitt Relative Pressure");
   }
 
   updateRelativePressure(baromabs) {
-    this.absolutePressureSensor.updateName(`Abs. Pressure: ${Math.round(Utils.tohPa(baromabs)).toString()} hPa`);
+    this.absolutePressureSensor.updateName(
+      `Abs. Pressure: ${Math.round(Utils.tohPa(baromabs)).toString()} hPa`
+    );
   }
 
   updateAbsolutePressure(baromrel) {
-    this.relativePressureSensor.updateName(`Rel. Pressure: ${Math.round(Utils.tohPa(baromrel)).toString()} hPa`);
+    this.relativePressureSensor.updateName(
+      `Rel. Pressure: ${Math.round(Utils.tohPa(baromrel)).toString()} hPa`
+    );
   }
 }
