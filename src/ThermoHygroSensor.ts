@@ -23,8 +23,6 @@ export class ThermoHygroSensor extends EcowittAccessory {
         this.platform.serviceUuid(tempName)
       );
 
-    this.temperatureSensor.addCharacteristic(this.platform.Characteristic.Name);
-
     this.setName(this.temperatureSensor, `${this.model} ${tempName}`);
 
     const humName = "Humidity Sensor";
@@ -35,8 +33,6 @@ export class ThermoHygroSensor extends EcowittAccessory {
         humName,
         this.platform.serviceUuid(humName)
       );
-
-    this.humiditySensor.addCharacteristic(this.platform.Characteristic.Name);
 
     this.setName(this.humiditySensor, `${this.model} ${humName}`);
   }
