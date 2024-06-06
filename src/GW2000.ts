@@ -9,11 +9,10 @@ export class GW2000 extends ThermoHygroBaroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    const modelName = "GW2000";
-    super(platform, accessory, modelName);
+    super(platform, accessory, "GW2000");
 
     this.setModel(
-      modelName,
+      "GW2000",
       "Gateway with Indoor Temperature, Humidity and Barometric Sensor"
     );
 
