@@ -38,10 +38,12 @@ export class ThermoHygroSensor extends EcowittAccessory {
   }
 
   updateTemperature(tempf: number) {
+    this.platform.log.info("-- setting temperature: " + tempf);
     this.updateCurrentTemperature(this.temperatureSensor, tempf);
   }
 
   updateHumidity(humidity: number) {
+    this.platform.log.info("-- setting humidity: " + humidity);
     this.updateCurrentRelativeHumidity(this.humiditySensor, humidity);
   }
 }

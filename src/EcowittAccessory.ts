@@ -217,6 +217,11 @@ export class EcowittAccessory {
     );
 
     service.updateCharacteristic(
+      this.platform.Characteristic.ConfiguredName,
+      `Temperature: ${tempInC}°`
+    );
+
+    service.updateCharacteristic(
       this.platform.Characteristic.Name,
       `Temperature: ${tempInC}°`
     );
@@ -228,6 +233,11 @@ export class EcowittAccessory {
     service.updateCharacteristic(
       this.platform.Characteristic.CurrentRelativeHumidity,
       parseFloat(humidity)
+    );
+
+    service.updateCharacteristic(
+      this.platform.Characteristic.ConfiguredName,
+      `Humidity: ${humidity}%`
     );
 
     service.updateCharacteristic(
