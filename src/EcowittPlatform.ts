@@ -1,22 +1,31 @@
-import { API, DynamicPlatformPlugin, Logger, PlatformAccessory, PlatformConfig, Service, Characteristic } from 'homebridge';
+import {
+  API,
+  DynamicPlatformPlugin,
+  Logger,
+  PlatformAccessory,
+  PlatformConfig,
+  Service,
+  Characteristic,
+} from "homebridge";
 
-import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
+import { PLATFORM_NAME, PLUGIN_NAME } from "./settings";
 
-import { GW1000 } from './GW1000';
-import { GW1100 } from './GW1100';
-import { GW2000 } from './GW2000';
-import { WH25 } from './WH25';
-import { WH31 } from './WH31';
-import { WH40 } from './WH40';
-import { WH41 } from './WH41';
-import { WH51 } from './WH51';
-import { WH55 } from './WH55';
-import { WH57 } from './WH57';
-import { WH65 } from './WH65';
-import { WN34 } from './WN34';
+import { GW1000 } from "./GW1000";
+import { GW1100 } from "./GW1100";
+import { GW2000 } from "./GW2000";
+import { WH25 } from "./WH25";
+import { WH31 } from "./WH31";
+import { WH40 } from "./WH40";
+import { WH41 } from "./WH41";
+import { WH51 } from "./WH51";
+import { WH55 } from "./WH55";
+import { WH57 } from "./WH57";
+import { WH65 } from "./WH65";
+import { WN34 } from "./WN34";
+import { WS85 } from "./WS85";
 
-import * as restify from 'restify';
-import * as crypto from 'crypto';
+import * as restify from "restify";
+import * as crypto from "crypto";
 
 interface BaseStationInfo {
   model: string;
@@ -39,7 +48,8 @@ interface BaseStationInfo {
 
 export class EcowittPlatform implements DynamicPlatformPlugin {
   public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly Characteristic: typeof Characteristic = this.api.hap
+    .Characteristic;
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
@@ -48,62 +58,61 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public lastDataReport = null;
 
   public baseStationInfo: BaseStationInfo = {
-    model: '',
-    deviceName: '',
+    model: "",
+    deviceName: "",
     serialNumber: this.config.mac,
-    hardwareRevision: '',
-    softwareRevision: '',
-    firmwareRevision: '',
-    frequency: '',
+    hardwareRevision: "",
+    softwareRevision: "",
+    firmwareRevision: "",
+    frequency: "",
     PASSKEY: crypto
-      .createHash('md5')
+      .createHash("md5")
       .update(this.config.mac)
-      .digest('hex').toUpperCase(),
+      .digest("hex")
+      .toUpperCase(),
     sensors: [],
   };
 
   constructor(
     public readonly log: Logger,
     public readonly config: PlatformConfig,
-    public readonly api: API,
+    public readonly api: API
   ) {
+    this.log.info("Storage path:", this.api.user.storagePath());
+    this.log.info("config:", JSON.stringify(this.config, undefined, 2));
 
-    this.log.info('Storage path:', this.api.user.storagePath());
-    this.log.info('config:', JSON.stringify(this.config, undefined, 2));
-
-    this.log.info('Creating data report service');
-    this.log.info('  Port:', this.config.port);
-    this.log.info('  Path:', this.config.path);
-    this.log.info('  Unregister:', this.config.unregister);
+    this.log.info("Creating data report service");
+    this.log.info("  Port:", this.config.port);
+    this.log.info("  Path:", this.config.path);
+    this.log.info("  Unregister:", this.config.unregister);
 
     this.dataReportServer = restify.createServer();
     this.dataReportServer.use(restify.plugins.bodyParser());
 
-    this.dataReportServer.post(
-      this.config.path,
-      (req, res, next) => {
-        this.log.info('Data source address:', req.socket.remoteAddress);
-        this.log.info('Request:', req.toString());
-        this.onDataReport(req.body);
-        next();
-      });
+    this.dataReportServer.post(this.config.path, (req, res, next) => {
+      this.log.info("Data source address:", req.socket.remoteAddress);
+      this.log.info("Request:", req.toString());
+      this.onDataReport(req.body);
+      next();
+    });
 
-    this.log.debug('Finished initializing platform:', this.config.name);
+    this.log.debug("Finished initializing platform:", this.config.name);
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
     // Dynamic Platform plugins should only register new accessories after this event was fired,
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
 
-    this.api.on('didFinishLaunching', () => {
-
-      if (this.config.unregister){
+    this.api.on("didFinishLaunching", () => {
+      if (this.config.unregister) {
         this.unregisterAccessories();
       }
 
-
       this.dataReportServer.listen(this.config.port, () => {
-        this.log.info('Listening for data reports on: %s', this.dataReportServer.url);
+        this.log.info(
+          "Listening for data reports on: %s",
+          this.dataReportServer.url
+        );
       });
     });
   }
@@ -111,7 +120,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   public serviceUuid(name: string) {
-    const serviceId = this.config.mac + '_' + name;
+    const serviceId = this.config.mac + "_" + name;
     return this.api.hap.uuid.generate(serviceId);
   }
 
@@ -123,7 +132,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
    */
 
   configureAccessory(accessory: PlatformAccessory) {
-    this.log.info('Loading accessory from cache:', accessory.displayName);
+    this.log.info("Loading accessory from cache:", accessory.displayName);
 
     // add the restored accessory to the accessories cache so we can track if it has already been registered
     this.accessories.push(accessory);
@@ -133,14 +142,17 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   onDataReport(dataReport) {
     if (dataReport.PASSKEY !== this.baseStationInfo.PASSKEY) {
-      this.log.error('Not configured for data reports from this base station:', JSON.stringify(dataReport, undefined, 2));
+      this.log.error(
+        "Not configured for data reports from this base station:",
+        JSON.stringify(dataReport, undefined, 2)
+      );
       return;
     }
 
-    this.log.info('Data report:', JSON.stringify(dataReport, undefined, 2));
+    this.log.info("Data report:", JSON.stringify(dataReport, undefined, 2));
 
     if (!this.lastDataReport) {
-      this.log.info('Registering accessories');
+      this.log.info("Registering accessories");
       this.lastDataReport = dataReport;
       this.registerAccessories(dataReport);
     } else {
@@ -155,11 +167,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   addSensorType(add: boolean, type: string, channel: any = undefined) {
     if (add) {
-      this.baseStationInfo.sensors.push(
-        {
-          type: type,
-          channel: channel,
-        });
+      this.baseStationInfo.sensors.push({
+        type: type,
+        channel: channel,
+      });
 
       if (channel) {
         this.log.info(`Adding sensor: ${type} channel: ${channel}`);
@@ -172,33 +183,41 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   unregisterAccessories() {
-    this.log.info('Unregistering cached accessories:', this.accessories.length);
-    this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, this.accessories);
+    this.log.info("Unregistering cached accessories:", this.accessories.length);
+    this.api.unregisterPlatformAccessories(
+      PLUGIN_NAME,
+      PLATFORM_NAME,
+      this.accessories
+    );
     this.accessories.length = 0;
   }
 
   //----------------------------------------------------------------------------
 
   registerAccessories(dataReport) {
-    const stationTypeInfo = dataReport?.stationtype.match(/(EasyWeather|GW[12][01]00(?:[ABC]?))_?(.*)/);
-    const modelInfo = dataReport?.model.match(/(HP2551CA|GW[12][01]00)[ABC]?_?(.*)/);
+    const stationTypeInfo = dataReport?.stationtype.match(
+      /(EasyWeather|GW[12][01]00(?:[ABC]?))_?(.*)/
+    );
+    const modelInfo = dataReport?.model.match(
+      /(HP2551CA|GW[12][01]00)[ABC]?_?(.*)/
+    );
 
-    this.log.info('stationTypeInfo:', JSON.stringify(stationTypeInfo));
-    this.log.info('modelInfo:', JSON.stringify(modelInfo));
+    this.log.info("stationTypeInfo:", JSON.stringify(stationTypeInfo));
+    this.log.info("modelInfo:", JSON.stringify(modelInfo));
 
     this.baseStationInfo.model = dataReport.model;
     this.baseStationInfo.frequency = dataReport.freq;
 
     if (Array.isArray(stationTypeInfo)) {
-      const octets = this.config.mac.split(':');
+      const octets = this.config.mac.split(":");
       this.baseStationInfo.deviceName = `${stationTypeInfo[1]}-WIFI${octets[4]}${octets[5]}`;
     }
 
     if (Array.isArray(modelInfo)) {
       switch (modelInfo[1]) {
-        case 'GW1000':
-        case 'GW1100':
-        case 'GW2000':
+        case "GW1000":
+        case "GW1100":
+        case "GW2000":
           this.baseStationInfo.hardwareRevision = dataReport.stationtype;
           this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
           if (!this.config?.thbin?.hide) {
@@ -206,139 +225,186 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           }
           break;
 
-        case 'HP2551CA':
+        case "HP2551CA":
           this.baseStationInfo.softwareRevision = dataReport.stationtype;
           this.baseStationInfo.firmwareRevision = modelInfo[2];
           break;
       }
     }
 
-    this.log.info('Discovering sensors');
+    this.log.info("Discovering sensors");
 
     if (!this.config?.ws?.hide) {
-      this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
+      this.addSensorType(dataReport.wh65batt !== undefined, "WH65");
     }
 
-    this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
+    if (!this.config?.ws?.hide) {
+      // NOTE: Typo in WS-85 as it responds with wh85batt instead of expected ws85batt.
+      this.addSensorType(
+        dataReport.wh85batt !== undefined || dataReport.ws85batt !== undefined,
+        "WS85"
+      );
+    }
+
+    this.addSensorType(dataReport.wh25batt !== undefined, "WH25");
 
     if (!this.config?.th?.hide) {
       for (let channel = 1; channel <= 8; channel++) {
-        this.addSensorType(dataReport[`batt${channel}`] !== undefined, 'WH31', channel);
+        this.addSensorType(
+          dataReport[`batt${channel}`] !== undefined,
+          "WH31",
+          channel
+        );
       }
     }
 
-    this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
+    this.addSensorType(dataReport.wh40batt !== undefined, "WH40");
 
     if (!this.config?.pm25?.hide) {
       for (let channel = 1; channel <= 4; channel++) {
-        this.addSensorType(dataReport[`pm25batt${channel}`] !== undefined, 'WH41', channel);
+        this.addSensorType(
+          dataReport[`pm25batt${channel}`] !== undefined,
+          "WH41",
+          channel
+        );
       }
     }
 
     if (!this.config?.soil?.hide) {
       for (let channel = 1; channel <= 8; channel++) {
-        this.addSensorType(dataReport[`soilbatt${channel}`] !== undefined, 'WH51', channel);
+        this.addSensorType(
+          dataReport[`soilbatt${channel}`] !== undefined,
+          "WH51",
+          channel
+        );
       }
     }
 
     if (!this.config?.leak?.hide) {
       for (let channel = 1; channel <= 4; channel++) {
-        this.addSensorType(dataReport[`leakbatt${channel}`] !== undefined, 'WH55', channel);
+        this.addSensorType(
+          dataReport[`leakbatt${channel}`] !== undefined,
+          "WH55",
+          channel
+        );
       }
     }
 
     if (!this.config?.lightning?.hide) {
-      this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
+      this.addSensorType(dataReport.wh57batt !== undefined, "WH57");
     }
 
     if (!this.config?.tf?.hide) {
       for (let channel = 1; channel <= 8; channel++) {
-        this.addSensorType(dataReport[`tf_batt${channel}`] !== undefined, 'WN34', channel);
+        this.addSensorType(
+          dataReport[`tf_batt${channel}`] !== undefined,
+          "WN34",
+          channel
+        );
       }
     }
 
-    this.log.info('StationInfo:', JSON.stringify(this.baseStationInfo, undefined, 2));
+    this.log.info(
+      "StationInfo:",
+      JSON.stringify(this.baseStationInfo, undefined, 2)
+    );
 
     for (const sensor of this.baseStationInfo.sensors) {
-      const sensorId = this.config.mac +
-        '-' +
+      const sensorId =
+        this.config.mac +
+        "-" +
         sensor.type +
-        (sensor.channel > 0 ? '-' + sensor.channel.toString() : '');
+        (sensor.channel > 0 ? "-" + sensor.channel.toString() : "");
       const uuid = this.api.hap.uuid.generate(sensorId);
 
-      this.log.info('sensorId:', sensorId, 'uuid:', uuid);
+      this.log.info("sensorId:", sensorId, "uuid:", uuid);
 
-      const existingAccessory = this.accessories.find(accessory => accessory.UUID === uuid);
+      const existingAccessory = this.accessories.find(
+        (accessory) => accessory.UUID === uuid
+      );
 
       if (existingAccessory) {
         // the accessory already exists
-        this.log.info('Restoring existing accessory from cache:', existingAccessory.displayName);
+        this.log.info(
+          "Restoring existing accessory from cache:",
+          existingAccessory.displayName
+        );
         this.createAccessory(sensor, existingAccessory);
       } else {
         // create a new sensor accessory
         const accessory = new this.api.platformAccessory(sensor.type, uuid);
         this.createAccessory(sensor, accessory);
 
-        this.log.info('Adding new accessory type:', sensor.type, 'channel:', sensor.channel);
+        this.log.info(
+          "Adding new accessory type:",
+          sensor.type,
+          "channel:",
+          sensor.channel
+        );
         // link the sensor accessory to the platform
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
-
+        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+          accessory,
+        ]);
       }
     }
   }
 
-  createAccessory(sensor, accessory){
+  createAccessory(sensor, accessory) {
     switch (sensor.type) {
-      case 'GW2000':
+      case "GW2000":
         sensor.accessory = new GW2000(this, accessory);
         break;
 
-      case 'GW1000':
+      case "GW1000":
         sensor.accessory = new GW1000(this, accessory);
         break;
 
-      case 'GW1100':
+      case "GW1100":
         sensor.accessory = new GW1100(this, accessory);
         break;
 
-      case 'WH25':
+      case "WH25":
         sensor.accessory = new WH25(this, accessory);
         break;
 
-      case 'WH31':
+      case "WH31":
         sensor.accessory = new WH31(this, accessory, sensor.channel);
         break;
 
-      case 'WH40':
+      case "WH40":
         sensor.accessory = new WH40(this, accessory);
         break;
 
-      case 'WH41':
+      case "WH41":
         sensor.accessory = new WH41(this, accessory, sensor.channel);
         break;
 
-      case 'WH51':
+      case "WH51":
         sensor.accessory = new WH51(this, accessory, sensor.channel);
         break;
 
-      case 'WH55':
+      case "WH55":
         sensor.accessory = new WH55(this, accessory, sensor.channel);
         break;
 
-      case 'WH57':
+      case "WH57":
         sensor.accessory = new WH57(this, accessory);
         break;
 
-      case 'WH65':
+      case "WH65":
         sensor.accessory = new WH65(this, accessory);
         break;
 
-      case 'WN34':
+      case "WN34":
         sensor.accessory = new WN34(this, accessory, sensor.channel);
         break;
 
+      case "WS85":
+        sensor.accessory = new WS85(this, accessory);
+        break;
+
       default:
-        this.log.error('Unhandled sensor type:', sensor.type);
+        this.log.error("Unhandled sensor type:", sensor.type);
         break;
     }
   }
@@ -347,10 +413,14 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   updateAccessories(dataReport) {
     const dateUTC = new Date(dataReport.dateutc);
-    this.log.info('Report time:', dateUTC);
+    this.log.info("Report time:", dateUTC);
 
     for (const sensor of this.baseStationInfo.sensors) {
-      this.log.info('Updating:', sensor.type, (sensor.channel > 0 ? 'channel: ' + sensor.channel.toString() : ''));
+      this.log.info(
+        "Updating:",
+        sensor.type,
+        sensor.channel > 0 ? "channel: " + sensor.channel.toString() : ""
+      );
       sensor.accessory.update(dataReport);
     }
   }
