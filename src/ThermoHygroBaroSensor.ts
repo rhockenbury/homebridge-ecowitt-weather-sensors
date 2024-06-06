@@ -8,8 +8,9 @@ import * as Utils from "./Utils.js";
 //------------------------------------------------------------------------------
 
 export class ThermoHygroBaroSensor extends ThermoHygroSensor {
-  protected absolutePressureSensor: OccupancySensor;
-  protected relativePressureSensor: OccupancySensor;
+  // TODO: Not supported by HomeKit yet.
+  // protected absolutePressureSensor: OccupancySensor;
+  // protected relativePressureSensor: OccupancySensor;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -19,27 +20,30 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
   ) {
     super(platform, accessory, model, modelName);
 
-    this.absolutePressureSensor = new OccupancySensor(
-      platform,
-      accessory,
-      "Absolute Pressure"
-    );
-    this.relativePressureSensor = new OccupancySensor(
-      platform,
-      accessory,
-      "Relative Pressure"
-    );
+    // TODO: Not supported by HomeKit yet.
+    // this.absolutePressureSensor = new OccupancySensor(
+    //   platform,
+    //   accessory,
+    //   "Absolute Pressure"
+    // );
+    // this.relativePressureSensor = new OccupancySensor(
+    //   platform,
+    //   accessory,
+    //   "Relative Pressure"
+    // );
   }
 
   updateRelativePressure(baromabs) {
-    this.absolutePressureSensor.updateName(
-      `Abs. Pressure: ${Math.round(Utils.tohPa(baromabs)).toString()} hPa`
-    );
+    // TODO: Not supported by HomeKit yet.
+    // this.absolutePressureSensor.updateName(
+    //   `Abs. Pressure: ${Math.round(Utils.tohPa(baromabs)).toString()} hPa`
+    // );
   }
 
   updateAbsolutePressure(baromrel) {
-    this.relativePressureSensor.updateName(
-      `Rel. Pressure: ${Math.round(Utils.tohPa(baromrel)).toString()} hPa`
-    );
+    // TODO: Not supported by HomeKit yet.
+    // this.relativePressureSensor.updateName(
+    //   `Rel. Pressure: ${Math.round(Utils.tohPa(baromrel)).toString()} hPa`
+    // );
   }
 }

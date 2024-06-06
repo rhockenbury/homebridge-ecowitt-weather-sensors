@@ -87,18 +87,6 @@ export class EcowittAccessory {
 
   //----------------------------------------------------------------------------
 
-  setConfiguredName(service: Service, name: string) {
-    service.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName
-    );
-    service.addCharacteristic(
-      this.platform.Characteristic.ConfiguredName,
-      name
-    );
-  }
-
-  //---------------------------------------------------------------------------
-
   private serviceUuid(name: string) {
     const serviceId = this.platform.config.mac + "_" + name;
     return this.platform.api.hap.uuid.generate(serviceId);

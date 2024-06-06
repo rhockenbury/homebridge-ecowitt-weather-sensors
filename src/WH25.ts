@@ -35,9 +35,11 @@ export class WH25 extends ThermoHygroBaroSensor {
     this.updateStatusLowBattery(this.humiditySensor, lowBattery);
 
     this.updateAbsolutePressure(dataReport.baromabsin);
-    this.absolutePressureSensor.updateStatusLowBattery(lowBattery);
+    // TODO: Not supported by HomeKit yet.
+    // this.absolutePressureSensor.updateStatusLowBattery(lowBattery);
 
     this.updateRelativePressure(dataReport.baromrelin);
-    this.relativePressureSensor.updateStatusLowBattery(lowBattery);
+    // TODO: Not supported by HomeKit yet.
+    // this.relativePressureSensor.updateStatusLowBattery(lowBattery);
   }
 }

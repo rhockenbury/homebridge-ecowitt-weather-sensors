@@ -11,7 +11,11 @@ export class Sensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
     protected readonly service: Service
-  ) {}
+  ) {
+    this.service.addOptionalCharacteristic(
+      this.platform.Characteristic.ConfiguredName
+    );
+  }
 
   //---------------------------------------------------------------------------
 
@@ -27,17 +31,11 @@ export class Sensor {
   }
 
   updateName(name: string) {
-    this.service.updateCharacteristic(this.platform.Characteristic.Name, name);
-  }
-
-  setConfiguredName(name: string) {
-    this.service.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName
-    );
-    this.service.setCharacteristic(
+    this.service.updateCharacteristic(
       this.platform.Characteristic.ConfiguredName,
       name
     );
+    this.service.updateCharacteristic(this.platform.Characteristic.Name, name);
   }
 
   //---------------------------------------------------------------------------
