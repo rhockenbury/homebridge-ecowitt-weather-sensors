@@ -97,10 +97,10 @@ export class RainSensor extends Sensor {
 
   private updateDetected(detected: boolean) {
     this.service.updateCharacteristic(
-      this.platform.Characteristic.LeakDetected,
+      this.platform.Characteristic.CurrentDoorState,
       detected
-        ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED
+        ? this.platform.Characteristic.CurrentDoorState.OPEN
+        : this.platform.Characteristic.CurrentDoorState.CLOSED
     );
   }
 
