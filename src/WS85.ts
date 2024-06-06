@@ -8,7 +8,6 @@ import { RainSensor } from "./RainSensor";
 //------------------------------------------------------------------------------
 
 export class WS85 extends EcowittAccessory {
-  protected name: string;
   protected battery: Service;
 
   protected windDirection: WindSensor | undefined;
@@ -29,14 +28,11 @@ export class WS85 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory);
-
-    this.setModel("WS85", "Ecowitt WS-85");
-    this.name = "WS-85";
+    super(platform, accessory, "WS85", "Ecowitt WS-85");
 
     // Battery
 
-    this.battery = this.addBattery(this.name, false);
+    this.battery = this.addBattery(this.model, false);
 
     // Wind
 
@@ -96,7 +92,7 @@ export class WS85 extends EcowittAccessory {
   }
 
   update(dataReport) {
-    this.platform.log.info("WS85 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  wh85batt:", dataReport.wh85batt);
     this.platform.log.info("  ws85batt:", dataReport.ws85batt);
 

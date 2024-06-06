@@ -1,7 +1,6 @@
 import { Service, PlatformAccessory } from "homebridge";
 import { EcowittPlatform } from "./EcowittPlatform";
 import { EcowittAccessory } from "./EcowittAccessory";
-import { fToC } from "./WindUtil";
 
 export class ThermoHygroSensor extends EcowittAccessory {
   protected temperatureSensor: Service;
@@ -10,11 +9,12 @@ export class ThermoHygroSensor extends EcowittAccessory {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly name: string
+    protected readonly model: string,
+    protected readonly modelName: string
   ) {
-    super(platform, accessory);
+    super(platform, accessory, model, modelName);
 
-    const tempName = name + "_temp";
+    const tempName = "Temperature Sensor";
     this.temperatureSensor =
       this.accessory.getService(tempName) ||
       this.accessory.addService(
@@ -22,12 +22,10 @@ export class ThermoHygroSensor extends EcowittAccessory {
         tempName,
         this.platform.serviceUuid(tempName)
       );
-    this.setConfiguredName(
-      this.temperatureSensor,
-      "Ecowitt Temperature Sensor"
-    );
 
-    const humName = name + "_hum";
+    this.setName(this.temperatureSensor, tempName);
+
+    const humName = "Humidity Sensor";
     this.humiditySensor =
       this.accessory.getService(humName) ||
       this.accessory.addService(
@@ -35,19 +33,15 @@ export class ThermoHygroSensor extends EcowittAccessory {
         humName,
         this.platform.serviceUuid(humName)
       );
-    this.setConfiguredName(this.humiditySensor, "Ecowitt Humidity Sensor");
+
+    this.setName(this.humiditySensor, humName);
   }
 
-  updateTemperature(tempf) {
+  updateTemperature(tempf: number) {
     this.updateCurrentTemperature(this.temperatureSensor, tempf);
-    this.updateName(
-      this.temperatureSensor,
-      `Temperature: ${Math.round(fToC(tempf))}°`
-    );
   }
 
-  updateHumidity(humidity) {
+  updateHumidity(humidity: number) {
     this.updateCurrentRelativeHumidity(this.humiditySensor, humidity);
-    this.updateName(this.humiditySensor, `Humidity: ${Math.round(humidity)}%`);
   }
 }

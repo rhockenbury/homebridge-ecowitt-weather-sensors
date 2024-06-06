@@ -14,9 +14,10 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly name: string
+    protected readonly model: string,
+    protected readonly modelName: string
   ) {
-    super(platform, accessory, name);
+    super(platform, accessory, model, modelName);
 
     this.absolutePressureSensor = new OccupancySensor(
       platform,

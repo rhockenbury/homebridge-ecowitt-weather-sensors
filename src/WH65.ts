@@ -46,9 +46,7 @@ export class WH65 extends ThermoHygroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory, "WH65");
-
-    this.setModel("WH65", "Solar Powererd 7-in-1 Outdoor Sensor");
+    super(platform, accessory, "WH65", "Solar Powererd 7-in-1 Outdoor Sensor");
 
     this.setName(this.temperatureSensor, "Outdoor Temperature");
     this.setName(this.humiditySensor, "Outdoor Humidity");
@@ -159,7 +157,7 @@ export class WH65 extends ThermoHygroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info("WH65 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  wh65batt:", dataReport.wh65batt);
     this.platform.log.info("  tempf:", dataReport.tempf);
     this.platform.log.info("  humidity:", dataReport.humidity);

@@ -7,11 +7,11 @@ export class GW1000 extends ThermoHygroBaroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory, "GW1000");
-
-    this.setModel(
+    super(
+      platform,
+      accessory,
       "GW1000",
-      /*'WiFi Weather Station */ "Gateway with Indoor Temperature, Humidity and Barometric Sensor"
+      "Gateway with Indoor Temperature, Humidity and Barometric Sensor"
     );
 
     this.accessory
@@ -33,7 +33,7 @@ export class GW1000 extends ThermoHygroBaroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info("GW1000 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  tempinf:", dataReport.tempinf);
     this.platform.log.info("  humidityin:", dataReport.humidityin);
     this.platform.log.info("  baromrelin", dataReport.baromrelin);

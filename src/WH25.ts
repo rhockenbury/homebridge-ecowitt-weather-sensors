@@ -7,16 +7,19 @@ export class WH25 extends ThermoHygroBaroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory, "WH25");
-
-    this.setModel("WH25", "Indoor Temperature, Humidity and Barometric Sensor");
+    super(
+      platform,
+      accessory,
+      "WH25",
+      "Indoor Temperature, Humidity and Barometric Sensor"
+    );
 
     this.setName(this.temperatureSensor, "Indoor Temperature");
     this.setName(this.humiditySensor, "Indoor Humidity");
   }
 
   update(dataReport) {
-    this.platform.log.info("WH25 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  wh25batt:", dataReport.wh25batt);
     this.platform.log.info("  tempinf:", dataReport.tempinf);
     this.platform.log.info("  humidityin:", dataReport.humidityin);

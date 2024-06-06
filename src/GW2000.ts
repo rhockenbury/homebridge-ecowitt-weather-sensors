@@ -9,9 +9,7 @@ export class GW2000 extends ThermoHygroBaroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory, "GW2000");
-
-    this.setModel("GW2000", "Ecowitt GW2000");
+    super(platform, accessory, "GW2000", "Ecowitt GW2000");
 
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!
@@ -26,7 +24,7 @@ export class GW2000 extends ThermoHygroBaroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info("GW2000 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  tempinf:", dataReport.tempinf);
     this.platform.log.info("  humidityin:", dataReport.humidityin);
     this.platform.log.info("  baromrelin:", dataReport.baromrelin);

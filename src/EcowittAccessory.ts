@@ -11,8 +11,12 @@ import * as Utils from "./Utils.js";
 export class EcowittAccessory {
   constructor(
     protected readonly platform: EcowittPlatform,
-    protected readonly accessory: PlatformAccessory
+    protected readonly accessory: PlatformAccessory,
+    protected readonly model: string,
+    protected readonly modelName: string
   ) {
+    this.setModel(model, modelName);
+
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!
       .setCharacteristic(this.platform.Characteristic.Manufacturer, "Ecowitt")
@@ -40,6 +44,12 @@ export class EcowittAccessory {
   }
 
   //----------------------------------------------------------------------------
+
+  getModel() {
+    return this.accessory
+      .getService(this.platform.Service.AccessoryInformation)!
+      .getCharacteristic(this.platform.Characteristic.Model);
+  }
 
   setModel(model: string, name: string) {
     this.accessory
@@ -199,10 +209,19 @@ export class EcowittAccessory {
   //---------------------------------------------------------------------------
 
   updateCurrentTemperature(service: Service, tempf) {
+    const tempInC = Utils.toCelcius(tempf);
+
     service.updateCharacteristic(
       this.platform.Characteristic.CurrentTemperature,
-      Utils.toCelcius(tempf)
+      tempInC
     );
+
+    this.updateName(service, `Temperature: ${tempInC}°`);
+
+    // service.updateCharacteristic(
+    //   this.platform.Characteristic.Name,
+    //   `Temperature: ${tempInC}°`
+    // );
   }
 
   //---------------------------------------------------------------------------
@@ -212,6 +231,13 @@ export class EcowittAccessory {
       this.platform.Characteristic.CurrentRelativeHumidity,
       parseFloat(humidity)
     );
+
+    this.updateName(service, `Humidity: ${humidity}%`);
+
+    // service.updateCharacteristic(
+    //   this.platform.Characteristic.Name,
+    //   `Humidity: ${humidity}%`
+    // );
   }
 
   //---------------------------------------------------------------------------

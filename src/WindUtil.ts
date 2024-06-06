@@ -187,9 +187,3 @@ export function toSector(degrees): string {
 
   return sectorName;
 }
-
-//------------------------------------------------------------------------------
-
-export function fToC(fahrenheit: number): number {
-  return ((fahrenheit - 32) * 5) / 9;
-}
