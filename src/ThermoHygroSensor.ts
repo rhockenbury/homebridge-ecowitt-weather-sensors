@@ -8,21 +8,32 @@ export class ThermoHygroSensor extends EcowittAccessory {
 
   constructor(
     protected readonly platform: EcowittPlatform,
-    protected readonly accessory: PlatformAccessory
+    protected readonly accessory: PlatformAccessory,
+    protected readonly name: string
   ) {
     super(platform, accessory);
 
+    const tempName = name + "_temp";
     this.temperatureSensor =
-      this.accessory.getService(this.platform.Service.TemperatureSensor) ||
-      this.accessory.addService(this.platform.Service.TemperatureSensor);
+      this.accessory.getService(tempName) ||
+      this.accessory.addService(
+        this.platform.Service.TemperatureSensor,
+        tempName,
+        this.platform.serviceUuid(tempName)
+      );
     this.setConfiguredName(
       this.temperatureSensor,
       "Ecowitt Temperature Sensor"
     );
 
+    const humName = name + "_hum";
     this.humiditySensor =
-      this.accessory.getService(this.platform.Service.HumiditySensor) ||
-      this.accessory.addService(this.platform.Service.HumiditySensor);
+      this.accessory.getService(humName) ||
+      this.accessory.addService(
+        this.platform.Service.HumiditySensor,
+        humName,
+        this.platform.serviceUuid(humName)
+      );
     this.setConfiguredName(this.humiditySensor, "Ecowitt Humidity Sensor");
   }
 
