@@ -216,12 +216,11 @@ export class EcowittAccessory {
       tempInC
     );
 
-    this.updateName(service, `Temperature: ${tempInC}°`);
-
-    // service.updateCharacteristic(
-    //   this.platform.Characteristic.Name,
-    //   `Temperature: ${tempInC}°`
-    // );
+    service.addCharacteristic(this.platform.Characteristic.Name);
+    service.updateCharacteristic(
+      this.platform.Characteristic.Name,
+      `Temperature: ${tempInC}°`
+    );
   }
 
   //---------------------------------------------------------------------------
@@ -232,12 +231,11 @@ export class EcowittAccessory {
       parseFloat(humidity)
     );
 
-    this.updateName(service, `Humidity: ${humidity}%`);
-
-    // service.updateCharacteristic(
-    //   this.platform.Characteristic.Name,
-    //   `Humidity: ${humidity}%`
-    // );
+    service.addCharacteristic(this.platform.Characteristic.Name);
+    service.updateCharacteristic(
+      this.platform.Characteristic.Name,
+      `Humidity: ${humidity}%`
+    );
   }
 
   //---------------------------------------------------------------------------

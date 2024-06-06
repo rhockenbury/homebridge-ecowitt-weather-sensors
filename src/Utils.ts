@@ -3,7 +3,7 @@
 //------------------------------------------------------------------------------
 
 export function toCelcius(fahrenheit): number {
-  return ((parseFloat(fahrenheit) - 32) * 5) / 9;
+  return Math.round(((parseFloat(fahrenheit) - 32) * 5) / 9);
 }
 
 //------------------------------------------------------------------------------
