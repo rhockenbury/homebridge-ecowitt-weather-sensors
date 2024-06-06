@@ -120,10 +120,13 @@ export class WS85 extends EcowittAccessory {
 
     // Battery
 
-    const voltage = parseFloat(dataReport.wh85batt || dataReport.ws85batt);
-    const lowBattery = voltage <= 1.1;
+    const batt = parseFloat(dataReport.wh85batt || dataReport.ws85batt) / 5;
+    const lowBattery = batt <= 0.2;
 
-    this.updateBatteryLevel(this.battery, (voltage / 1.6) * 100);
+    this.updateBatteryLevel(
+      this.battery,
+      Math.min(0, Math.max(100, batt * 100))
+    );
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     // Wind
