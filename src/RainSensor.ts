@@ -1,23 +1,27 @@
-import { PlatformAccessory /*CharacteristicValue,*/ /*Service*/ } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { Sensor } from './Sensor';
+import {
+  PlatformAccessory /*CharacteristicValue,*/ /*Service*/,
+} from "homebridge";
+import { EcowittPlatform } from "./EcowittPlatform";
+import { Sensor } from "./Sensor";
 
 //------------------------------------------------------------------------------
 
 export class RainSensor extends Sensor {
-
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly name: string,
+    protected readonly name: string
   ) {
-    super(platform,
+    super(
+      platform,
       accessory,
-      accessory.getService(name)
-      || accessory.addService(
-        platform.Service.LeakSensor,
-        name,
-        platform.serviceUuid(name)));
+      accessory.getService(name) ||
+        accessory.addService(
+          platform.Service.Door,
+          name,
+          platform.serviceUuid(name)
+        )
+    );
   }
 
   //----------------------------------------------------------------------------
@@ -25,7 +29,7 @@ export class RainSensor extends Sensor {
   public updateRate(ratein: number, thresholdmm) {
     if (!isFinite(ratein)) {
       //this.updateActive(false);
-      this.updateName('N/A');
+      this.updateName("N/A");
       return;
     }
 
@@ -33,13 +37,13 @@ export class RainSensor extends Sensor {
     let ratemm: number;
 
     switch (this.platform.config?.ws?.rain?.units) {
-      case 'in':
+      case "in":
         rate = `${ratein} in/h`;
         ratemm = ratein * 25.4;
         break;
 
       default:
-      case 'mm':
+      case "mm":
         ratemm = Math.round(ratein * 254) / 10;
         rate = `${ratemm} mm/h`;
         break;
@@ -55,7 +59,7 @@ export class RainSensor extends Sensor {
   public updateTotal(totalin: number, thresholdmm) {
     if (!isFinite(totalin)) {
       //this.updateActive(false);
-      this.updateName('N/A');
+      this.updateName("N/A");
       return;
     }
 
@@ -63,13 +67,13 @@ export class RainSensor extends Sensor {
     let totalmm: number;
 
     switch (this.platform.config?.ws?.rain?.units) {
-      case 'in':
+      case "in":
         total = `${totalin} in`;
         totalmm = totalin * 25.4;
         break;
 
       default:
-      case 'mm':
+      case "mm":
         totalmm = Math.round(totalin * 254) / 10;
         total = `${totalmm} mm`;
         break;
@@ -85,7 +89,8 @@ export class RainSensor extends Sensor {
   private updateActive(active: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.Active,
-      active);
+      active
+    );
   }
 
   //----------------------------------------------------------------------------
@@ -95,22 +100,23 @@ export class RainSensor extends Sensor {
       this.platform.Characteristic.LeakDetected,
       detected
         ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED
+    );
   }
 
   //----------------------------------------------------------------------------
 
   private toIntensity(ratein: number): string {
     if (ratein <= 0) {
-      return '';
+      return "";
     } else if (ratein <= 0.098) {
-      return 'Light';
+      return "Light";
     } else if (ratein <= 0.3) {
-      return 'Moderate';
+      return "Moderate";
     } else if (ratein < 2) {
-      return 'Heavy';
+      return "Heavy";
     } else {
-      return 'Violent';
+      return "Violent";
     }
   }
 
