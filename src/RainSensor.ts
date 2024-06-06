@@ -17,7 +17,7 @@ export class RainSensor extends Sensor {
       accessory,
       accessory.getService(name) ||
         accessory.addService(
-          platform.Service.Door,
+          platform.Service.MotionSensor,
           name,
           platform.serviceUuid(name)
         )
@@ -97,10 +97,8 @@ export class RainSensor extends Sensor {
 
   private updateDetected(detected: boolean) {
     this.service.updateCharacteristic(
-      this.platform.Characteristic.CurrentDoorState,
+      this.platform.Characteristic.MotionDetected,
       detected
-        ? this.platform.Characteristic.CurrentDoorState.OPEN
-        : this.platform.Characteristic.CurrentDoorState.CLOSED
     );
   }
 
