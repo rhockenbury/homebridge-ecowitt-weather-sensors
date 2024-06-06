@@ -23,13 +23,11 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
       accessory,
       "Absolute Pressure"
     );
-    this.absolutePressureSensor.setConfiguredName("Ecowitt Absolute Pressure");
     this.relativePressureSensor = new OccupancySensor(
       platform,
       accessory,
       "Relative Pressure"
     );
-    this.relativePressureSensor.setConfiguredName("Ecowitt Relative Pressure");
   }
 
   updateRelativePressure(baromabs) {

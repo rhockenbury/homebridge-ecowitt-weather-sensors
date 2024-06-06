@@ -31,7 +31,7 @@ export class WS85 extends EcowittAccessory {
   ) {
     super(platform, accessory);
 
-    this.setModel("WS85", "3-in-1 Solar Weather Sensor");
+    this.setModel("WS85", "Ecowitt WS-85");
     this.name = "WS-85";
 
     // Battery

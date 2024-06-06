@@ -11,10 +11,7 @@ export class GW2000 extends ThermoHygroBaroSensor {
   ) {
     super(platform, accessory, "GW2000");
 
-    this.setModel(
-      "GW2000",
-      "Gateway with Indoor Temperature, Humidity and Barometric Sensor"
-    );
+    this.setModel("GW2000", "Ecowitt GW2000");
 
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!

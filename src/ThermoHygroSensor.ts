@@ -1,6 +1,7 @@
 import { Service, PlatformAccessory } from "homebridge";
 import { EcowittPlatform } from "./EcowittPlatform";
 import { EcowittAccessory } from "./EcowittAccessory";
+import { fToC } from "./WindUtil";
 
 export class ThermoHygroSensor extends EcowittAccessory {
   protected temperatureSensor: Service;
@@ -39,9 +40,14 @@ export class ThermoHygroSensor extends EcowittAccessory {
 
   updateTemperature(tempf) {
     this.updateCurrentTemperature(this.temperatureSensor, tempf);
+    this.updateName(
+      this.temperatureSensor,
+      `Temperature: ${Math.round(fToC(tempf))}°`
+    );
   }
 
   updateHumidity(humidity) {
     this.updateCurrentRelativeHumidity(this.humiditySensor, humidity);
+    this.updateName(this.humiditySensor, `Humidity: ${Math.round(humidity)}%`);
   }
 }
