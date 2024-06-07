@@ -1,7 +1,6 @@
-
 # Ecowitt Sensors Homebridge Plugin
 
-This is a fork of [https://github.com/spatialdude/homebridge-ecowitt](https://github.com/spatialdude/homebridge-ecowitt) with a dependency update and the addition of support for the GW2000.
+This is a fork of [https://github.com/ochong/homebridge-ecowitt](https://github.com/ochong/homebridge-ecowitt) which is a fork of [https://github.com/spatialdude/homebridge-ecowitt](https://github.com/spatialdude/homebridge-ecowitt). This fork is fixing the support for GW2000 and also adding support for the brand new WS-85. I'm aware the code here is not great, but I only did the very MVP to get things running stable for me. I also only focused on the behavior of devices I own (GW2000 and WS-85) so contributions fixing or extending behavior of other gateways or sensors are welcome!
 
 A Homebridge plugin providing support for a wide range of **Ecowitt** sensors.
 
@@ -14,6 +13,13 @@ Features include -
 * Configurable display units
 
 ## Release Notes
+
+* 1.4.0
+  * Added support for WS-85 - 3-in-1 Solar Weather Sensor, Measures Rainfall, Wind Speed & Direction
+  * Fixed support for GW2000 where data output was merging its readings with readings of other attached sensor (I'm assuming WS-90 or similar 7-in-1) in the previous fork
+  * Disabled barometric readings of GW2000 until it is supported by HomeKit as it only polutes the HomeKit views now
+  * Fixed display of all sensor names in HomeKit view
+  * Moved rain triggers from the leak sensor to occupancy sensor to prevent loud notifications for all home members
 
 * 1.3.0
   * Add WN34 - Multi-Channel Temperature Sensor (contrib @mastaab)
