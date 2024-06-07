@@ -1,24 +1,15 @@
-import { Service, PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
+import { PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
 import { EcowittPlatform } from "./EcowittPlatform";
 import { ThermoHygroBaroSensor } from "./ThermoHygroBaroSensor";
 
 //------------------------------------------------------------------------------
 
 export class GW2000 extends ThermoHygroBaroSensor {
-  protected indoorTemperature: Service;
-  protected indoorHumidity: Service;
-  // TODO: Add Barometric data.
-
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory);
-
-    this.setModel(
-      "GW2000",
-      "IOT Wi-Fi Hub with Built-in Indoor Temp/Humidity/Barometric"
-    );
+    super(platform, accessory, "GW2000", "Ecowitt GW2000");
 
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!
@@ -30,42 +21,21 @@ export class GW2000 extends ThermoHygroBaroSensor {
         this.platform.Characteristic.HardwareRevision,
         platform.baseStationInfo.model
       );
-
-    const nameInTemp = "Indoor Temperature";
-    this.indoorTemperature =
-      this.accessory.getService(nameInTemp) ||
-      this.accessory.addService(
-        this.platform.Service.TemperatureSensor,
-        nameInTemp,
-        this.platform.serviceUuid(nameInTemp)
-      );
-
-    const nameInHum = "Indoor Humidity";
-    this.indoorHumidity =
-      this.accessory.getService(nameInHum) ||
-      this.accessory.addService(
-        this.platform.Service.HumiditySensor,
-        nameInHum,
-        this.platform.serviceUuid(nameInHum)
-      );
-
-    this.setName(this.indoorTemperature, "Indoor Temperature");
-    this.setName(this.indoorHumidity, "Indoor Humidity");
   }
 
   update(dataReport) {
-    this.platform.log.info("GW2000 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  tempinf:", dataReport.tempinf);
     this.platform.log.info("  humidityin:", dataReport.humidityin);
     this.platform.log.info("  baromrelin:", dataReport.baromrelin);
     this.platform.log.info("  baromabsin:", dataReport.baromabsin);
 
-    this.updateStatusActive(this.indoorTemperature, true);
-    this.updateStatusActive(this.indoorHumidity, true);
+    this.updateStatusActive(this.temperatureSensor, true);
+    this.updateStatusActive(this.humiditySensor, true);
 
-    this.updateCurrentTemperature(this.indoorTemperature, dataReport.tempinf);
+    this.updateCurrentTemperature(this.temperatureSensor, dataReport.tempinf);
     this.updateCurrentRelativeHumidity(
-      this.indoorHumidity,
+      this.humiditySensor,
       dataReport.humidityin
     );
 

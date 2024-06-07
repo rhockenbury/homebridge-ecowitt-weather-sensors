@@ -1,13 +1,15 @@
-import { PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
+import { Service, PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
 import { EcowittPlatform } from "./EcowittPlatform";
-import { ThermoHygroSensor } from "./ThermoHygroSensor";
+import { EcowittAccessory } from "./EcowittAccessory";
 
 import { WindSensor } from "./WindSensor";
 import { RainSensor } from "./RainSensor";
 
 //------------------------------------------------------------------------------
 
-export class WS85 extends ThermoHygroSensor {
+export class WS85 extends EcowittAccessory {
+  protected battery: Service;
+
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
@@ -26,9 +28,11 @@ export class WS85 extends ThermoHygroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory
   ) {
-    super(platform, accessory);
+    super(platform, accessory, "WS85", "Ecowitt WS-85");
 
-    this.setModel("WS85", "3-in-1 Solar Weather Sensor");
+    // Battery
+
+    this.battery = this.addBattery(this.model, false);
 
     // Wind
 
@@ -88,7 +92,7 @@ export class WS85 extends ThermoHygroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info("WS85 Update");
+    this.platform.log.info(`${this.model} Update`);
     this.platform.log.info("  wh85batt:", dataReport.wh85batt);
     this.platform.log.info("  ws85batt:", dataReport.ws85batt);
 
@@ -110,13 +114,16 @@ export class WS85 extends ThermoHygroSensor {
     this.platform.log.info("  mrain_piezo:", dataReport.mrain_piezo);
     this.platform.log.info("  yrain_piezo:", dataReport.yrain_piezo);
 
-    this.updateStatusActive(this.temperatureSensor, true);
+    // Battery
 
-    const lowBattery =
-      dataReport.wh85batt === "1" || dataReport.ws85batt === "1";
+    const batt = parseFloat(dataReport.wh85batt || dataReport.ws85batt) / 5;
+    const lowBattery = batt <= 0.25;
 
-    this.updateTemperature(dataReport.tempinf);
-    this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
+    this.updateBatteryLevel(
+      this.battery,
+      Math.max(0, Math.min(100, batt * 100))
+    );
+    this.updateStatusLowBattery(this.battery, lowBattery);
 
     // Wind
 

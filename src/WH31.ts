@@ -1,25 +1,28 @@
-import { PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroSensor } from './ThermoHygroSensor';
-
+import { PlatformAccessory } from "homebridge";
+import { EcowittPlatform } from "./EcowittPlatform";
+import { ThermoHygroSensor } from "./ThermoHygroSensor";
 
 export class WH31 extends ThermoHygroSensor {
-
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected channel: number,
+    protected channel: number
   ) {
-    super(platform, accessory);
+    super(
+      platform,
+      accessory,
+      "WH31",
+      "Wireless Multi-channel Thermometer and Hygrometer Sensor"
+    );
 
-    this.setModel(
-      'WH31',
-      'Wireless Multi-channel Thermometer and Hygrometer Sensor');
     this.setSerialNumber(`CH${this.channel}`);
 
     const name = this.platform.config?.th?.[`name${this.channel}`];
 
-    this.setName(this.temperatureSensor, name || `CH${this.channel} Temperature`);
+    this.setName(
+      this.temperatureSensor,
+      name || `CH${this.channel} Temperature`
+    );
     this.setName(this.humiditySensor, name || `CH${this.channel} Humidity`);
   }
 
@@ -28,12 +31,12 @@ export class WH31 extends ThermoHygroSensor {
     const tempf = dataReport[`temp${this.channel}f`];
     const humidity = dataReport[`humidity${this.channel}`];
 
-    this.platform.log.info(`WH31 Channel ${this.channel} Update`);
-    this.platform.log.info('  batt:', batt);
-    this.platform.log.info('  tempf:', tempf);
-    this.platform.log.info('  humidity:', humidity);
+    this.platform.log.info(`${this.model} Channel ${this.channel} Update`);
+    this.platform.log.info("  batt:", batt);
+    this.platform.log.info("  tempf:", tempf);
+    this.platform.log.info("  humidity:", humidity);
 
-    const lowBattery = batt === '1';
+    const lowBattery = batt === "1";
 
     this.updateTemperature(tempf);
     this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
@@ -44,4 +47,3 @@ export class WH31 extends ThermoHygroSensor {
     this.updateStatusActive(this.humiditySensor, true);
   }
 }
-
