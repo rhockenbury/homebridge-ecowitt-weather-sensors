@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 //------------------------------------------------------------------------------
 
@@ -15,22 +15,22 @@ export function tohPa(inHg): number {
 //------------------------------------------------------------------------------
 
 const kWindSectors = [
-  "N",
-  "NNE",
-  "NE",
-  "ENE",
-  "E",
-  "ESE",
-  "SE",
-  "SSE",
-  "S",
-  "SSW",
-  "SW",
-  "WSW",
-  "W",
-  "WNW",
-  "NW",
-  "NNW",
+  'N',
+  'NNE',
+  'NE',
+  'ENE',
+  'E',
+  'ESE',
+  'SE',
+  'SSE',
+  'S',
+  'SSW',
+  'SW',
+  'WSW',
+  'W',
+  'WNW',
+  'NW',
+  'NNW',
 ];
 
 //------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ interface Beaufort {
 const kBeaufortScale = [
   {
     force: 0,
-    description: "Calm",
+    description: 'Calm',
     kts: [1],
     mph: [1],
     kmh: [2],
@@ -55,7 +55,7 @@ const kBeaufortScale = [
   },
   {
     force: 1,
-    description: "Light Air",
+    description: 'Light Air',
     kts: [1, 3],
     mph: [1, 3],
     kmh: [2, 5],
@@ -63,7 +63,7 @@ const kBeaufortScale = [
   },
   {
     force: 2,
-    description: "Light Breeze",
+    description: 'Light Breeze',
     kts: [4, 6],
     mph: [4, 7],
     kmh: [6, 11],
@@ -71,7 +71,7 @@ const kBeaufortScale = [
   },
   {
     force: 3,
-    description: "Gentle Breeze",
+    description: 'Gentle Breeze',
     kts: [7, 10],
     mph: [8, 12],
     kmh: [12, 19],
@@ -79,7 +79,7 @@ const kBeaufortScale = [
   },
   {
     force: 4,
-    description: "Moderate Breeze",
+    description: 'Moderate Breeze',
     kts: [11, 16],
     mph: [13, 18],
     kmh: [20, 28],
@@ -87,7 +87,7 @@ const kBeaufortScale = [
   },
   {
     force: 5,
-    description: "Fresh Breeze",
+    description: 'Fresh Breeze',
     kts: [17, 21],
     mph: [19, 24],
     kmh: [29, 38],
@@ -95,7 +95,7 @@ const kBeaufortScale = [
   },
   {
     force: 6,
-    description: "Strong Breeze",
+    description: 'Strong Breeze',
     kts: [22, 27],
     mph: [25, 31],
     kmh: [39, 49],
@@ -103,7 +103,7 @@ const kBeaufortScale = [
   },
   {
     force: 7,
-    description: "Moderate Gale",
+    description: 'Moderate Gale',
     kts: [28, 33],
     mph: [32, 38],
     kmh: [50, 61],
@@ -111,7 +111,7 @@ const kBeaufortScale = [
   },
   {
     force: 8,
-    description: "Gale",
+    description: 'Gale',
     kts: [34, 40],
     mph: [39, 46],
     kmh: [62, 74],
@@ -119,7 +119,7 @@ const kBeaufortScale = [
   },
   {
     force: 9,
-    description: "Severe Gale",
+    description: 'Severe Gale',
     kts: [41, 47],
     mph: [47, 54],
     kmh: [75, 88],
@@ -127,7 +127,7 @@ const kBeaufortScale = [
   },
   {
     force: 10,
-    description: "Storm",
+    description: 'Storm',
     kts: [48, 55],
     mph: [55, 63],
     kmh: [89, 102],
@@ -135,7 +135,7 @@ const kBeaufortScale = [
   },
   {
     force: 11,
-    description: "Violent Storm",
+    description: 'Violent Storm',
     kts: [56, 63],
     mph: [64, 72],
     kmh: [103, 117],
@@ -143,7 +143,7 @@ const kBeaufortScale = [
   },
   {
     force: 12,
-    description: "Hurricane",
+    description: 'Hurricane',
     kts: [64, 9999],
     mph: [73, 9999],
     kmh: [118, 9999],
@@ -191,15 +191,15 @@ export function toBeafort(mph): Beaufort {
 //------------------------------------------------------------------------------
 
 export function toWindSector(degrees): string {
-  if (typeof degrees !== "number" || isNaN(degrees)) {
-    return "Unkown";
+  if (typeof degrees !== 'number' || isNaN(degrees)) {
+    return 'Unkown';
   }
 
   const index = Math.round((degrees % 360) / 22.5);
 
   let sectorName = kWindSectors[index];
   if (!sectorName) {
-    sectorName = "Variable";
+    sectorName = 'Variable';
   }
 
   return sectorName;

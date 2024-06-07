@@ -1,22 +1,22 @@
-import { Service, PlatformAccessory /*ServiceEventTypes*/ } from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
-import { ThermoHygroSensor } from "./ThermoHygroSensor";
+import { Service, PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
+import { ThermoHygroSensor } from './ThermoHygroSensor';
 
-import * as Utils from "./Utils.js";
+import * as Utils from './Utils.js';
 
-import { WindSensor } from "./WindSensor";
-import { RainSensor } from "./RainSensor";
+import { WindSensor } from './WindSensor';
+import { RainSensor } from './RainSensor';
 
 //------------------------------------------------------------------------------
 
 // https://en.wikipedia.org/wiki/Ultraviolet_index
 
 const uvInfos = [
-  { level: 0, risk: "Low" },
-  { level: 3, risk: "Moderate" },
-  { level: 6, risk: "High" },
-  { level: 8, risk: "Very High" },
-  { level: 11, risk: "Extreme" },
+  { level: 0, risk: 'Low' },
+  { level: 3, risk: 'Moderate' },
+  { level: 6, risk: 'High' },
+  { level: 8, risk: 'Very High' },
+  { level: 11, risk: 'Extreme' },
 ];
 
 //------------------------------------------------------------------------------
@@ -44,23 +44,23 @@ export class WH65 extends ThermoHygroSensor {
 
   constructor(
     protected readonly platform: EcowittPlatform,
-    protected readonly accessory: PlatformAccessory
+    protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, "WH65", "Solar Powererd 7-in-1 Outdoor Sensor");
+    super(platform, accessory, 'WH65', 'Solar Powererd 7-in-1 Outdoor Sensor');
 
-    this.setName(this.temperatureSensor, "Outdoor Temperature");
-    this.setName(this.humiditySensor, "Outdoor Humidity");
+    this.setName(this.temperatureSensor, 'Outdoor Temperature');
+    this.setName(this.humiditySensor, 'Outdoor Humidity');
 
     // Dew point
 
     if (!this.platform.config.ws?.dewpoint?.hide) {
-      const nameDP = "Dew Point";
+      const nameDP = 'Dew Point';
       this.dewPoint =
         this.accessory.getService(nameDP) ||
         this.accessory.addService(
           this.platform.Service.TemperatureSensor,
           nameDP,
-          this.platform.serviceUuid(nameDP)
+          this.platform.serviceUuid(nameDP),
         );
 
       this.setName(this.dewPoint, nameDP);
@@ -73,11 +73,11 @@ export class WH65 extends ThermoHygroSensor {
         this.accessory.getService(this.platform.Service.LightSensor) ||
         this.accessory.addService(this.platform.Service.LightSensor);
 
-      this.setName(this.solarRadiation, "Solar Radiation");
+      this.setName(this.solarRadiation, 'Solar Radiation');
 
       this.solarRadiation
         .getCharacteristic(
-          this.platform.Characteristic.CurrentAmbientLightLevel
+          this.platform.Characteristic.CurrentAmbientLightLevel,
         )
         .setProps({
           minValue: 0,
@@ -90,65 +90,65 @@ export class WH65 extends ThermoHygroSensor {
     this.uvThreshold = this.platform.config?.ws?.uv?.threshold ?? 6;
 
     if (!this.platform.config.ws?.uv?.hide) {
-      this.uvIndex = this.addOccupancySensor("UV Index");
+      this.uvIndex = this.addOccupancySensor('UV Index');
 
-      this.platform.log.info("uvThreshold:", this.uvThreshold);
+      this.platform.log.info('uvThreshold:', this.uvThreshold);
     }
 
     // Wind
 
     const windHide = this.platform.config?.ws?.wind?.hide || [];
 
-    if (!windHide.includes("Direction")) {
+    if (!windHide.includes('Direction')) {
       this.windDirection = new WindSensor(
         platform,
         accessory,
-        "Wind Direction"
+        'Wind Direction',
       );
     }
 
-    if (!windHide.includes("Speed")) {
-      this.windSpeed = new WindSensor(platform, accessory, "Wind Speed");
+    if (!windHide.includes('Speed')) {
+      this.windSpeed = new WindSensor(platform, accessory, 'Wind Speed');
     }
 
-    if (!windHide.includes("Gust")) {
-      this.windGust = new WindSensor(platform, accessory, "Wind Gust");
+    if (!windHide.includes('Gust')) {
+      this.windGust = new WindSensor(platform, accessory, 'Wind Gust');
     }
 
-    if (!windHide.includes("MaxDailyGust")) {
-      this.maxDailyGust = new WindSensor(platform, accessory, "Max Daily Gust");
+    if (!windHide.includes('MaxDailyGust')) {
+      this.maxDailyGust = new WindSensor(platform, accessory, 'Max Daily Gust');
     }
 
     // Rain
 
     const rainHide = this.platform.config?.ws?.rain?.hide || [];
 
-    if (!rainHide.includes("Rate")) {
-      this.rainRate = new RainSensor(platform, accessory, "Rain Rate");
+    if (!rainHide.includes('Rate')) {
+      this.rainRate = new RainSensor(platform, accessory, 'Rain Rate');
     }
 
-    if (!rainHide.includes("Event")) {
-      this.eventRain = new RainSensor(platform, accessory, "Event Rain");
+    if (!rainHide.includes('Event')) {
+      this.eventRain = new RainSensor(platform, accessory, 'Event Rain');
     }
 
-    if (!rainHide.includes("Hourly")) {
-      this.hourlyRain = new RainSensor(platform, accessory, "Hourly Rain");
+    if (!rainHide.includes('Hourly')) {
+      this.hourlyRain = new RainSensor(platform, accessory, 'Hourly Rain');
     }
 
-    if (!rainHide.includes("Daily")) {
-      this.dailyRain = new RainSensor(platform, accessory, "Daily Rain");
+    if (!rainHide.includes('Daily')) {
+      this.dailyRain = new RainSensor(platform, accessory, 'Daily Rain');
     }
 
-    if (!rainHide.includes("Weekly")) {
-      this.weeklyRain = new RainSensor(platform, accessory, "Weekly Rain");
+    if (!rainHide.includes('Weekly')) {
+      this.weeklyRain = new RainSensor(platform, accessory, 'Weekly Rain');
     }
 
-    if (!rainHide.includes("Monthly")) {
-      this.monthlyRain = new RainSensor(platform, accessory, "Monthly Rain");
+    if (!rainHide.includes('Monthly')) {
+      this.monthlyRain = new RainSensor(platform, accessory, 'Monthly Rain');
     }
 
-    if (!rainHide.includes("Yearly")) {
-      this.yearlyRain = new RainSensor(platform, accessory, "Yearly Rain");
+    if (!rainHide.includes('Yearly')) {
+      this.yearlyRain = new RainSensor(platform, accessory, 'Yearly Rain');
     }
 
     // if (!rainHide.includes('Total')) {
@@ -158,35 +158,35 @@ export class WH65 extends ThermoHygroSensor {
 
   update(dataReport) {
     this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info("  wh65batt:", dataReport.wh65batt);
-    this.platform.log.info("  tempf:", dataReport.tempf);
-    this.platform.log.info("  humidity:", dataReport.humidity);
-    this.platform.log.info("  solarradiation:", dataReport.solarradiation);
-    this.platform.log.info("  uv:", dataReport.uv);
+    this.platform.log.info('  wh65batt:', dataReport.wh65batt);
+    this.platform.log.info('  tempf:', dataReport.tempf);
+    this.platform.log.info('  humidity:', dataReport.humidity);
+    this.platform.log.info('  solarradiation:', dataReport.solarradiation);
+    this.platform.log.info('  uv:', dataReport.uv);
 
     const winddir = parseFloat(dataReport.winddir);
     const windspeedmph = parseFloat(dataReport.windspeedmph);
     const windgustmph = parseFloat(dataReport.windgustmph);
     const maxdailygust = parseFloat(dataReport.maxdailygust);
 
-    this.platform.log.info("  winddir:", winddir);
-    this.platform.log.info("  windspeedmph:", windspeedmph);
-    this.platform.log.info("  windgustmph:", windgustmph);
-    this.platform.log.info("  maxdailygust:", maxdailygust);
+    this.platform.log.info('  winddir:', winddir);
+    this.platform.log.info('  windspeedmph:', windspeedmph);
+    this.platform.log.info('  windgustmph:', windgustmph);
+    this.platform.log.info('  maxdailygust:', maxdailygust);
 
-    this.platform.log.info("  rainratein:", dataReport.rainratein);
-    this.platform.log.info("  eventrainin:", dataReport.eventrainin);
-    this.platform.log.info("  hourlyrainin:", dataReport.hourlyrainin);
-    this.platform.log.info("  dailyrainin:", dataReport.dailyrainin);
-    this.platform.log.info("  weeklyrainin:", dataReport.weeklyrainin);
-    this.platform.log.info("  monthlyrainin:", dataReport.monthlyrainin);
-    this.platform.log.info("  yearlyrainin:", dataReport.yearlyrainin);
-    this.platform.log.info("  totalrainin:", dataReport.totalrainin);
+    this.platform.log.info('  rainratein:', dataReport.rainratein);
+    this.platform.log.info('  eventrainin:', dataReport.eventrainin);
+    this.platform.log.info('  hourlyrainin:', dataReport.hourlyrainin);
+    this.platform.log.info('  dailyrainin:', dataReport.dailyrainin);
+    this.platform.log.info('  weeklyrainin:', dataReport.weeklyrainin);
+    this.platform.log.info('  monthlyrainin:', dataReport.monthlyrainin);
+    this.platform.log.info('  yearlyrainin:', dataReport.yearlyrainin);
+    this.platform.log.info('  totalrainin:', dataReport.totalrainin);
 
     this.updateStatusActive(this.temperatureSensor, true);
     this.updateStatusActive(this.humiditySensor, true);
 
-    const lowBattery = dataReport.wh65batt === "1";
+    const lowBattery = dataReport.wh65batt === '1';
 
     this.updateTemperature(dataReport.tempf);
     this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
@@ -204,7 +204,7 @@ export class WH65 extends ThermoHygroSensor {
       this.updateName(this.solarRadiation, `Solar Radiation: ${wm2} W/m²`);
       this.solarRadiation.updateCharacteristic(
         this.platform.Characteristic.CurrentAmbientLightLevel,
-        lux
+        lux,
       );
       this.updateStatusLowBattery(this.solarRadiation, lowBattery);
     }
@@ -222,46 +222,46 @@ export class WH65 extends ThermoHygroSensor {
     this.windDirection?.updateDirection(winddir);
     this.windSpeed?.updateSpeed(
       windspeedmph,
-      this.platform.config.ws.wind.speedThresold
+      this.platform.config.ws.wind.speedThresold,
     );
     this.windGust?.updateSpeed(
       windgustmph,
-      this.platform.config.ws.wind.gustThresold
+      this.platform.config.ws.wind.gustThresold,
     );
     this.maxDailyGust?.updateSpeed(
       maxdailygust,
-      this.platform.config.ws.wind.maxDailyGustThresold
+      this.platform.config.ws.wind.maxDailyGustThresold,
     );
 
     // Rain
 
     this.rainRate?.updateRate(
       parseFloat(dataReport.rainratein),
-      this.platform.config.ws?.rain?.rateThreshold
+      this.platform.config.ws?.rain?.rateThreshold,
     );
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
-      this.platform.config.ws?.rain?.eventThreshold
+      this.platform.config.ws?.rain?.eventThreshold,
     );
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hourlyrainin),
-      this.platform.config.ws?.rain?.hourlyThreshold
+      this.platform.config.ws?.rain?.hourlyThreshold,
     );
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.dailyrainin),
-      this.platform.config.ws?.rain?.dailyThreshold
+      this.platform.config.ws?.rain?.dailyThreshold,
     );
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.weeklyrainin),
-      this.platform.config.ws?.rain?.weeklyThreshold
+      this.platform.config.ws?.rain?.weeklyThreshold,
     );
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.monthlyrainin),
-      this.platform.config.ws?.rain?.monthlyThreshold
+      this.platform.config.ws?.rain?.monthlyThreshold,
     );
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yearlyrainin),
-      this.platform.config.ws?.rain?.yearlyThreshold
+      this.platform.config.ws?.rain?.yearlyThreshold,
     );
     this.totalRain?.updateTotal(parseFloat(dataReport.totalrainin), undefined);
 
@@ -274,7 +274,7 @@ export class WH65 extends ThermoHygroSensor {
 
       this.dewPoint.updateCharacteristic(
         this.platform.Characteristic.CurrentTemperature,
-        dp
+        dp,
       );
     }
   }

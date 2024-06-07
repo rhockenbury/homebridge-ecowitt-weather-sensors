@@ -1,9 +1,6 @@
-import { /*Service,*/ PlatformAccessory } from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
-import { ThermoHygroSensor } from "./ThermoHygroSensor";
-import { OccupancySensor } from "./OccupancySensor";
-
-import * as Utils from "./Utils.js";
+import { PlatformAccessory } from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
+import { ThermoHygroSensor } from './ThermoHygroSensor';
 
 //------------------------------------------------------------------------------
 
@@ -16,7 +13,7 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
     protected readonly model: string,
-    protected readonly modelName: string
+    protected readonly modelName: string,
   ) {
     super(platform, accessory, model, modelName);
 
@@ -33,6 +30,7 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
     // );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateRelativePressure(baromabs) {
     // TODO: Not supported by HomeKit yet.
     // this.absolutePressureSensor.updateName(
@@ -40,6 +38,7 @@ export class ThermoHygroBaroSensor extends ThermoHygroSensor {
     // );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   updateAbsolutePressure(baromrel) {
     // TODO: Not supported by HomeKit yet.
     // this.relativePressureSensor.updateName(

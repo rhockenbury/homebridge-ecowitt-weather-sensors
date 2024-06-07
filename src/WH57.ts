@@ -1,9 +1,9 @@
-import { Service, PlatformAccessory } from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
-import { EcowittAccessory } from "./EcowittAccessory";
+import { Service, PlatformAccessory } from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
+import { EcowittAccessory } from './EcowittAccessory';
 
-import { ContactSensor } from "./ContactSensor";
-import { OccupancySensor } from "./OccupancySensor";
+import { ContactSensor } from './ContactSensor';
+import { OccupancySensor } from './OccupancySensor';
 
 export class WH57 extends EcowittAccessory {
   protected battery: Service;
@@ -12,25 +12,25 @@ export class WH57 extends EcowittAccessory {
 
   constructor(
     protected readonly platform: EcowittPlatform,
-    protected readonly accessory: PlatformAccessory
+    protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, "WH57", "Lightning Detector Sensor");
+    super(platform, accessory, 'WH57', 'Lightning Detector Sensor');
 
-    this.events = new ContactSensor(platform, accessory, "Events");
+    this.events = new ContactSensor(platform, accessory, 'Events');
     this.timeDistance = new OccupancySensor(
       platform,
       accessory,
-      "Time/Distance"
+      'Time/Distance',
     );
-    this.battery = this.addBattery("⚡");
+    this.battery = this.addBattery('⚡');
   }
 
   update(dataReport) {
     this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info("  wh57batt:", dataReport.wh57batt);
-    this.platform.log.info("  lightning:", dataReport.lightning);
-    this.platform.log.info("  lightning_num:", dataReport.lightning_num);
-    this.platform.log.info("  lightning_time:", dataReport.lightning_time);
+    this.platform.log.info('  wh57batt:', dataReport.wh57batt);
+    this.platform.log.info('  lightning:', dataReport.lightning);
+    this.platform.log.info('  lightning_num:', dataReport.lightning_num);
+    this.platform.log.info('  lightning_time:', dataReport.lightning_time);
 
     // Battery
 
@@ -54,7 +54,7 @@ export class WH57 extends EcowittAccessory {
 
     const lightningTime = parseInt(dataReport.lightning_time);
 
-    let timeText = "";
+    let timeText = '';
 
     if (lightningTime > 0) {
       const ms = lightningTime;
@@ -69,7 +69,7 @@ export class WH57 extends EcowittAccessory {
       // eslint-disable-next-line no-inner-declarations
       function appendTime(text: string) {
         if (timeText) {
-          timeText += ",";
+          timeText += ',';
         }
 
         timeText += text;
@@ -79,34 +79,34 @@ export class WH57 extends EcowittAccessory {
         appendTime(`${d} days`);
       } else if (d || h || m) {
         if (d) {
-          appendTime(d > 1 ? `${d} days` : "1 day");
+          appendTime(d > 1 ? `${d} days` : '1 day');
         }
         if (h) {
-          appendTime(h > 1 ? `${h} hours` : "1 hour");
+          appendTime(h > 1 ? `${h} hours` : '1 hour');
         }
         if (m) {
-          appendTime(m > 1 ? `${m} minutes` : "1 minute");
+          appendTime(m > 1 ? `${m} minutes` : '1 minute');
         }
       } else if (s) {
-        appendTime(s > 1 ? `${s} seconds` : "1 second");
+        appendTime(s > 1 ? `${s} seconds` : '1 second');
       }
 
-      timeText += " ago";
+      timeText += ' ago';
     }
 
-    let distanceUnits = "";
+    let distanceUnits = '';
     let distance = 0;
 
     switch (this.platform.config.lightning.units) {
-      case "mi":
+      case 'mi':
         distance = Math.round((dataReport.lightning / 1.609) * 10) / 10;
-        distanceUnits = "mi";
+        distanceUnits = 'mi';
         break;
 
-      case "km":
+      case 'km':
       default:
         distance = dataReport.lightning;
-        distanceUnits = "km";
+        distanceUnits = 'km';
         break;
     }
 

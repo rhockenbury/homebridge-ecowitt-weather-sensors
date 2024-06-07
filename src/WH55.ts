@@ -1,6 +1,6 @@
-import { Service, PlatformAccessory } from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
-import { EcowittAccessory } from "./EcowittAccessory";
+import { Service, PlatformAccessory } from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
+import { EcowittAccessory } from './EcowittAccessory';
 
 export class WH55 extends EcowittAccessory {
   protected battery: Service;
@@ -10,13 +10,13 @@ export class WH55 extends EcowittAccessory {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly channel: number
+    protected readonly channel: number,
   ) {
     super(
       platform,
       accessory,
-      "WH55",
-      "Wireless Multi-channel Water Leak Detection Sensor"
+      'WH55',
+      'Wireless Multi-channel Water Leak Detection Sensor',
     );
 
     this.setSerialNumber(`CH${this.channel}`);
@@ -40,8 +40,8 @@ export class WH55 extends EcowittAccessory {
     const leak = dataReport[`leak_ch${this.channel}`];
 
     this.platform.log.info(`${this.model} Channel ${this.channel} Update`);
-    this.platform.log.info("  leakbatt:", leakbatt);
-    this.platform.log.info("  leak:", leak);
+    this.platform.log.info('  leakbatt:', leakbatt);
+    this.platform.log.info('  leak:', leak);
 
     //this.setStatusActive(this.leakSensor, true);
 
@@ -57,9 +57,9 @@ export class WH55 extends EcowittAccessory {
 
     this.leakSensor.updateCharacteristic(
       this.platform.Characteristic.LeakDetected,
-      leak === "1"
+      leak === '1'
         ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED
+        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED,
     );
 
     this.updateStatusLowBattery(this.leakSensor, lowBattery);

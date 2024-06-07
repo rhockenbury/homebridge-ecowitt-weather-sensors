@@ -1,8 +1,8 @@
 import {
   PlatformAccessory,
   /*CharacteristicValue,*/ Service,
-} from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
+} from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
 
 //------------------------------------------------------------------------------
 
@@ -10,17 +10,17 @@ export class Sensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly service: Service
+    protected readonly service: Service,
   ) {
     this.service.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName
+      this.platform.Characteristic.ConfiguredName,
     );
   }
 
   //---------------------------------------------------------------------------
 
   protected serviceUuid(name: string) {
-    const serviceId = this.platform.config.mac + "_" + name;
+    const serviceId = this.platform.config.mac + '_' + name;
     return this.platform.api.hap.uuid.generate(serviceId);
   }
 
@@ -33,7 +33,7 @@ export class Sensor {
   updateName(name: string) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.ConfiguredName,
-      name
+      name,
     );
     this.service.updateCharacteristic(this.platform.Characteristic.Name, name);
   }
@@ -43,14 +43,14 @@ export class Sensor {
   setStatusActive(active: boolean) {
     this.service.setCharacteristic(
       this.platform.Characteristic.StatusActive,
-      active
+      active,
     );
   }
 
   updateStatusActive(active: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.StatusActive,
-      active
+      active,
     );
   }
 
@@ -61,7 +61,7 @@ export class Sensor {
       this.platform.Characteristic.StatusLowBattery,
       lowBattery
         ? this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
-        : this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL
+        : this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL,
     );
   }
 

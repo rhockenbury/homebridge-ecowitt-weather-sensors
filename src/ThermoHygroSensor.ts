@@ -1,6 +1,6 @@
-import { Service, PlatformAccessory } from "homebridge";
-import { EcowittPlatform } from "./EcowittPlatform";
-import { EcowittAccessory } from "./EcowittAccessory";
+import { Service, PlatformAccessory } from 'homebridge';
+import { EcowittPlatform } from './EcowittPlatform';
+import { EcowittAccessory } from './EcowittAccessory';
 
 export class ThermoHygroSensor extends EcowittAccessory {
   protected temperatureSensor: Service;
@@ -10,35 +10,35 @@ export class ThermoHygroSensor extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
     protected readonly model: string,
-    protected readonly modelName: string
+    protected readonly modelName: string,
   ) {
     super(platform, accessory, model, modelName);
 
-    const tempName = "Temperature Sensor";
+    const tempName = 'Temperature Sensor';
     this.temperatureSensor =
       this.accessory.getService(tempName) ||
       this.accessory.addService(
         this.platform.Service.TemperatureSensor,
         tempName,
-        this.platform.serviceUuid(tempName)
+        this.platform.serviceUuid(tempName),
       );
 
     this.temperatureSensor.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName
+      this.platform.Characteristic.ConfiguredName,
     );
     this.setName(this.temperatureSensor, `${this.model} ${tempName}`);
 
-    const humName = "Humidity Sensor";
+    const humName = 'Humidity Sensor';
     this.humiditySensor =
       this.accessory.getService(humName) ||
       this.accessory.addService(
         this.platform.Service.HumiditySensor,
         humName,
-        this.platform.serviceUuid(humName)
+        this.platform.serviceUuid(humName),
       );
 
     this.humiditySensor.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName
+      this.platform.Characteristic.ConfiguredName,
     );
     this.setName(this.humiditySensor, `${this.model} ${humName}`);
   }
