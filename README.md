@@ -14,6 +14,9 @@ Features include -
 
 ## Release Notes
 
+* 1.4.1
+  * Fixed typos in wind threshold
+  * Added a "too high wind speed" sensor with its own threshold to support certain automation edge-cases
 * 1.4.0
   * Added support for WS-85 - 3-in-1 Solar Weather Sensor, Measures Rainfall, Wind Speed & Direction
   * Fixed support for GW2000 where data output was merging its readings with readings of other attached sensor (I'm assuming WS-90 or similar 7-in-1) in the previous fork

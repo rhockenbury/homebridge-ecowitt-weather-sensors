@@ -32,7 +32,7 @@
         "required": true,
         "default": false,
         "description": "Removes existing accessories and reregisters with defaults (only enable when you're sure this is what you want)"
-      },    
+      },
       "ws": {
         "type": "object",
         "properties": {
@@ -82,33 +82,23 @@
                 "oneOf": [
                   {
                     "title": "Miles per hour",
-                    "enum": [
-                      "mph"
-                    ]
+                    "enum": ["mph"]
                   },
                   {
                     "title": "Knots",
-                    "enum": [
-                      "kts"
-                    ]
+                    "enum": ["kts"]
                   },
                   {
                     "title": "Kilometers per hour",
-                    "enum": [
-                      "kmh"
-                    ]
+                    "enum": ["kmh"]
                   },
                   {
                     "title": "Meters per second",
-                    "enum": [
-                      "mps"
-                    ]
+                    "enum": ["mps"]
                   },
                   {
                     "title": "Beaufort Scale",
-                    "enum": [
-                      "beaufort"
-                    ]
+                    "enum": ["beaufort"]
                   }
                 ],
                 "required": true
@@ -120,12 +110,7 @@
                 "items": {
                   "title": "Indicator",
                   "type": "string",
-                  "enum": [
-                    "Direction",
-                    "Speed",
-                    "Gust",
-                    "MaxDailyGust"
-                  ]
+                  "enum": ["Direction", "Speed", "Gust", "MaxDailyGust"]
                 }
               },
               "speedThreshold": {
@@ -133,14 +118,21 @@
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 12,
-                "default": 1
+                "default": 5
+              },
+              "speedHighThreshold": {
+                "title": "Too high wind speed threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 12,
+                "default": 7
               },
               "gustThreshold": {
                 "title": "Wind gusts threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 12,
-                "default": 3
+                "default": 6
               },
               "maxDailyGustThreshold": {
                 "title": "Max daily gust threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
@@ -161,15 +153,11 @@
                 "oneOf": [
                   {
                     "title": "Millimeters",
-                    "enum": [
-                      "mm"
-                    ]
+                    "enum": ["mm"]
                   },
                   {
                     "title": "Inches",
-                    "enum": [
-                      "in"
-                    ]
+                    "enum": ["in"]
                   }
                 ],
                 "required": true
@@ -428,15 +416,11 @@
             "oneOf": [
               {
                 "title": "Kilometres",
-                "enum": [
-                  "km"
-                ]
+                "enum": ["km"]
               },
               {
                 "title": "Miles",
-                "enum": [
-                  "mi"
-                ]
+                "enum": ["mi"]
               }
             ],
             "required": true
@@ -458,10 +442,7 @@
           "expandable": true,
           "expanded": true,
           "title": "Data Report Service",
-          "items": [
-            "port",
-            "path"
-          ]
+          "items": ["port", "path"]
         }
       ]
     },
@@ -488,6 +469,7 @@
                 "ws.wind.units",
                 "ws.wind.hide",
                 "ws.wind.speedThreshold",
+                "ws.wind.speedHighThreshold",
                 "ws.wind.gustThreshold",
                 "ws.wind.maxDailyGustThreshold"
               ]
@@ -522,9 +504,7 @@
                   "condition": {
                     "functionBody": "return !model.ws.uv.hide;"
                   },
-                  "items": [
-                    "ws.uv.threshold"
-                  ]
+                  "items": ["ws.uv.threshold"]
                 }
               ]
             },
@@ -541,9 +521,7 @@
                   "condition": {
                     "functionBody": "return !model.ws.solarradiation.hide;"
                   },
-                  "items": [
-                    "ws.solarradiation.luxFactor"
-                  ]
+                  "items": ["ws.solarradiation.luxFactor"]
                 }
               ]
             }
@@ -556,9 +534,7 @@
       "expandable": true,
       "expanded": false,
       "title": "Indoor Thermometer/Hygrometer/Barometer Sensor",
-      "items": [
-        "thbin.hide"
-      ]
+      "items": ["thbin.hide"]
     },
     {
       "type": "fieldset",
@@ -625,9 +601,7 @@
           "condition": {
             "functionBody": "return !model.lightning.hide;"
           },
-          "items": [
-            "lightning.units"
-          ]
+          "items": ["lightning.units"]
         }
       ]
     },
@@ -670,12 +644,7 @@
           "condition": {
             "functionBody": "return !model.leak.hide;"
           },
-          "items": [
-            "leak.name1",
-            "leak.name2",
-            "leak.name3",
-            "leak.name4"
-          ]
+          "items": ["leak.name1", "leak.name2", "leak.name3", "leak.name4"]
         }
       ]
     },
@@ -692,12 +661,7 @@
           "condition": {
             "functionBody": "return !model.pm25.hide;"
           },
-          "items": [
-            "pm25.name1",
-            "pm25.name2",
-            "pm25.name3",
-            "pm25.name4"
-          ]
+          "items": ["pm25.name1", "pm25.name2", "pm25.name3", "pm25.name4"]
         }
       ]
     }

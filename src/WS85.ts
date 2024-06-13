@@ -12,6 +12,7 @@ export class WS85 extends EcowittAccessory {
 
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
+  protected windSpeedHigh: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
   protected maxDailyGust: WindSensor | undefined;
 
@@ -48,6 +49,14 @@ export class WS85 extends EcowittAccessory {
 
     if (!windHide.includes('Speed')) {
       this.windSpeed = new WindSensor(platform, accessory, 'Wind Speed');
+    }
+
+    if (!windHide.includes('Speed')) {
+      this.windSpeedHigh = new WindSensor(
+        platform,
+        accessory,
+        'Too High Wind Speed',
+      );
     }
 
     if (!windHide.includes('Gust')) {
@@ -130,15 +139,19 @@ export class WS85 extends EcowittAccessory {
     this.windDirection?.updateDirection(winddir);
     this.windSpeed?.updateSpeed(
       windspeedmph,
-      this.platform.config.ws.wind.speedThresold,
+      this.platform.config.ws.wind.speedThreshold,
+    );
+    this.windSpeedHigh?.updateSpeed(
+      windspeedmph,
+      this.platform.config.ws.wind.speedHighThreshold,
     );
     this.windGust?.updateSpeed(
       windgustmph,
-      this.platform.config.ws.wind.gustThresold,
+      this.platform.config.ws.wind.gustThreshold,
     );
     this.maxDailyGust?.updateSpeed(
       maxdailygust,
-      this.platform.config.ws.wind.maxDailyGustThresold,
+      this.platform.config.ws.wind.maxDailyGustThreshold,
     );
 
     // Rain
