@@ -1,11 +1,11 @@
 import { Service, PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroSensor } from './ThermoHygroSensor';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { ThermoHygroSensor } from './../ThermoHygroSensor';
 
-import * as Utils from './Utils.js';
+import * as Utils from './../Utils.js';
 
-import { WindSensor } from './WindSensor';
-import { RainSensor } from './RainSensor';
+import { WindSensor } from './../sensors/WindSensor';
+import { RainSensor } from './../sensors/RainSensor';
 
 //------------------------------------------------------------------------------
 
@@ -238,32 +238,43 @@ export class WH65 extends ThermoHygroSensor {
     this.rainRate?.updateRate(
       parseFloat(dataReport.rainratein),
       this.platform.config.ws?.rain?.rateThreshold,
+      dataReport.dateutc
     );
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
       this.platform.config.ws?.rain?.eventThreshold,
+      dataReport.dateutc
     );
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hourlyrainin),
       this.platform.config.ws?.rain?.hourlyThreshold,
+      dataReport.dateutc
     );
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.dailyrainin),
       this.platform.config.ws?.rain?.dailyThreshold,
+      dataReport.dateutc
     );
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.weeklyrainin),
       this.platform.config.ws?.rain?.weeklyThreshold,
+      dataReport.dateutc
     );
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.monthlyrainin),
       this.platform.config.ws?.rain?.monthlyThreshold,
+      dataReport.dateutc
     );
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yearlyrainin),
       this.platform.config.ws?.rain?.yearlyThreshold,
+      dataReport.dateutc
     );
-    this.totalRain?.updateTotal(parseFloat(dataReport.totalrainin), undefined);
+    this.totalRain?.updateTotal(
+      parseFloat(dataReport.totalrainin),
+      undefined,
+      dataReport.dateutc
+    );
 
     // Dew point
 

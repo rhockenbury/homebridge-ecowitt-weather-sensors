@@ -1,9 +1,9 @@
 import { Service, PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { EcowittAccessory } from './EcowittAccessory';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { EcowittAccessory } from './../EcowittAccessory';
 
-import { ContactSensor } from './ContactSensor';
-import { OccupancySensor } from './OccupancySensor';
+import { ContactSensor } from './../sensors/ContactSensor';
+import { OccupancySensor } from './../sensors/OccupancySensor';
 
 export class WH57 extends EcowittAccessory {
   protected battery: Service;

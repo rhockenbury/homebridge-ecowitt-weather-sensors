@@ -78,7 +78,7 @@
               "units": {
                 "title": "Units",
                 "type": "string",
-                "default": "beaufort",
+                "default": "mph",
                 "oneOf": [
                   {
                     "title": "Miles per hour",
@@ -95,10 +95,6 @@
                   {
                     "title": "Meters per second",
                     "enum": ["mps"]
-                  },
-                  {
-                    "title": "Beaufort Scale",
-                    "enum": ["beaufort"]
                   }
                 ],
                 "required": true
@@ -114,32 +110,22 @@
                 }
               },
               "speedThreshold": {
-                "title": "Wind speed threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Wind speed threshold",
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 12,
-                "default": 5
-              },
-              "speedHighThreshold": {
-                "title": "Too high wind speed threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 12,
-                "default": 7
+                "default": 20
               },
               "gustThreshold": {
-                "title": "Wind gusts threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Wind gusts threshold",
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 12,
-                "default": 6
+                "default": 25
               },
               "maxDailyGustThreshold": {
-                "title": "Max daily gust threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Max daily gust threshold",
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 12,
-                "default": 8
+                "default": 25
               }
             }
           },
@@ -149,7 +135,7 @@
               "units": {
                 "title": "Units",
                 "type": "string",
-                "default": "mm",
+                "default": "in",
                 "oneOf": [
                   {
                     "title": "Millimeters",
@@ -181,31 +167,31 @@
                 }
               },
               "rateThreshold": {
-                "title": "Rate threshold (mm)",
+                "title": "Rate threshold",
                 "type": "number"
               },
               "eventThreshold": {
-                "title": "Event threshold (mm)",
+                "title": "Event threshold",
                 "type": "number"
               },
               "hourlyThreshold": {
-                "title": "Hourly threshold (mm)",
+                "title": "Hourly threshold",
                 "type": "number"
               },
               "dailyThreshold": {
-                "title": "Daily threshold (mm)",
+                "title": "Daily threshold",
                 "type": "number"
               },
               "weeklyThreshold": {
-                "title": "Weekly threshold (mm)",
+                "title": "Weekly threshold",
                 "type": "number"
               },
               "monthlyThreshold": {
-                "title": "Monthly threshold (mm)",
+                "title": "Monthly threshold",
                 "type": "number"
               },
               "yearlyThreshold": {
-                "title": "Yearly threshold (mm)",
+                "title": "Yearly threshold",
                 "type": "number",
                 "description": "Blank threshold = no detection trigger"
               }
@@ -469,7 +455,6 @@
                 "ws.wind.units",
                 "ws.wind.hide",
                 "ws.wind.speedThreshold",
-                "ws.wind.speedHighThreshold",
                 "ws.wind.gustThreshold",
                 "ws.wind.maxDailyGustThreshold"
               ]

@@ -1,6 +1,6 @@
 import { PlatformAccessory, Service } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { EcowittAccessory } from './EcowittAccessory';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { EcowittAccessory } from './../EcowittAccessory';
 
 export class WN34 extends EcowittAccessory {
   protected temperatureSensor: Service;

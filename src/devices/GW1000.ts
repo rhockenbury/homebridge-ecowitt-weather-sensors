@@ -1,8 +1,8 @@
 import { PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroBaroSensor } from './ThermoHygroBaroSensor';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
 
-export class GW1100 extends ThermoHygroBaroSensor {
+export class GW1000 extends ThermoHygroBaroSensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
@@ -10,7 +10,7 @@ export class GW1100 extends ThermoHygroBaroSensor {
     super(
       platform,
       accessory,
-      'GW1100',
+      'GW1000',
       'Gateway with Indoor Temperature, Humidity and Barometric Sensor',
     );
 
