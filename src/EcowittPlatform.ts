@@ -27,6 +27,8 @@ import { WS85 } from './devices/WS85';
 import * as restify from 'restify';
 import * as crypto from 'crypto';
 
+import * from './Utils.ts'
+
 interface BaseStationInfo {
   model: string;
   deviceName: string;
@@ -412,7 +414,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         break;
 
       default:
-        this.log.error(`Unhandled sensor type: ${sensor.type}. Please report this issue to `);
+        this.log.error(`Unhandled sensor type: ${sensor.type}. Please file a feature request for support additional Ecowitt devices ${util.FEATURE_REQ_LINK}`);
         break;
     }
   }

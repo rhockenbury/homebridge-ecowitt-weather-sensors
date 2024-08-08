@@ -34,4 +34,12 @@
 
 
 
-- get data reports from git issues -> and use to test / validate
+- get data reports from git issues -> and use to test / validate -> got some
+
+change repo name
+
+
+link to issues page - https://bit.ly/3yklrWZ
+
+
+featue request link = https://bit.ly/4fzeAtj

@@ -1,17 +1,17 @@
 {
   "private": false,
   "displayName": "Homebridge Ecowitt",
-  "name": "homebridge-ecowitt",
+  "name": "homebridge-ecowitt-weather-sensors",
   "version": "1.4.4",
-  "description": "Provides support for a wide range of Ecowitt sensors.",
+  "description": "A Homebridge plugin to support Ecowitt devices",
   "license": "Apache-2.0",
   "icon": "",
   "repository": {
     "type": "git",
-    "url": "git://github.com/rhockenbury/homebridge-ecowitt.git"
+    "url": "git://github.com/rhockenbury/homebridge-ecowitt-weather-sensors.git"
   },
   "bugs": {
-    "url": "https://github.com/rhockenbury/homebridge-ecowitt/issues"
+    "url": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues"
   },
   "engines": {
     "node": "^18.20.4 || ^20.16.0 || ^22.5.1",
@@ -25,7 +25,13 @@
     "prepublishOnly": "npm run lint && npm run build"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "homebridge",
+    "ecowitt",
+    "weather",
+    "weather station",
+    "outdoor",
+    "sensors"
   ],
   "dependencies": {
     "restify": "^11.1.0"

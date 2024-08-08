@@ -1,5 +1,9 @@
 'use strict';
 
+
+export const BUG_REPORT_LINK = "https://bit.ly/3yklrWZ";
+export const FEATURE_REQ_LINK = "https://bit.ly/4fzeAtj";
+
 //------------------------------------------------------------------------------
 
 export function toCelcius(fahrenheit): number {
