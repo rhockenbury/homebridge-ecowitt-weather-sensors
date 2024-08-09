@@ -2,44 +2,42 @@
 
 
 
-- util and windutil are duplicates
 
-- set icon in package.json
+- set icon in package.json - DONE, but need to verify
 
-- look at package verificaiton  - https://github.com/homebridge/verified
 
-- adapt more of example plugin - https://github.com/homebridge/homebridge-plugin-template/blob/latest/.vscode/extensions.json
+- util and windutil are duplicates -> Feature
 
-- test harness??
 
-- readme -> make "Tested devices" into table w/ photos
+- look at package verificaiton  - https://github.com/homebridge/verified -> FEATURE
 
-- introduce validateMac to check if report published from accepted MAC
 
+
+
+- adapt more of example plugin for basic config files
+
+
+
+- test harness?? -> build out tests - IN PROGRESS, for today
+
+
+- readme -> make "Tested devices" into table w/ photos - in progress
+
+
+- introduce validateMac to check if report published from accepted MAC -> FEATURE
 - possibly accept list of MACs???
 
 
 - could add https://developers.homebridge.io/HAP-NodeJS/classes/Service.html#AccessoryRuntimeInformation
 
-- recommend to use controller to view custom characteristics
 
-- guide for upgrading, remove all cached ecowitt accessories
-
-- time between weather data reports -> check and alert
+- recommend to use controller to view custom characteristics in README
 
 
 
-- create repo with issues page -> create short link for reporting
----- create template - https://github.com/spatialdude/homebridge-ecowitt/issues/32
+- time between weather data reports -> check and alert -> FEATURE
 
 
 
-- get data reports from git issues -> and use to test / validate -> got some
-
-change repo name
-
-
-link to issues page - https://bit.ly/3yklrWZ
-
-
-featue request link = https://bit.ly/4fzeAtj
+- get data reports from git issues -> and use to test / validate -> got some, good enough for now
+- change repo name -> should be all good on this

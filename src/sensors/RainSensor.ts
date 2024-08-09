@@ -168,8 +168,6 @@ export class RainSensor extends MotionSensor {
     );
     timeStr = `${timeStr} UTC`;
 
-    console.log(timeStr.toString());
-
     this.platform.log.debug(`Setting ${this.name} time to ${timeStr}`);
     this.service.updateCharacteristic(
       CHAR_TIME_NAME,

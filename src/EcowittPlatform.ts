@@ -24,10 +24,10 @@ import { WH65 } from './devices/WH65';
 import { WN34 } from './devices/WN34';
 import { WS85 } from './devices/WS85';
 
+import * as util from './Utils';
+
 import * as restify from 'restify';
 import * as crypto from 'crypto';
-
-import * from './Utils.ts'
 
 interface BaseStationInfo {
   model: string;
@@ -141,7 +141,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   //----------------------------------------------------------------------------
 
-  onDataReport(dataReport) {
+  public onDataReport(dataReport) {
     if (typeof dataReport !== 'object') {
       this.log.warn('Received empty data report');
     }
