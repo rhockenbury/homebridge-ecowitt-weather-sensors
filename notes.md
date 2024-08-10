@@ -5,39 +5,28 @@
 
 - set icon in package.json - DONE, but need to verify
 
-
-- util and windutil are duplicates -> Feature
-
-
-- look at package verificaiton  - https://github.com/homebridge/verified -> FEATURE
-
-
-
-
-- adapt more of example plugin for basic config files
-
-
-
-- test harness?? -> build out tests - IN PROGRESS, for today
-
+- adapt more of example plugin for basic top level config files
 
 - readme -> make "Tested devices" into table w/ photos - in progress
 
-
-- introduce validateMac to check if report published from accepted MAC -> FEATURE
-- possibly accept list of MACs???
-
-
 - could add https://developers.homebridge.io/HAP-NodeJS/classes/Service.html#AccessoryRuntimeInformation
-
 
 - recommend to use controller to view custom characteristics in README
 
 
 
+
+
+FEATURES
+
+- util and windutil are duplicates -> FEATURE
+- look at package verificaiton  - https://github.com/homebridge/verified -> FEATURE
 - time between weather data reports -> check and alert -> FEATURE
+- introduce validateMac to check if report published from accepted MAC -> FEATURE
 
 
+DONE
 
 - get data reports from git issues -> and use to test / validate -> got some, good enough for now
 - change repo name -> should be all good on this
+- test harness?? -> build out tests - IN PROGRESS, for today, good enough for now

@@ -1,8 +1,8 @@
-name: Build and Test
+name: Master - Build and Test
 
 on:
   push:
-    branches: [dev]
+    branches: [master]
   pull_request:
     branches: [master]
   schedule:
@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [16.x, 18.x, 20.x, 22.x]
+        node-version: [18.x, 20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -39,5 +39,5 @@ jobs:
       #     npm list --outdated
       #     npm audit
 
-      - name: Test the project
+      - name: Run the tests
         run: npm test

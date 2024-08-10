@@ -34,7 +34,7 @@ Search for "Ecowitt" on the Homebridge UI "Plugins" tab, and select install.
 sudo npm install -g homebridge-ecowitt
 ```
 
-## Plugin Configuration
+## Getting Started
 It is recommended to configure the plugin via the **Settings** UI.
 
 The plugin's **Base Station** settings must be configured before configuring the Ecowitt gateway or display console.
@@ -43,7 +43,7 @@ The plugin's **Base Station** settings must be configured before configuring the
 
 This can be found on the *About* screen on the Weather Display Console, or via the **WSView Plus** app on the "My Devices" tab.
 
-The **WSView Plus** can be found on the [Apple App Store](https://apps.apple.com/us/app/wsview-plus/id1581353359) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.ost.wsautool).
+The **WSView Plus** is available through the [Apple App Store](https://apps.apple.com/us/app/wsview-plus/id1581353359) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.ost.wsautool).
 
 The MAC address is used validate that the data report received is coming from the correct gateway or display console.
 
@@ -53,7 +53,7 @@ The **Port** and **Path** settings configure on which port and path the data rep
 
 Default settings are `8080` for the port and `/data/report` for the path. Other values may be used as desired. Depending on your system or network configuration ensure the **Port** selected is not already in use and that its accessible from the Ecowitt base station.
 
-// TODO SCREENSHOT
+// TODO SCREENSHOT of PLUGIN CONFIG
 
 
 ### Gateway / Display Console Configuration
@@ -117,6 +117,7 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 | WS85 | 3-in-1 Solar Weather Sensor | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
 
 
+// finish sensor section in table
 
 // add table for config Options
 
@@ -218,3 +219,7 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 
 ### I use an Ecowitt sensor that's not currently supported.  What can I do to get it supported?
 > Please [open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=&labels=enhancement&projects=&template=feature-request.md&title=) on the Github project to let me know what devices you are interested in getting support for.
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
