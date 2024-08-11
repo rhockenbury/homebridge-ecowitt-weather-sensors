@@ -12,16 +12,22 @@ jobs:
 
     strategy:
       matrix:
-        # the Node.js versions to build on
-        node-version: [18, 20, 22]
+        node-version: [18.x, 20.x, 22.x]
+        homebridge-version: ["^1.6.0", "^1.8.0", "^2.0.0-beta.0"]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+
+      - name: Install homebridge
+        run: npm install homebridge@${{ matrix.homebridge-version }}
+
+      - name: Show node and homebridge version
+        run: node -v && npm list homebridge
 
       - name: Install dependencies
         run: npm install
