@@ -2,7 +2,7 @@
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">
 
-<img src="./docs/assets/homebridge-logo.png" alt="Homebridge Logo Banner" width="200"/>  <img src="./docs/assets/ecowitt-logo.png" alt="Ecowitt Logo Banner" width="200"/>
+<img src="./docs/assets/homebridge-logo.png" alt="Homebridge Logo Banner" width="200"/>  &nbsp; &nbsp; &nbsp; <img src="./docs/assets/ecowitt-logo.png" alt="Ecowitt Logo Banner" width="200"/>
 
 # Homebridge Ecowitt Weather Sensors
 
