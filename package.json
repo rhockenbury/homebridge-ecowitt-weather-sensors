@@ -3,7 +3,7 @@
   "displayName": "Homebridge Ecowitt Weather Sensors",
   "name": "homebridge-ecowitt-weather-sensors",
   "version": "1.4.4",
-  "description": "Complete HomeKit support for Ecowitt Weather Stations and Sensors through Homebrige",
+  "description": "Complete HomeKit support for Ecowitt Weather Sensors through Homebrige",
   "license": "Apache-2.0",
   "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/docs/assets/ecowitt_logo.png",
   "repository": {
@@ -34,7 +34,6 @@
     "sensors"
   ],
   "dependencies": {
-    "homebridge": "^2.0.0-beta.0",
     "restify": "^11.1.0"
   },
   "devDependencies": {

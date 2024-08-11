@@ -3,16 +3,14 @@
 
 
 
-- adapt more of example plugin for basic top level config files
-
-
 FEATURES
 
+- barometric services -> FEATURE 
 - look at package verificaiton  - https://github.com/homebridge/verified -> FEATURE
 - time between weather data reports -> check and alert -> FEATURE
 - introduce validateMac to check if report published from accepted MAC -> FEATURE
 - could add https://developers.homebridge.io/HAP-NodeJS/classes/Service.html#AccessoryRuntimeInformation for uptime of device -> FEATURE
-
+- adapt more of example plugin for basic top level config files -> FEATURE
 
 
 DONE

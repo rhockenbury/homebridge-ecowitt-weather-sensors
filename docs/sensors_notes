@@ -1,5 +1,11 @@
 
 
+
+// make table
+- name, description, currently supported, currently avaiable on ecowitt, notes
+
+
+
 // WH26 outdoor temp and humidity, replaced by WH31 -> FEATURE, have test data for this
 
 // WH31 - temp and humidity (multi-channel)
@@ -9,6 +15,10 @@
 // WH24 - similiar data to WS65, not sure how to load it, "the boat"
 
 
+
+
+
+| WH24 | Solar Powered 7-in-1 Outdoor Sensor |  | <img src="./docs/assets/WH24.jpeg" alt="WH24" width="200"/> |
 
 
 list
