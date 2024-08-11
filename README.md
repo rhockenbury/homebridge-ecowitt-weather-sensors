@@ -1,18 +1,19 @@
-# Homebridge Ecowitt Weather Sensors Plugin
 
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">
 
-<img src="./docs/assets/ecowitt_logo_text.png" alt="Ecowitt Logo Banner" width="400"/>
+<img src="./docs/assets/homebridge-logo.png" alt="Homebridge Logo Banner" width="200"/>  <img src="./docs/assets/ecowitt-logo.png" alt="Ecowitt Logo Banner" width="200"/>
+
+# Homebridge Ecowitt Weather Sensors
+
+[![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 </div>
 </span>
 
 ## Complete HomeKit support for [Ecowitt]((https://www.ecowitt.com/)) Weather Stations and Sensors through [Homebridge](https://homebridge.io).
 
-[![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
-
-This plugin operates as a service that listens for data reports from an Ecowitt WiFi Gateway or Weather Display Console.  The Ecowitt gateway or console must be configured to publish weather service reports to the Homebridge Ecowitt Weather Sensor plugin.
+This plugin operates as a service that listens for data reports from an Ecowitt WiFi Gateway or Weather Display Console.  The Ecowitt gateway or console must be configured to publish weather service reports to the Homebridge Ecowitt Weather Sensors plugin.
 
 For bugs, feature requests, and questions - [please file a new issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).
 
@@ -22,20 +23,14 @@ For bugs, feature requests, and questions - [please file a new issue](https://gi
 * Sensors can be hidden via the plugin settings
 * Configurable units for display, and for setting sensor thresholds
 
+> :warning: **This plugin uses some custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended.**
+
 ## Requirements
 * GW2000 Gateway, GW1100 Gateway, GW1000 Gateway, or HP2551 Weather Display Console
 
 ## Installation
 
-#### Option 1: Install via Homebridge UI (recommended):
-
-Search for "Ecowitt" on the Homebridge UI "Plugins" tab, and select install.
-
-#### Option 2: Install manually:
-
-```
-sudo npm install -g homebridge-ecowitt
-```
+Search for "Ecowitt" on the Homebridge Config UI X Plugins screen, find `homebridge-ecowitt-weather-sensors` and select to install.
 
 ## Getting Started
 It is recommended to configure the plugin via the **Settings** UI.
@@ -56,8 +51,15 @@ The **Port** and **Path** settings configure on which port and path the data rep
 
 Default settings are `8080` for the port and `/data/report` for the path. Other values may be used as desired. Depending on your system or network configuration ensure the **Port** selected is not already in use and that its accessible from the Ecowitt base station.
 
-// TODO SCREENSHOT of PLUGIN CONFIG
 
+<span align="center" style="text-align:center">
+<div align="center" style="text-align:center">
+
+<img src="./docs/assets/homebridge-ui-config.png" alt="Homebridge UI Config" width="500"/>
+
+
+</div>
+</span>
 
 ### Gateway / Display Console Configuration
 
@@ -74,7 +76,7 @@ The gateway or display console can be configured using the Ecowitt **WSView Plus
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">
 
-<img src="./docs/assets/app_config_nav.png" alt="WSView Plus App 'More' Options" width="200"/>   <img src="./docs/assets/app_config.png" alt="WSView Plus App Weather Services" width="200"/>
+<img src="./docs/assets/app-config-nav.png" alt="WSView Plus App 'More' Options" width="200"/>   <img src="./docs/assets/app-config.png" alt="WSView Plus App Weather Services" width="200"/>
 
 </div>
 </span>
@@ -84,7 +86,7 @@ The gateway and display console can also be configured directly via its web UI o
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">
 
-<img src="./docs/assets/gw_webui_config.png" alt="Gateway Web UI" width="500"/>
+<img src="./docs/assets/webui-config.png" alt="Gateway Web UI" width="500"/>
 
 
 </div>
@@ -94,37 +96,37 @@ It is also recommended to configure the Homebridge host system with a static IP 
 
 After the gateway or display console has been configuration has been updated, sensor data reports will appear in the Homebridge status log. The plugin will automatically configure the accessories based on the first data report received.
 
-
 ## Supported Devices
 
 The full list of all [Ecowitt sensors](https://shop.ecowitt.com/collections/wifi-sensor) and [Ecowitt consoles](https://shop.ecowitt.com/collections/console) can be found on the [Ecowitt online store](https://shop.ecowitt.com/).
 
 This plugin currently supports the Ecowitt devices shown in the table below. If your Ecowitt device is currently not supported, [please open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=&labels=enhancement&projects=&template=feature-request.md&title=).
 
-| Device | Description | HomeKit Sensors | Product Image |
+| Device | Description | Service Types| Product Image |
 | -------- | ------- | ------- | ------ |
-| GW1000 | WiFi Weather Station Gateway with Indoor Temperature, Humidity and Barometric Sensor | <ul><li>Temperature</li><li>Humdity</li></ul> |
-| GW1100 | WiFi Weather Station Gateway with Indoor Temperature, Humidity and Barometric Sensor |
-| GW2000 | WiFi Weather Station Gateway with Indoor Temperature, Humidity and Barometric Sensor |
-| HP2551 | Weather Station Display Console |
-| WH24 | Solar Powered 7-in-1 Outdoor Sensor | <img src="./docs/assets/WH24.jpeg" alt="WH24" width="200"/> |
-| WH25 | Indoor Temperature, Humidity and Barometric Sensor | <img src="./docs/assets/WH25.jpeg" alt="WH25" width="200"/> |
-| WH31 | Multi-Channel Temperature and Humidity Sensor | <img src="./docs/assets/WH31.jpeg" alt="WH31" width="200"/> |
-| WH40 | Self-Emptying Rain Collector Rainfall Sensor | <img src="./docs/assets/WH40.jpeg" alt="WH40" width="200"/> |
-| WH41 | PM2.5 Air Quality Sensor Monitor Outdoor | <img src="./docs/assets/WH41.jpeg" alt="WH41" width="200"/> |
-| WH51 | Wireless Soil Moisture Sensor | <img src="./docs/assets/WH51.jpeg" alt="WH51" width="200"/> |
-| WH55 | Wireless Water Leak Detection Sensor with Loud Audio Alarm| <img src="./docs/assets/WH55.jpeg" alt="WH55" width="200"/> |
-| WH57 | Wireless Lightning Detection Sensor | <img src="./docs/assets/WH57.jpeg" alt="WH57" width="200"/> |
-| WH65 | Solar Powered 7-in-1 Outdoor Sensor | <img src="./docs/assets/WH65.jpeg" alt="WH65" width="200"/> |
-| WN34 | Multi-Channel Temperature Sensor | <img src="./docs/assets/WN34.jpeg" alt="WH34" width="200"/> |
-| WS85 | 3-in-1 Solar Weather Sensor | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
+| GW1000 / GW1100 | WiFi Weather Station Gateway | <ul><li>Temperature</li><li>Humdity</li></ul> | <img src="./docs/assets/GW1000-GW1100.jpeg" alt="GW1000" width="200"/> |
+| GW2000 | WiFi Weather Station Gateway | <ul><li>Temperature</li><li>Humdity</li></ul> | <img src="./docs/assets/GW2000.jpeg" alt="GW2000" width="200"/> |
+| HP2551 | Weather Station Display Console |  | <img src="./docs/assets/HP2551.jpeg" alt="HP2551" width="200"/> |
+| WH24 | Solar Powered 7-in-1 Outdoor Sensor |  | <img src="./docs/assets/WH24.jpeg" alt="WH24" width="200"/> |
+| WH25 | Indoor Temperature, Humidity and Barometric Sensor | <ul><li>Temperature</li><li>Humdity</li></ul> | <img src="./docs/assets/WH25.jpeg" alt="WH25" width="200"/> |
+| WH31 | Multi-Channel Temperature and Humidity Sensor | <ul><li>Temperature</li><li>Humdity</li></ul> | <img src="./docs/assets/WH31.jpeg" alt="WH31" width="200"/> |
+| WH40 | Self-Emptying Rain Collector Rainfall Sensor | <ul><li>Rain Rate</li><li>Rain Event</li><li>Rain Hourly</li><li>Rain Daily</li><li>Rain Weekly</li><li>Rain Monthly</li><li>Rain Yearly</li></ul> | <img src="./docs/assets/WH40.jpeg" alt="WH40" width="200"/> |
+| WH41 | PM2.5 Air Quality Sensor Monitor Outdoor | <ul><li>Air Quality</li><li>Air Quality (24hrs)</li></ul> | <img src="./docs/assets/WH41.jpeg" alt="WH41" width="200"/> |
+| WH51 | Wireless Soil Moisture Sensor | <ul><li>Soil Moisture</li></ul> | <img src="./docs/assets/WH51.jpeg" alt="WH51" width="200"/> |
+| WH55 | Wireless Water Leak Detection Sensor with Loud Audio Alarm | <ul><li>Leak</li></ul> | <img src="./docs/assets/WH55.jpeg" alt="WH55" width="200"/> |
+| WH57 | Wireless Lightning Detection Sensor | <ul><li>Lightning Event</li><li>Lightning Distance</li></ul> | <img src="./docs/assets/WH57.jpeg" alt="WH57" width="200"/> |
+| WH65 | Solar Powered 7-in-1 Outdoor Sensor | <ul><li>Temperature</li><li>Humidity</li><li>Solar Radiation</li><li>UV Index</li><li>Dew Point</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust</li><li>Wind Speed Daily Max</li><li>Rain Rate</li><li>Rain Event</li><li>Rain Hourly</li><li>Rain Daily</li><li>Rain Weekly</li><li>Rain Monthly</li><li>Rain Yearly</li></ul> | <img src="./docs/assets/WH65.jpeg" alt="WH65" width="200"/> |
+| WN34 | Multi-Channel Temperature Sensor | <ul><li>Temperature</li></ul>  | <img src="./docs/assets/WN34.jpeg" alt="WH34" width="200"/> |
+| WS85 | 3-in-1 Solar Weather Sensor | <ul><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust</li><li>Wind Speed Daily Max</li><li>Rain Rate</li><li>Rain Event</li><li>Rain Hourly</li><li>Rain Daily</li><li>Rain Weekly</li><li>Rain Monthly</li><li>Rain Yearly</li></ul> | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
 
 
+
+// Note that pressure is not currently supported
 // finish sensor section in table
+// take out WH24
+
 
 // add table for config Options
-
-// add note about custom characteristics -> viewing custom characteristics
 
 
 ## Sensor Notes
@@ -225,4 +227,4 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+Contributions are welcomed! Please report bugs, suggest improvements, and open pull requests. For major pull requests, please open an issue first to discuss what you would like to change.

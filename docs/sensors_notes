@@ -1,0 +1,33 @@
+
+
+// WH26 outdoor temp and humidity, replaced by WH31 -> FEATURE, have test data for this
+
+// WH31 - temp and humidity (multi-channel)
+
+// WH32 - temp and humidity (outdoor) overrides, bought as part of combo kit
+
+// WH24 - similiar data to WS65, not sure how to load it, "the boat"
+
+
+
+
+list
+
+
+WH24 - 7-in-1 weather station, Sensor for wind speed & direction, solar radiation & light, temperature, humidity, rainfall
+WH25 - 3-in-1 sensor temperature, humidity, pressure
+WH26 - 2-in-1 sensor temperature, humidity
+WH31 - 2-in-1 sensor temperature, humidity
+WH34 - External temperature sensor
+WH35 - Leaf wetness sensor
+WH40 - Rainfall sensor
+WH41 - Outdoor air quality sensor
+WH45 - Air quality sensor
+WH51 - Soil moisture sensor
+WH55 - Water leak detection sensor
+WH57 - Lightning detection sensor
+WH65 - 7-in-1 weather station for wind speed & direction, solar radiation & light, temperature, humidity and rainfall
+WH68 - 4-in-1 weather station - Solar-powered sensor for wind speed & direction, solar radiation & light
+WH80 - 6-in-1 weather station - Ultrasonic sensor for wind speed & direction, solar radiation & light, temperature & humidity
+WH90 - 7-in-1 weather station - Ultrasonic sensor for wind speed & direction, solar radiation & light, temperature, humidity and haptic rainfall Sensor
+#

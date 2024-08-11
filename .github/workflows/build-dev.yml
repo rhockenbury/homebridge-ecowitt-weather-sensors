@@ -1,4 +1,4 @@
-name: Dev - Build and Test
+name: Dev - Build
 
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
     strategy:
       matrix:
         # the Node.js versions to build on
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [18, 20, 22]
 
     steps:
       - uses: actions/checkout@v3

@@ -22,7 +22,7 @@ export class WS85 extends EcowittAccessory {
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
   protected yearlyRain: RainSensor | undefined;
-  protected totalRain: RainSensor | undefined;
+  //protected totalRain: RainSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,

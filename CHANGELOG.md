@@ -12,12 +12,12 @@
 * 1.4.0
   * Added support for WS-85 - 3-in-1 Solar Weather Sensor, Measures Rainfall, Wind Speed & Direction
   * Fixed support for GW2000 where data output was merging its readings with readings of other attached sensor (I'm assuming WS-90 or similar 7-in-1) in the previous fork
-  * Disabled barometric readings of GW2000 until it is supported by HomeKit as it only polutes the HomeKit views now
+  * Disabled barometric readings of GW2000 until it is supported by HomeKit as it only pollutes the HomeKit views now
   * Fixed display of all sensor names in HomeKit view
   * Moved rain triggers from the leak sensor to occupancy sensor to prevent loud notifications for all home members
 
 * 1.3.0
-  * Add WN34 - Multi-Channel Temperature Sensor (contrib @mastaab)
+  * Add WN34 - Multi-Channel Temperature Sensor
 
 * 1.2.5
   * Corrected Node 18 support
