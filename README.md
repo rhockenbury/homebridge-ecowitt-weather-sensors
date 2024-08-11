@@ -11,26 +11,27 @@
 </div>
 </span>
 
-## Complete HomeKit support for [Ecowitt]((https://www.ecowitt.com/)) Weather Sensors through [Homebridge](https://homebridge.io).
+## Complete HomeKit support for [Ecowitt]((https://www.ecowitt.com/)) Weather Sensors with [Homebridge](https://homebridge.io).
 
 This plugin operates as a service that listens for data reports from an Ecowitt WiFi Gateway or Weather Display Console.  The Ecowitt gateway or console must be configured to publish weather service reports to the Homebridge Ecowitt Weather Sensors plugin.
 
 For bugs, feature requests, and questions - [please file a new issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).
 
 ## Features
-* Support for a wide range of sensor types
+* Stable support for most Ecowitt weather sensor products
 * Operates locally without the need for any cloud services
-* Sensors can be hidden via the plugin settings
-* Configurable units for display, and for setting sensor thresholds
+* Detection thresholds for most weather sensor devices to drive automations
+* Customize units, sensor override names, and whether to show or hide a device
 
 > :warning: **This plugin uses a few custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended.**
 
 ## Requirements
 * GW2000 Gateway, GW1100 Gateway, GW1000 Gateway, or HP2551 Weather Display Console
+* **WSView Plus** app is recommended, available through the [Apple App Store](https://apps.apple.com/us/app/wsview-plus/id1581353359) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.ost.wsautool).
 
 ## Installation
 
-Search for "Ecowitt" on the Homebridge Config UI X Plugins screen, find `homebridge-ecowitt-weather-sensors` and select to install.
+Search for "Ecowitt" on the [Homebridge Config UI X](https://github.com/homebridge/homebridge-config-ui-x) Plugins screen, find `homebridge-ecowitt-weather-sensors` and select to install.
 
 ## Getting Started
 It is recommended to configure the plugin via the **Settings** UI.
@@ -40,8 +41,6 @@ The plugin's **Base Station** settings must be configured before configuring the
 ### MAC Address
 
 This can be found on the *About* screen on the Weather Display Console, or via the **WSView Plus** app on the "My Devices" tab.
-
-The **WSView Plus** is available through the [Apple App Store](https://apps.apple.com/us/app/wsview-plus/id1581353359) or the [Google Play Store](https://play.google.com/store/apps/details?id=com.ost.wsautool).
 
 The MAC address is used validate that the data report received is coming from the correct gateway or display console.
 
@@ -56,6 +55,8 @@ Default settings are `8080` for the port and `/data/report` for the path. Other 
 <div align="center" style="text-align:center">
 
 <img src="./docs/assets/homebridge-ui-config.png" alt="Homebridge UI Config" width="500"/>
+
+*Plugin UI with Required Configuration Options*
 
 
 </div>
@@ -78,6 +79,8 @@ The gateway or display console can be configured using the Ecowitt **WSView Plus
 
 <img src="./docs/assets/app-config-nav.png" alt="WSView Plus App 'More' Options" width="200"/>   <img src="./docs/assets/app-config.png" alt="WSView Plus App Weather Services" width="200"/>
 
+*Ecowitt WSView Plus app showing Custom Weather Service*
+
 </div>
 </span>
 
@@ -87,6 +90,8 @@ The gateway and display console can also be configured directly via its web UI o
 <div align="center" style="text-align:center">
 
 <img src="./docs/assets/webui-config.png" alt="Gateway Web UI" width="500"/>
+
+*Ecowitt Gateway Web UI showing Custom Weather Service*
 
 
 </div>
@@ -118,13 +123,13 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 | WN34 | Multi-Channel Temperature Sensor | <ul><li>Temperature</li></ul>  | <img src="./docs/assets/WN34.jpeg" alt="WH34" width="200"/> |
 | WS85 | 3-in-1 Solar Weather Sensor | <ul><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust</li><li>Wind Speed Daily Max</li><li>Rain Rate</li><li>Rain Event</li><li>Rain Hourly</li><li>Rain Daily</li><li>Rain Weekly</li><li>Rain Monthly</li><li>Rain Yearly</li></ul> | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
 
-> :warning: **This plugin does not currently implement barometric services.  While these are not supported natively by HomeKit as this time, I do plan to implement them with custom characteristics in the near future, see [this issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/5).**\
+> :warning: **This plugin does not currently implement barometric (pressure) services.  While these are not supported natively by HomeKit as this time, they are planned to be implemented with custom characteristics in the near future, see [this issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/5).**
 
 ## Configuration
 
 ### Basic Configuration
 
-This plugin will work with the basic configuration described in [Getting Started](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started).
+This plugin will work with the basic configuration described in [Getting Started](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started). As an example -
 
 ```
 {
@@ -167,108 +172,15 @@ It's recommended to configure these through the Plugin Config UI.
 | lightning.hide | `false` | Whether to show or hide the lightning detection sensor (WH57) information. |
 | lightning.units | `miles` | The units to display the lightning distance. Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers</p> |
 
-
-"lightning": {
-    "hide": false,
-    "units": "km"
-},
-
-
-
-
-
-## Sensor Notes
-
-
-### Outdoor Weather Sensors
-#### Wind
-* Sensors (Can be individually hidden via the plugin settings)
-    * Direction
-    * Speed
-    * Gust
-    * Maximum Daily Gust
-* Presented as **Motion Sensors**
-  * **Motion Detected** status is triggered based on thresholds configured in the plugin settings
-* Wind direction units are in degrees
-* Wind speed units can be configured in the plugin setting (kts, mps, mph, kmh)
-* Wind speed thresholds are specified using the configured (selected) units
-
-#### Rain
-* Sensors (Can be individually hidden via the plugin settings)
-  * Rate
-  * Event
-  * Hourly
-  * Daily
-  * Weekly
-  * Monthly
-  * Yearly
-* Presented as **Leak Sensors**
-  * For the Rate sensor, the **Leak Detected** status is based on the threshold configured in the plugin settings.
-  * For all other sensors the **Leak Detected** status is triggered if the sensor's value is non-zero
-* Rain display units and detection thresholds are configured the plugin settings
-
-#### UV Index
-* Can be hidden via plugin settings
-* Presented as an **Occupancy Sensor**
-  * **Occupancy Detected** status is based on the threshold configured in the plugin settings
-
-#### Solar Radiation
-* Can be hidden via plugin settings
-* Presented as a **Light Sensor**
-* Display units and conversion factor to lux are configured in plugin settings
-
-
-
-
-### Indoor Thermometer/Hygrometer/Barometer Sensor
-* Can be hidden via plugin settings
-
-### Multi-Channel Thermometer/Hygrometer Sensors
-* Can be hidden via plugin settings
-* Up to 8 sensors supported
-* Sensors can be individually named via the plugin settings
-
-### Multi-Channel Thermometer Sensors
-* Can be hidden via plugin settings
-* Up to 8 sensors supported
-* Sensors can be individually named via the plugin settings
-
-### Lightning Detection Sensor
-* Can be hidden via plugin settings
-* Number of lighing events is presented as a **Contact Sensor**
-  * **Open** state when number of events is > 0
-  * **Closed** state when number of events is 0
-* Distance and time presented as an **Occupancy Sensor**
-  * **Occupancy Detected** status is set when number of events is > 0
-* Distance units configured via plugin settings
-
-### Soil Moisture Sensors
-* Can be hidden via plugin settings
-* Up to 8 sensors supported
-* Sensors can be individually named via the plugin settings
-* Presented as **Humidity Sensors**
-
-### Leak Detection Sensors
-* Can be hidden via plugin settings
-* Up to 4 sensors supported
-* Sensors can be individually named via the plugin settings
-
-### PM2.5 Air Quality Sensors
-* Can be hidden via plugin settings
-* Up to 4 sensors supported
-* Sensors can be individually named via the plugin settings
-* Current and 24H Average presented as separate sensors
-
-
 ## Frequently Asked Questions
 
 ### How do I migrate to this plugin from other Homebridge Ecowitt plugins?
 > This plugin includes most prior version of Homebridge Ecowitt plugin forks including v1.0 and v1.1 from [spatialdude](https://github.com/spatialdude), v1.2 and v1.3 from [ochong](https://github.com/ochong) and v1.4 from [pavelserbajlo](https://github.com/pavelserbajlo). If you are currently using any of these mentioned versions, you can switch to the equivalent version of this plugin and get the exact same functionality.
 
-> However, I would also recommend updating to the latest version of this plugin to take advantage of the latest features.  To migrate from any version below v2.0 to v2.0 or higher, you should clear the Homebridge accessory cache for all Ecowitt accessories, install the latest plugin version, and then restart Homebridge.
+> I would also recommend updating to the latest version of this plugin to take advantage of the new features.  To migrate from any version below v2.0 to v2.0 or higher, you should clear the Homebridge accessory cache for all Ecowitt accessories, install the latest plugin version, and then restart Homebridge.
 
 ### Does this plugin support devices produced by other manufacturers?
-> There are a number of weather station distributors that re-package and re-brand the hardware sensors from [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/). Along with Ecowitt, other notable distributors include Aercus, Ambient Weather, and Frogger.  These brands typically also use similar firmware / software within their ecosystem, and many provide the ability to publish weather data reports to a custom endpoint.  If the weather station brand you are using relies on [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/) hardware, and can publish custom/local weather reports, please [file a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=&labels=enhancement&projects=&template=feature-request.md&title=) to let me know what support you would like to see.
+> There are a number of weather station distributors that re-package and re-brand the hardware sensors from [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/). Along with Ecowitt, other notable distributors include Aercus, Ambient Weather, and Frogger.  These brands typically also use similar firmware / software within their ecosystem, and many provide the ability to publish weather data reports to a custom endpoint.  If the weather station brand you are using relies on [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/) hardware, and can publish custom/local weather reports, please [file a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=&labels=enhancement&projects=&template=feature-request.md&title=) to let me know what device support you would like to see.
 
 ### I use an Ecowitt sensor that's not currently supported.  What can I do to get it supported?
 > Please [open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=&labels=enhancement&projects=&template=feature-request.md&title=) on the Github project to let me know what devices you are interested in getting support for.

@@ -2,6 +2,7 @@
   "pluginAlias": "Ecowitt",
   "pluginType": "platform",
   "singular": true,
+  "footerDisplay": "For help with configuring this plugin, [see the configuration docs](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration)",
   "schema": {
     "type": "object",
     "properties": {
@@ -424,8 +425,8 @@
     {
       "type": "fieldset",
       "expandable": true,
-      "expanded": false,
-      "title": "Base Station",
+      "expanded": true,
+      "title": "Base Station (Required)",
       "items": [
         "mac",
         {
