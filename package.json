@@ -5,7 +5,6 @@
   "version": "1.4.4",
   "description": "Complete HomeKit support for Ecowitt Weather Stations and Sensors through Homebrige",
   "license": "Apache-2.0",
-  "author": "Ryler Hockenbury",
   "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/docs/assets/ecowitt_logo.png",
   "repository": {
     "type": "git",
@@ -16,7 +15,7 @@
   },
   "engines": {
     "node": "^18.20.4 || ^20.16.0 || ^22.5.1",
-    "homebridge": "^1.6.0 || ^1.8.0 || ^2.0.0-beta.0"
+    "homebridge": "~1.6.0 || ~1.8.0 || ^2.0.0-beta.0"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -35,6 +34,7 @@
     "sensors"
   ],
   "dependencies": {
+    "homebridge": "^2.0.0-beta.0",
     "restify": "^11.1.0"
   },
   "devDependencies": {
