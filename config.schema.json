@@ -2,6 +2,7 @@
   "pluginAlias": "Ecowitt",
   "pluginType": "platform",
   "singular": true,
+  "footerDisplay": "For help with configuring this plugin, [see the configuration docs](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration)",
   "schema": {
     "type": "object",
     "properties": {
@@ -16,7 +17,7 @@
         "title": "Port",
         "type": "integer",
         "required": true,
-        "default": "8080",
+        "default": 8080,
         "description": "Port number on which to listen for data reports"
       },
       "path": {
@@ -78,7 +79,7 @@
               "units": {
                 "title": "Units",
                 "type": "string",
-                "default": "beaufort",
+                "default": "mph",
                 "oneOf": [
                   {
                     "title": "Miles per hour",
@@ -95,10 +96,6 @@
                   {
                     "title": "Meters per second",
                     "enum": ["mps"]
-                  },
-                  {
-                    "title": "Beaufort Scale",
-                    "enum": ["beaufort"]
                   }
                 ],
                 "required": true
@@ -114,32 +111,20 @@
                 }
               },
               "speedThreshold": {
-                "title": "Wind speed threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Wind speed threshold",
                 "type": "integer",
-                "minimum": 0,
-                "maximum": 12,
-                "default": 5
-              },
-              "speedHighThreshold": {
-                "title": "Too high wind speed threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 12,
-                "default": 7
+                "minimum": 0
               },
               "gustThreshold": {
-                "title": "Wind gusts threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Wind gusts threshold",
                 "type": "integer",
-                "minimum": 0,
-                "maximum": 12,
-                "default": 6
+                "minimum": 0
               },
               "maxDailyGustThreshold": {
-                "title": "Max daily gust threshold (<a href=\"https://simple.wikipedia.org/wiki/Beaufort_scale\" target=\"_blank\" rel=\"noopener noreferrer\">Beaufort scale</a>)",
+                "title": "Max daily gust threshold",
                 "type": "integer",
                 "minimum": 0,
-                "maximum": 12,
-                "default": 8
+                "description": "Blank threshold = no detection trigger"
               }
             }
           },
@@ -149,7 +134,7 @@
               "units": {
                 "title": "Units",
                 "type": "string",
-                "default": "mm",
+                "default": "in",
                 "oneOf": [
                   {
                     "title": "Millimeters",
@@ -181,31 +166,38 @@
                 }
               },
               "rateThreshold": {
-                "title": "Rate threshold (mm)",
+                "title": "Rate threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "eventThreshold": {
-                "title": "Event threshold (mm)",
+                "title": "Event threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "hourlyThreshold": {
-                "title": "Hourly threshold (mm)",
+                "title": "Hourly threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "dailyThreshold": {
-                "title": "Daily threshold (mm)",
+                "title": "Daily threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "weeklyThreshold": {
-                "title": "Weekly threshold (mm)",
+                "title": "Weekly threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "monthlyThreshold": {
-                "title": "Monthly threshold (mm)",
+                "title": "Monthly threshold",
+                "minimum": 0,
                 "type": "number"
               },
               "yearlyThreshold": {
-                "title": "Yearly threshold (mm)",
+                "title": "Yearly threshold",
+                "minimum": 0,
                 "type": "number",
                 "description": "Blank threshold = no detection trigger"
               }
@@ -412,7 +404,7 @@
           "units": {
             "title": "Distance Units",
             "type": "string",
-            "default": "km",
+            "default": "mi",
             "oneOf": [
               {
                 "title": "Kilometres",
@@ -433,16 +425,15 @@
     {
       "type": "fieldset",
       "expandable": true,
-      "expanded": false,
-      "title": "Base Station",
+      "expanded": true,
+      "title": "Base Station (Required)",
       "items": [
-        "mac",
         {
           "type": "section",
           "expandable": true,
           "expanded": true,
           "title": "Data Report Service",
-          "items": ["port", "path"]
+          "items": ["mac", "port", "path"]
         }
       ]
     },
@@ -468,10 +459,30 @@
               "items": [
                 "ws.wind.units",
                 "ws.wind.hide",
-                "ws.wind.speedThreshold",
-                "ws.wind.speedHighThreshold",
-                "ws.wind.gustThreshold",
-                "ws.wind.maxDailyGustThreshold"
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.wind.hide.includes('Speed')"
+                  },
+                  "items": ["ws.wind.speedThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.wind.hide.includes('Gust')"
+                  },
+                  "items": ["ws.wind.gustThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.wind.hide.includes('MaxDailyGust')"
+                  },
+                  "items": ["ws.wind.maxDailyGustThreshold"]
+                }
               ]
             },
             {
@@ -482,13 +493,62 @@
               "items": [
                 "ws.rain.units",
                 "ws.rain.hide",
-                "ws.rain.rateThreshold",
-                "ws.rain.eventThreshold",
-                "ws.rain.hourlyThreshold",
-                "ws.rain.dailyThreshold",
-                "ws.rain.weeklyThreshold",
-                "ws.rain.monthlyThreshold",
-                "ws.rain.yearlyThreshold"
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Rate')"
+                  },
+                  "items": ["ws.rain.rateThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Event')"
+                  },
+                  "items": ["ws.rain.EventThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Hourly')"
+                  },
+                  "items": ["ws.rain.hourlyThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Daily')"
+                  },
+                  "items": ["ws.rain.dailyThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Weekly')"
+                  },
+                  "items": ["ws.rain.weeklyThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Monthly')"
+                  },
+                  "items": ["ws.rain.monthlyThreshold"]
+                },
+                {
+                  "type": "fieldset",
+                  "notitle": true,
+                  "condition": {
+                    "functionBody": "return !model.ws.rain.hide.includes('Yearly')"
+                  },
+                  "items": ["ws.rain.yearlyThreshold"]
+                }
               ]
             },
             {
