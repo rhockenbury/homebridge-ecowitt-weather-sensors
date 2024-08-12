@@ -4,7 +4,8 @@ on:
   push:
     branches: [master]
   schedule:
-    - cron: "0 13 * * 1"
+    - cron: "0 13 * * 1" # every Monday
+  workflow_dispatch:
 
 jobs:
   build:

@@ -10,7 +10,7 @@
 
 ![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors) ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
-<!--![NPM Downloads](https://img.shields.io/npm/dw/homebridge-ecowitt-weather-sensors) -->
+<!--![NPM Downloads](https://img.shields.io/npm/dw/homebridge-ecowitt-weather-sensors)-->
 
 </div>
 </span>
@@ -97,7 +97,6 @@ The gateway and display console can also be configured directly via its web UI o
 
 *Ecowitt Gateway Web UI showing Custom Weather Service*
 
-
 </div>
 </span>
 
@@ -161,7 +160,7 @@ It's recommended to configure these through the Plugin Config UI.
 | ws.wind.speedThreshold</br>ws.wind.gustThreshold </br>ws.wind.maxDailyGustThreshold  | None | Thresholds to trigger the Motion Sensor for wind speed, gust speed, and max daily gust specified. By default, thresholds are not set.  Thresholds should be specified in units selected for wind speed. |
 | ws.rain.hide | `[]` | List of rain information to hide on the weather station accessory. By default, all rain information is shown. Possible values are: <br/><br/>`Rate`<br/>`Event`<br/>`Hourly`<br/>`Daily`<br/>`Weekly`<br/>`Monthly`<br/>`Yearly`<br/></p> |
 | ws.rain.units | `in` | The units to display rain accumulation. Possible values are: <br/><br/>`in`: Inches<br/>`mm`: Millimeters</p> |
-| ws.rain.rateThreshold</br>ws.rain.eventThreshold </br>ws.rain.hourlyThreshold </br>ws.rain.dailyThreshold </br>ws.rain.weeklyThreshold </br>ws.rain.monthlyThreshold </br>ws.rain.yearlyThreshold  | None | Thresholds to trigger the Motion Sensor for rain rate, event total, hourly total, daily total, weekly total, monthly total and yearly total.  By default, thresholds are not set.  Thresholds should be specified in units selected for rain. |
+| ws.rain.rateThreshold</br>ws.rain.eventThreshold </br>ws.rain.hourlyThreshold </br>ws.rain.dailyThreshold </br>ws.rain.weeklyThreshold </br>ws.rain.monthlyThreshold </br>ws.rain.yearlyThreshold | None | Thresholds to trigger the Motion Sensor for rain rate, event total, hourly total, daily total, weekly total, monthly total and yearly total.  By default, thresholds are not set.  Thresholds should be specified in units selected for rain. |
 | thbin.hide | `false` | Whether to show or hide the indoor temperature, humidity and pressure information from the base station. |
 | th.hide | `false` | Whether to show or hide the outdoor temperature and humidity (WH31) information. |
 | th.name[1-8] | None | Override names for up to 8 temperature and humidity sensors (WH31) corresponding to channels 1-8. |
@@ -174,7 +173,7 @@ It's recommended to configure these through the Plugin Config UI.
 | pm25.hide | `false` | Whether to show or hide the PM2.5 air quality sensor (WH41) information. |
 | pm25.name[1-4] | None | Override names for up to 4 PM2.5 air quality sensors (WH41) corresponding to channels 1-4. |
 | lightning.hide | `false` | Whether to show or hide the lightning detection sensor (WH57) information. |
-| lightning.units | `miles` | The units to display the lightning distance. Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers</p> |
+| lightning.units | `mi` | The units to display the lightning distance. Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers</p> |
 
 ## Frequently Asked Questions
 
