@@ -1,6 +1,6 @@
 import { PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroBaroSensor } from './ThermoHygroBaroSensor';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
 
 export class WH25 extends ThermoHygroBaroSensor {
   constructor(

@@ -1,5 +1,5 @@
 import { PlatformAccessory /*CharacteristicValue,*/ /*Service*/ } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
+import { EcowittPlatform } from './../EcowittPlatform';
 import { Sensor } from './Sensor';
 
 //------------------------------------------------------------------------------

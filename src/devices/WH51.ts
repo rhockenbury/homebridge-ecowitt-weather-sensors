@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { EcowittAccessory } from './EcowittAccessory';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { EcowittAccessory } from './../EcowittAccessory';
 
 export class WH51 extends EcowittAccessory {
   protected battery: Service;
@@ -34,16 +34,16 @@ export class WH51 extends EcowittAccessory {
     const soilbatt = dataReport[`soilbatt${this.channel}`];
     const soilmoisture = dataReport[`soilmoisture${this.channel}`];
 
-    this.platform.log.info(`${this.model} Channel ${this.channel} Update`);
-    this.platform.log.info('  soilbatt:', soilbatt);
-    this.platform.log.info('  soilmoisture:', soilmoisture);
+    this.platform.log.debug(`${this.model} Channel ${this.channel} Update`);
+    this.platform.log.debug('  soilbatt:', soilbatt);
+    this.platform.log.debug('  soilmoisture:', soilmoisture);
 
     this.setStatusActive(this.soilMoistureSensor, true);
 
     const voltage = parseFloat(soilbatt);
     const lowBattery = voltage <= 1.1;
 
-    this.updateBatteryLevel(this.battery, (voltage / 1.6) * 100);
+    this.updateBatteryLevel(this.battery, Math.min(100, (voltage / 1.6) * 100));
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     this.updateCurrentRelativeHumidity(

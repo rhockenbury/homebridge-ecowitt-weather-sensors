@@ -2,7 +2,7 @@ import {
   PlatformAccessory,
   /*CharacteristicValue,*/ Service,
 } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
+import { EcowittPlatform } from './../EcowittPlatform';
 
 //------------------------------------------------------------------------------
 
@@ -12,9 +12,9 @@ export class Sensor {
     protected readonly accessory: PlatformAccessory,
     protected readonly service: Service,
   ) {
-    this.service.addOptionalCharacteristic(
-      this.platform.Characteristic.ConfiguredName,
-    );
+    if (!this.service.testCharacteristic(this.platform.Characteristic.ConfiguredName)) {
+      this.service.addCharacteristic(this.platform.Characteristic.ConfiguredName);
+    }
   }
 
   //---------------------------------------------------------------------------

@@ -10,19 +10,21 @@ import {
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
-import { GW1000 } from './GW1000';
-import { GW1100 } from './GW1100';
-import { GW2000 } from './GW2000';
-import { WH25 } from './WH25';
-import { WH31 } from './WH31';
-import { WH40 } from './WH40';
-import { WH41 } from './WH41';
-import { WH51 } from './WH51';
-import { WH55 } from './WH55';
-import { WH57 } from './WH57';
-import { WH65 } from './WH65';
-import { WN34 } from './WN34';
-import { WS85 } from './WS85';
+import { GW1000 } from './devices/GW1000';
+import { GW1100 } from './devices/GW1100';
+import { GW2000 } from './devices/GW2000';
+import { WH25 } from './devices/WH25';
+import { WH31 } from './devices/WH31';
+import { WH40 } from './devices/WH40';
+import { WH41 } from './devices/WH41';
+import { WH51 } from './devices/WH51';
+import { WH55 } from './devices/WH55';
+import { WH57 } from './devices/WH57';
+import { WH65 } from './devices/WH65';
+import { WN34 } from './devices/WN34';
+import { WS85 } from './devices/WS85';
+
+import * as util from './Utils';
 
 import * as restify from 'restify';
 import * as crypto from 'crypto';
@@ -78,22 +80,23 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
-    this.log.info('Storage path:', this.api.user.storagePath());
-    this.log.info('config:', JSON.stringify(this.config, undefined, 2));
+    this.log.debug('Storage path:', this.api.user.storagePath());
+    this.log.debug('Config:', JSON.stringify(this.config, undefined, 2));
 
-    this.log.info('Creating data report service');
-    this.log.info('  Port:', this.config.port);
-    this.log.info('  Path:', this.config.path);
-    this.log.info('  Unregister:', this.config.unregister);
+    this.log.debug('Creating data report service');
+    this.log.debug('  Port:', this.config.port);
+    this.log.debug('  Path:', this.config.path);
+    this.log.debug('  Unregister:', this.config.unregister);
 
     this.dataReportServer = restify.createServer();
     this.dataReportServer.use(restify.plugins.bodyParser());
 
     this.dataReportServer.post(this.config.path, (req, res, next) => {
-      this.log.info('Data source address:', req.socket.remoteAddress);
-      this.log.info('Request:', req.toString());
+      this.log.debug('Data source address:', req.socket.remoteAddress);
+      this.log.debug('Request:', req.toString());
       this.onDataReport(req.body);
-      next();
+      res.send();
+      return next();
     });
 
     this.log.debug('Finished initializing platform:', this.config.name);
@@ -102,7 +105,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     // Dynamic Platform plugins should only register new accessories after this event was fired,
     // in order to ensure they weren't added to homebridge already. This event can also be used
     // to start discovery of new accessories.
-
     this.api.on('didFinishLaunching', () => {
       if (this.config.unregister) {
         this.unregisterAccessories();
@@ -110,8 +112,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       this.dataReportServer.listen(this.config.port, () => {
         this.log.info(
-          'Listening for data reports on: %s',
-          this.dataReportServer.url,
+          `Listening for data reports on: ${this.dataReportServer.url}`
         );
       });
     });
@@ -140,7 +141,16 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   //----------------------------------------------------------------------------
 
-  onDataReport(dataReport) {
+  public onDataReport(dataReport) {
+    if (typeof dataReport !== 'object') {
+      this.log.warn('Received empty data report');
+    }
+
+    if ( !dataReport.hasOwnProperty('PASSKEY') || !dataReport.hasOwnProperty('stationtype') ) {
+      this.log.warn('Received incomplete data report');
+    }
+
+    // TODO - introduce property to toggle verification
     if (dataReport.PASSKEY !== this.baseStationInfo.PASSKEY) {
       this.log.error(
         'Not configured for data reports from this base station:',
@@ -149,9 +159,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    this.log.info('Data report:', JSON.stringify(dataReport, undefined, 2));
+    this.log.debug('Recieved data report:', JSON.stringify(dataReport, undefined, 2));
 
-    if (!this.lastDataReport) {
+    if (!this.lastDataReport) { // on first data report
       this.log.info('Registering accessories');
       this.lastDataReport = dataReport;
       this.registerAccessories(dataReport);
@@ -172,7 +182,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         channel: channel,
       });
 
-      if (channel) {
+      if (typeof channel !== 'undefined') {
         this.log.info(`Adding sensor: ${type} channel: ${channel}`);
       } else {
         this.log.info(`Adding sensor: ${type}`);
@@ -202,8 +212,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       /(HP2551CA|GW[12][01]00)[ABC]?_?(.*)/,
     );
 
-    this.log.info('stationTypeInfo:', JSON.stringify(stationTypeInfo));
-    this.log.info('modelInfo:', JSON.stringify(modelInfo));
+    this.log.debug('stationTypeInfo:', JSON.stringify(stationTypeInfo));
+    this.log.debug('modelInfo:', JSON.stringify(modelInfo));
 
     this.baseStationInfo.model = dataReport.model;
     this.baseStationInfo.frequency = dataReport.freq;
@@ -232,7 +242,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    this.log.info('Discovering sensors');
+    this.log.debug('Discovering sensors');
 
     if (!this.config?.ws?.hide) {
       this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
@@ -317,7 +327,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         (sensor.channel > 0 ? '-' + sensor.channel.toString() : '');
       const uuid = this.api.hap.uuid.generate(sensorId);
 
-      this.log.info('sensorId:', sensorId, 'uuid:', uuid);
+      this.log.debug('sensorId:', sensorId, 'uuid:', uuid);
 
       const existingAccessory = this.accessories.find(
         (accessory) => accessory.UUID === uuid,
@@ -325,7 +335,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       if (existingAccessory) {
         // the accessory already exists
-        this.log.info(
+        this.log.debug(
           'Restoring existing accessory from cache:',
           existingAccessory.displayName,
         );
@@ -335,12 +345,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         const accessory = new this.api.platformAccessory(sensor.type, uuid);
         this.createAccessory(sensor, accessory);
 
-        this.log.info(
-          'Adding new accessory type:',
-          sensor.type,
-          'channel:',
-          sensor.channel,
-        );
+        if (typeof sensor.channel !== 'undefined') {
+          this.log.info(`Adding new accessory type: ${sensor.type} channel: ${sensor.channel}`);
+        } else {
+          this.log.info(`Adding new accessory type: ${sensor.type}`);
+        }
+
         // link the sensor accessory to the platform
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
           accessory,
@@ -351,16 +361,16 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   createAccessory(sensor, accessory) {
     switch (sensor.type) {
-      case 'GW2000':
-        sensor.accessory = new GW2000(this, accessory);
-        break;
-
       case 'GW1000':
         sensor.accessory = new GW1000(this, accessory);
         break;
 
       case 'GW1100':
         sensor.accessory = new GW1100(this, accessory);
+        break;
+
+      case 'GW2000':
+        sensor.accessory = new GW2000(this, accessory);
         break;
 
       case 'WH25':
@@ -404,7 +414,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         break;
 
       default:
-        this.log.error('Unhandled sensor type:', sensor.type);
+        this.log.error(`Unhandled sensor type: ${sensor.type}. Please file a feature request for support additional Ecowitt devices ${util.FEATURE_REQ_LINK}`);
         break;
     }
   }
@@ -413,10 +423,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   updateAccessories(dataReport) {
     const dateUTC = new Date(dataReport.dateutc);
-    this.log.info('Report time:', dateUTC);
+    this.log.debug(`Received new data report for ${dateUTC}`);
 
     for (const sensor of this.baseStationInfo.sensors) {
-      this.log.info(
+      this.log.debug(
         'Updating:',
         sensor.type,
         sensor.channel > 0 ? 'channel: ' + sensor.channel.toString() : '',

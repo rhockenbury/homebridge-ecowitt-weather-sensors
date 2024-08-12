@@ -175,14 +175,14 @@ export function toBeafort(mph): Beaufort {
 
 export function toSector(degrees): string {
   if (typeof degrees !== 'number' || isNaN(degrees)) {
-    return 'Unkown';
+    return 'NaN';
   }
 
   const index = Math.round((degrees % 360) / 22.5);
 
   let sectorName = kSectors[index];
   if (!sectorName) {
-    sectorName = 'Variable';
+    sectorName = 'NaN';
   }
 
   return sectorName;
