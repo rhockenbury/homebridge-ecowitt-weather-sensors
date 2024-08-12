@@ -6,11 +6,8 @@
 
 # Homebridge Ecowitt Weather Sensors
 
-<!--[![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml)-->
-
-![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors) ![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
-
-<!--![NPM Downloads](https://img.shields.io/npm/dw/homebridge-ecowitt-weather-sensors)-->
+<!-- badges -->
+[![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![NPM Downloads](https://img.shields.io/npm/d18m/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 </div>
 </span>

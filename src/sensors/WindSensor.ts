@@ -15,7 +15,7 @@ export class WindSensor extends MotionSensor {
     super(platform, accessory, name);
 
     // custom sensor for value string
-    if (!his.service.testCharacteristic(Util.CHAR_VALUE_NAME)) {
+    if (!this.service.testCharacteristic(Util.CHAR_VALUE_NAME)) {
       this.service.addCharacteristic(
         new this.platform.api.hap.Characteristic(Util.CHAR_VALUE_NAME, Util.CHAR_VALUE_UUID, {
           format: Formats.STRING,
