@@ -24,7 +24,7 @@ For bugs, feature requests, and questions - [please file a new issue](https://gi
 * Detection thresholds for most weather sensor devices to drive automations
 * Customize units, sensor override names, and whether to show or hide a device
 
-> :warning: **This plugin uses a few custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended.**
+> :warning: **This plugin uses a few custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended, but not required.**
 
 ## Requirements
 * GW2000 Gateway, GW1100 Gateway, GW1000 Gateway, or HP2551 Weather Display Console
