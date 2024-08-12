@@ -1,6 +1,6 @@
 import { PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { ThermoHygroBaroSensor } from './ThermoHygroBaroSensor';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
 
 //------------------------------------------------------------------------------
 
@@ -24,11 +24,11 @@ export class GW2000 extends ThermoHygroBaroSensor {
   }
 
   update(dataReport) {
-    this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info('  tempinf:', dataReport.tempinf);
-    this.platform.log.info('  humidityin:', dataReport.humidityin);
-    this.platform.log.info('  baromrelin:', dataReport.baromrelin);
-    this.platform.log.info('  baromabsin:', dataReport.baromabsin);
+    this.platform.log.debug(`${this.model} Update`);
+    this.platform.log.debug('  tempinf:', dataReport.tempinf);
+    this.platform.log.debug('  humidityin:', dataReport.humidityin);
+    this.platform.log.debug('  baromrelin:', dataReport.baromrelin);
+    this.platform.log.debug('  baromabsin:', dataReport.baromabsin);
 
     this.updateStatusActive(this.temperatureSensor, true);
     this.updateStatusActive(this.humiditySensor, true);

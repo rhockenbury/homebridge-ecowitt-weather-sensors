@@ -1,9 +1,9 @@
 import { Service, PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { EcowittAccessory } from './EcowittAccessory';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { EcowittAccessory } from './../EcowittAccessory';
 
-import { WindSensor } from './WindSensor';
-import { RainSensor } from './RainSensor';
+import { WindSensor } from './../sensors/WindSensor';
+import { RainSensor } from './../sensors/RainSensor';
 
 //------------------------------------------------------------------------------
 
@@ -12,7 +12,6 @@ export class WS85 extends EcowittAccessory {
 
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
-  protected windSpeedHigh: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
   protected maxDailyGust: WindSensor | undefined;
 
@@ -23,7 +22,7 @@ export class WS85 extends EcowittAccessory {
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
   protected yearlyRain: RainSensor | undefined;
-  protected totalRain: RainSensor | undefined;
+  //protected totalRain: RainSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -49,14 +48,6 @@ export class WS85 extends EcowittAccessory {
 
     if (!windHide.includes('Speed')) {
       this.windSpeed = new WindSensor(platform, accessory, 'Wind Speed');
-    }
-
-    if (!windHide.includes('Speed')) {
-      this.windSpeedHigh = new WindSensor(
-        platform,
-        accessory,
-        'Too High Wind Speed',
-      );
     }
 
     if (!windHide.includes('Gust')) {
@@ -101,27 +92,27 @@ export class WS85 extends EcowittAccessory {
   }
 
   update(dataReport) {
-    this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info('  wh85batt:', dataReport.wh85batt);
-    this.platform.log.info('  ws85batt:', dataReport.ws85batt);
+    this.platform.log.debug(`${this.model} Update`);
+    this.platform.log.debug('  wh85batt:', dataReport.wh85batt);
+    this.platform.log.debug('  ws85batt:', dataReport.ws85batt);
 
     const winddir = parseFloat(dataReport.winddir);
     const windspeedmph = parseFloat(dataReport.windspeedmph);
     const windgustmph = parseFloat(dataReport.windgustmph);
     const maxdailygust = parseFloat(dataReport.maxdailygust);
 
-    this.platform.log.info('  winddir:', winddir);
-    this.platform.log.info('  windspeedmph:', windspeedmph);
-    this.platform.log.info('  windgustmph:', windgustmph);
-    this.platform.log.info('  maxdailygust:', maxdailygust);
+    this.platform.log.debug('  winddir:', winddir);
+    this.platform.log.debug('  windspeedmph:', windspeedmph);
+    this.platform.log.debug('  windgustmph:', windgustmph);
+    this.platform.log.debug('  maxdailygust:', maxdailygust);
 
-    this.platform.log.info('  rrain_piezo:', dataReport.rrain_piezo);
-    this.platform.log.info('  erain_piezo:', dataReport.erain_piezo);
-    this.platform.log.info('  hrain_piezo:', dataReport.hrain_piezo);
-    this.platform.log.info('  drain_piezo:', dataReport.drain_piezo);
-    this.platform.log.info('  wrain_piezo:', dataReport.wrain_piezo);
-    this.platform.log.info('  mrain_piezo:', dataReport.mrain_piezo);
-    this.platform.log.info('  yrain_piezo:', dataReport.yrain_piezo);
+    this.platform.log.debug('  rrain_piezo:', dataReport.rrain_piezo);
+    this.platform.log.debug('  erain_piezo:', dataReport.erain_piezo);
+    this.platform.log.debug('  hrain_piezo:', dataReport.hrain_piezo);
+    this.platform.log.debug('  drain_piezo:', dataReport.drain_piezo);
+    this.platform.log.debug('  wrain_piezo:', dataReport.wrain_piezo);
+    this.platform.log.debug('  mrain_piezo:', dataReport.mrain_piezo);
+    this.platform.log.debug('  yrain_piezo:', dataReport.yrain_piezo);
 
     // Battery
 
@@ -141,10 +132,6 @@ export class WS85 extends EcowittAccessory {
       windspeedmph,
       this.platform.config.ws.wind.speedThreshold,
     );
-    this.windSpeedHigh?.updateSpeed(
-      windspeedmph,
-      this.platform.config.ws.wind.speedHighThreshold,
-    );
     this.windGust?.updateSpeed(
       windgustmph,
       this.platform.config.ws.wind.gustThreshold,
@@ -159,30 +146,37 @@ export class WS85 extends EcowittAccessory {
     this.rainRate?.updateRate(
       parseFloat(dataReport.rrain_piezo),
       this.platform.config.ws?.rain?.rateThreshold,
+      dataReport.dateutc,
     );
     this.eventRain?.updateTotal(
       parseFloat(dataReport.erain_piezo),
       this.platform.config.ws?.rain?.eventThreshold,
+      dataReport.dateutc,
     );
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hrain_piezo),
       this.platform.config.ws?.rain?.hourlyThreshold,
+      dataReport.dateutc,
     );
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.drain_piezo),
       this.platform.config.ws?.rain?.dailyThreshold,
+      dataReport.dateutc,
     );
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.wrain_piezo),
       this.platform.config.ws?.rain?.weeklyThreshold,
+      dataReport.dateutc,
     );
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.mrain_piezo),
       this.platform.config.ws?.rain?.monthlyThreshold,
+      dataReport.dateutc,
     );
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yrain_piezo),
       this.platform.config.ws?.rain?.yearlyThreshold,
+      dataReport.dateutc,
     );
   }
 }

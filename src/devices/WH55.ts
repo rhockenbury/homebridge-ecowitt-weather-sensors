@@ -1,6 +1,6 @@
 import { Service, PlatformAccessory } from 'homebridge';
-import { EcowittPlatform } from './EcowittPlatform';
-import { EcowittAccessory } from './EcowittAccessory';
+import { EcowittPlatform } from './../EcowittPlatform';
+import { EcowittAccessory } from './../EcowittAccessory';
 
 export class WH55 extends EcowittAccessory {
   protected battery: Service;
