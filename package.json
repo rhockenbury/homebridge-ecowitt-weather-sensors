@@ -1,42 +1,50 @@
 {
   "private": false,
-  "displayName": "Homebridge Ecowitt",
-  "name": "@pserb/homebridge-ecowitt",
-  "version": "1.4.1",
-  "description": "Provides support for a wide range of Ecowitt sensors.",
+  "displayName": "Homebridge Ecowitt Weather Sensors",
+  "name": "homebridge-ecowitt-weather-sensors",
+  "version": "2.0.0-beta",
+  "description": "Complete HomeKit support for Ecowitt Weather Sensors through Homebrige",
   "license": "Apache-2.0",
+  "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/docs/assets/ecowitt_logo.png",
   "repository": {
     "type": "git",
-    "url": "git://github.com/pavelserbajlo/homebridge-ecowitt.git"
+    "url": "git://github.com/rhockenbury/homebridge-ecowitt-weather-sensors.git"
   },
   "bugs": {
-    "url": "https://github.com/pavelserbajlo/homebridge-ecowitt/issues"
+    "url": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues"
   },
   "engines": {
-    "node": ">=10.17.0",
-    "homebridge": ">=1.3.0"
+    "node": "^18.20.4 || ^20.16.0 || ^22.5.1",
+    "homebridge": "~1.6.0 || ~1.8.0 || ^2.0.0-beta.0"
   },
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint src/**.ts --max-warnings=0",
-    "watch": "npm run build && npm link && nodemon",
+    "lint": "eslint src/**/*.ts --max-warnings=0",
+    "watch": "npm run build && npm link",
+    "test": "mocha tests/test.js",
     "build": "rimraf ./dist && tsc",
     "prepublishOnly": "npm run lint && npm run build"
   },
   "keywords": [
-    "homebridge-plugin"
+    "homebridge-plugin",
+    "homebridge",
+    "ecowitt",
+    "weather",
+    "outdoor",
+    "sensors"
   ],
   "dependencies": {
     "restify": "^11.1.0"
   },
   "devDependencies": {
-    "@types/node": "^14.14.31",
-    "@types/restify": "^8.5.11",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
-    "eslint": "^7.21.0",
-    "homebridge": "^1.3.1",
-    "nodemon": "^2.0.7",
+    "@types/node": "^20.14.12",
+    "@types/restify": "^8.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "chai": "^4.5.0",
+    "eslint": "^8.56.0",
+    "mocha": "^10.7.3",
+    "nodemon": "^3.1.4",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "typescript": "^4.2.2"
