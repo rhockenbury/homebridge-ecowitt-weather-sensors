@@ -1,23 +1,9 @@
-import {
-  PlatformAccessory /*CharacteristicValue,*/ /*Service*/,
-} from 'homebridge';
+import { PlatformAccessory, Characteristic, Formats, Perms, Units } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { MotionSensor } from './MotionSensor';
+import * as Util from './../Utils';
 
 //------------------------------------------------------------------------------
-
-
-import { Characteristic, Formats, Perms, Units } from 'homebridge';
-
-const CHAR_VALUE_NAME = 'Value';
-const CHAR_VALUE_UUID = 'dc87b6c3-84ab-41a6-ae13-69fea759ee39';
-
-const CHAR_TIME_NAME = 'Last Updated';
-const CHAR_TIME_UUID = 'd1130039-59df-4b0e-a8ba-8527c854e3fa';
-
-const CHAR_INTENSITY_NAME = 'Intensity';
-const CHAR_INTENSITY_UUID = 'fdd76937-37bb-49f2-b1a0-0705fe548782';
-
 
 export class RainSensor extends MotionSensor {
   constructor(
@@ -28,20 +14,20 @@ export class RainSensor extends MotionSensor {
     super(platform, accessory, name);
 
     // custom sensor for value string
-    let sensorValueExists = this.service.testCharacteristic(CHAR_VALUE_NAME);
+    let sensorValueExists = this.service.testCharacteristic(Util.CHAR_VALUE_NAME);
     if (!sensorValueExists) {
       this.service.addCharacteristic(
-        new this.platform.api.hap.Characteristic(CHAR_VALUE_NAME, CHAR_VALUE_UUID, {
+        new this.platform.api.hap.Characteristic(Util.CHAR_VALUE_NAME, Util.CHAR_VALUE_UUID, {
           format: Formats.STRING,
           perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
       }));
     }
 
     // custom sensor for last updated timestamp
-    let sensorTimeExists = this.service.testCharacteristic(CHAR_TIME_NAME);
+    let sensorTimeExists = this.service.testCharacteristic(Util.CHAR_TIME_NAME);
     if (!sensorTimeExists) {
       this.service.addCharacteristic(
-        new this.platform.api.hap.Characteristic(CHAR_TIME_NAME, CHAR_TIME_UUID, {
+        new this.platform.api.hap.Characteristic(Util.CHAR_TIME_NAME, Util.CHAR_TIME_UUID, {
           format: Formats.STRING,
           perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
       }));
@@ -49,10 +35,10 @@ export class RainSensor extends MotionSensor {
 
     // custom sensor for intensity string
     if (name.includes('Rate')) {
-      let sensorIntensityExists = this.service.testCharacteristic(CHAR_INTENSITY_NAME);
+      let sensorIntensityExists = this.service.testCharacteristic(Util.CHAR_INTENSITY_NAME);
       if (!sensorIntensityExists) {
         this.service.addCharacteristic(
-          new this.platform.api.hap.Characteristic(CHAR_INTENSITY_NAME, CHAR_INTENSITY_UUID, {
+          new this.platform.api.hap.Characteristic(Util.CHAR_INTENSITY_NAME, Util.CHAR_INTENSITY_UUID, {
             format: Formats.STRING,
             perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
         }));
@@ -66,9 +52,9 @@ export class RainSensor extends MotionSensor {
 
   public updateRate(ratein: number, threshold: number, time: string) {
     if (!isFinite(ratein)) {
-      this.platform.log.warn(`Cannot update ${this.name}, rate ${ratein} is NAN`);
+      this.platform.log.warn(`Cannot update ${this.name}, rate ${ratein} is NaN`);
       this.updateStatusActive(false);
-      this.updateValue('NAN');
+      this.updateValue('NaN');
       this.updateIntensity(0);
       return;
     }
@@ -93,13 +79,17 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(this.name);
+    this.updateName(Util.STATIC_NAMES ? this.name :  `${this.name} ${rateStr}`);
     this.updateValue(rateStr);
     this.updateIntensity(ratemm);
     this.updateTime(time);
 
     if (!isFinite(threshold)) {
-      this.platform.log.warn(`Cannot update ${this.name}, threshold ${threshold} is NAN`);
+      if (typeof threshold === undefined) {
+        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
+      } else {
+        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
+      }
       this.updateMotionDetected(false);
       return;
     }
@@ -111,9 +101,9 @@ export class RainSensor extends MotionSensor {
 
   public updateTotal(totalin: number, threshold, time: string) {
     if (!isFinite(totalin)) {
-      this.platform.log.warn(`Cannot update ${this.name}, total ${totalin} is NAN`);
+      this.platform.log.warn(`Cannot update ${this.name}, total ${totalin} is NaN`);
       this.updateStatusActive(false);
-      this.updateValue('NAN');
+      this.updateValue('NaN');
       return;
     }
 
@@ -137,12 +127,16 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(this.name);
+    this.updateName(Util.STATIC_NAMES ? this.name :  `${this.name} ${totalStr}`);
     this.updateValue(totalStr);
     this.updateTime(time);
 
     if (!isFinite(threshold)) {
-      this.platform.log.warn(`Cannot update ${this.name}, threshold ${threshold} is NAN`);
+      if (typeof threshold === undefined) {
+        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
+      } else {
+        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
+      }
       this.updateMotionDetected(false);
       return;
     }
@@ -155,7 +149,7 @@ export class RainSensor extends MotionSensor {
   private updateValue(value: string) {
     this.platform.log.debug(`Setting ${this.name} value to ${value}`);
     this.service.updateCharacteristic(
-      CHAR_VALUE_NAME,
+      Util.CHAR_VALUE_NAME,
       value,
     );
   }
@@ -170,7 +164,7 @@ export class RainSensor extends MotionSensor {
 
     this.platform.log.debug(`Setting ${this.name} time to ${timeStr}`);
     this.service.updateCharacteristic(
-      CHAR_TIME_NAME,
+      Util.CHAR_TIME_NAME,
       timeStr,
     );
   }
@@ -181,12 +175,13 @@ export class RainSensor extends MotionSensor {
     let intensity = this.toIntensity(ratemm);
     this.platform.log.debug(`Setting ${this.name} intensity to ${intensity}`);
     this.service.updateCharacteristic(
-      CHAR_INTENSITY_NAME,
+      Util.CHAR_INTENSITY_NAME,
       intensity,
     );
   }
 
   //----------------------------------------------------------------------------
+
   private toIntensity(ratemm: number): string {
     // classifcations from MANOBS (Manual of Surface Weather Observations)
     if (ratemm <= 0) {

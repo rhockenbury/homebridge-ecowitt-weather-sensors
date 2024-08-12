@@ -1,4 +1,5 @@
 {
+    "platform": "Ecowitt",
     "mac": "00:00:00:00:00:00",
     "port": 8080,
     "path": "/data/report",
@@ -6,33 +7,20 @@
     "ws": {
         "hide": false,
         "uv": {
-            "hide": true,
+            "hide": false,
             "threshold": 6
         },
         "solarradiation": {
-            "hide": true,
+            "hide": false,
             "luxFactor": 126.7
         },
         "wind": {
             "units": "mph",
-            "hide": [
-                "Direction"
-            ],
-            "speedThreshold": 15,
-            "gustThreshold": 20,
-            "maxDailyGustThreshold": 20
+            "hide": []
         },
         "rain": {
             "units": "in",
-            "hide": [
-                "Daily",
-                "Weekly",
-                "Monthly",
-                "Yearly"
-            ],
-            "rateThreshold": 0.05,
-            "eventThreshold": 1,
-            "hourlyThreshold": 1
+            "hide": []
         }
     },
     "thbin": {
@@ -55,7 +43,6 @@
     },
     "lightning": {
         "hide": false,
-        "units": "km"
-    },
-    "platform": "Ecowitt"
+        "units": "mi"
+    }
 }

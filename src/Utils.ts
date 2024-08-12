@@ -1,8 +1,25 @@
 'use strict';
 
-
+// Github issue link short urls
 export const BUG_REPORT_LINK = "https://bit.ly/3yklrWZ";
 export const FEATURE_REQ_LINK = "https://bit.ly/4fzeAtj";
+
+//------------------------------------------------------------------------------
+
+// custom characteristics name and uuid
+export const CHAR_VALUE_NAME = 'Value';
+export const CHAR_VALUE_UUID = 'dc87b6c3-84ab-41a6-ae13-69fea759ee39';
+
+export const CHAR_TIME_NAME = 'Last Updated';
+export const CHAR_TIME_UUID = 'd1130039-59df-4b0e-a8ba-8527c854e3fa';
+
+export const CHAR_INTENSITY_NAME = 'Intensity';
+export const CHAR_INTENSITY_UUID = 'fdd76937-37bb-49f2-b1a0-0705fe548782';
+
+//------------------------------------------------------------------------------
+
+// experimental plugin options
+export const STATIC_NAMES = false;
 
 //------------------------------------------------------------------------------
 

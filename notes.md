@@ -5,12 +5,15 @@
 
 FEATURES
 
-- barometric services -> FEATURE 
+- data report process -> seperate issue, and wiki page
 - look at package verificaiton  - https://github.com/homebridge/verified -> FEATURE
 - time between weather data reports -> check and alert -> FEATURE
 - introduce validateMac to check if report published from accepted MAC -> FEATURE
 - could add https://developers.homebridge.io/HAP-NodeJS/classes/Service.html#AccessoryRuntimeInformation for uptime of device -> FEATURE
-- adapt more of example plugin for basic top level config files -> FEATURE
+- adapt more of example plugin for basic top level config files, ES2022 -> FEATURE
+- add WH26 sensor -> have test data files
+
+
 
 
 DONE

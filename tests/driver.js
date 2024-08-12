@@ -2,7 +2,7 @@
 
 const hap = require("hap-nodejs");
 const platform = require('./../dist/EcowittPlatform');
-const platformConfig = require('./configs/config.json')
+const platformConfig = require('./configs/default.json')
 
 // mock api object
 const api = {

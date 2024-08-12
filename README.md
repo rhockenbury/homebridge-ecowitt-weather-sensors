@@ -149,7 +149,8 @@ It's recommended to configure these through the Plugin Config UI.
 
 | Option | Default | Explanation |
 | -------- | ------- | ------- |
-| unregister | `false` |
+| unregister | `false` | Remove all existing accessories during next plugin startup. Restart Homebridge after setting to `true`, and then **set it back to `false` to avoid unregistering again** |
+| staticNames | `false` | Set to `true` to not show the weather metric value in the service names of the accessory so that the service names do not change. **Currently only fully supported on the Wind and Rain sensors.** TODO - screenshots, note about automation |
 | ws.hide | `false` | Whether to show or hide the full weather station accessory. |
 | ws.uv.hide | `false` | Whether to show or hide the UV Index information on the weather station accessory. |
 | ws.uv.threshold | `6` | Threshold to trigger the UV Index Occupancy sensor. <br/><br/><b><u>UV Levels</u></b><br/>0-2: Low<br/>3-5: Moderate<br/>6-7: High<br/>8-10: Very High<br/>11+: Extreme</p> |

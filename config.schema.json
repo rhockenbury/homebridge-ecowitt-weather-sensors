@@ -17,7 +17,7 @@
         "title": "Port",
         "type": "integer",
         "required": true,
-        "default": "8080",
+        "default": 8080,
         "description": "Port number on which to listen for data reports"
       },
       "path": {
@@ -428,13 +428,12 @@
       "expanded": true,
       "title": "Base Station (Required)",
       "items": [
-        "mac",
         {
           "type": "section",
           "expandable": true,
           "expanded": true,
           "title": "Data Report Service",
-          "items": ["port", "path"]
+          "items": ["mac", "port", "path"]
         }
       ]
     },
