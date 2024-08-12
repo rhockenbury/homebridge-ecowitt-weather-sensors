@@ -1,0 +1,48 @@
+name: Master - Build
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "0 13 * * 1" # every Monday
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x, 22.x]
+        homebridge-version: ["~1.6.0", "~1.8.0", "^2.0.0-beta.0"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install homebridge ${{ matrix.homebridge-version  }}
+        run: npm install homebridge@${{ matrix.homebridge-version }}
+
+      - name: Show node and homebridge version
+        run: node -v && npm list homebridge
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint the project
+        run: npm run lint
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Audit dependencies
+        run: |
+          npm list --outdated
+          npm audit
+
+      - name: Run the tests
+        run: npm test
