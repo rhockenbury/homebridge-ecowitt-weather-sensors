@@ -146,37 +146,37 @@ export class WS85 extends EcowittAccessory {
     this.rainRate?.updateRate(
       parseFloat(dataReport.rrain_piezo),
       this.platform.config.ws?.rain?.rateThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.eventRain?.updateTotal(
       parseFloat(dataReport.erain_piezo),
       this.platform.config.ws?.rain?.eventThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hrain_piezo),
       this.platform.config.ws?.rain?.hourlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.drain_piezo),
       this.platform.config.ws?.rain?.dailyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.wrain_piezo),
       this.platform.config.ws?.rain?.weeklyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.mrain_piezo),
       this.platform.config.ws?.rain?.monthlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yrain_piezo),
       this.platform.config.ws?.rain?.yearlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
   }
 }

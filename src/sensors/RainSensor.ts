@@ -1,4 +1,4 @@
-import { PlatformAccessory, Characteristic, Formats, Perms, Units } from 'homebridge';
+import { PlatformAccessory, Formats, Perms } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { MotionSensor } from './MotionSensor';
 import * as Util from './../Utils';
@@ -14,34 +14,31 @@ export class RainSensor extends MotionSensor {
     super(platform, accessory, name);
 
     // custom sensor for value string
-    let sensorValueExists = this.service.testCharacteristic(Util.CHAR_VALUE_NAME);
-    if (!sensorValueExists) {
+    if (!this.service.testCharacteristic(Util.CHAR_VALUE_NAME)) {
       this.service.addCharacteristic(
         new this.platform.api.hap.Characteristic(Util.CHAR_VALUE_NAME, Util.CHAR_VALUE_UUID, {
           format: Formats.STRING,
-          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
-      }));
+          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+        }));
     }
 
     // custom sensor for last updated timestamp
-    let sensorTimeExists = this.service.testCharacteristic(Util.CHAR_TIME_NAME);
-    if (!sensorTimeExists) {
+    if (!this.service.testCharacteristic(Util.CHAR_TIME_NAME)) {
       this.service.addCharacteristic(
         new this.platform.api.hap.Characteristic(Util.CHAR_TIME_NAME, Util.CHAR_TIME_UUID, {
           format: Formats.STRING,
-          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
-      }));
+          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+        }));
     }
 
     // custom sensor for intensity string
     if (name.includes('Rate')) {
-      let sensorIntensityExists = this.service.testCharacteristic(Util.CHAR_INTENSITY_NAME);
-      if (!sensorIntensityExists) {
+      if (!this.service.testCharacteristic(Util.CHAR_INTENSITY_NAME)) {
         this.service.addCharacteristic(
           new this.platform.api.hap.Characteristic(Util.CHAR_INTENSITY_NAME, Util.CHAR_INTENSITY_UUID, {
             format: Formats.STRING,
-            perms: [ Perms.PAIRED_READ, Perms.NOTIFY ]
-        }));
+            perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+          }));
       }
     }
 
@@ -79,13 +76,13 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(Util.STATIC_NAMES ? this.name :  `${this.name} ${rateStr}`);
+    this.updateName(Util.STATIC_NAMES ? this.name : `${this.name} ${rateStr}`);
     this.updateValue(rateStr);
     this.updateIntensity(ratemm);
     this.updateTime(time);
 
     if (!isFinite(threshold)) {
-      if (typeof threshold === undefined) {
+      if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
         this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
@@ -127,12 +124,12 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(Util.STATIC_NAMES ? this.name :  `${this.name} ${totalStr}`);
+    this.updateName(Util.STATIC_NAMES ? this.name : `${this.name} ${totalStr}`);
     this.updateValue(totalStr);
     this.updateTime(time);
 
     if (!isFinite(threshold)) {
-      if (typeof threshold === undefined) {
+      if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
         this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
@@ -158,7 +155,7 @@ export class RainSensor extends MotionSensor {
 
   private updateTime(time: string) {
     let timeStr = new Date(time).toLocaleString('en-US',
-       {timeZone: 'UTC', hour12: false, dateStyle: 'short', timeStyle: 'short'}
+      {timeZone: 'UTC', hour12: false, dateStyle: 'short', timeStyle: 'short'},
     );
     timeStr = `${timeStr} UTC`;
 
@@ -172,7 +169,7 @@ export class RainSensor extends MotionSensor {
   //----------------------------------------------------------------------------
 
   private updateIntensity(ratemm: number) {
-    let intensity = this.toIntensity(ratemm);
+    const intensity = this.toIntensity(ratemm);
     this.platform.log.debug(`Setting ${this.name} intensity to ${intensity}`);
     this.service.updateCharacteristic(
       Util.CHAR_INTENSITY_NAME,

@@ -238,42 +238,42 @@ export class WH65 extends ThermoHygroSensor {
     this.rainRate?.updateRate(
       parseFloat(dataReport.rainratein),
       this.platform.config.ws?.rain?.rateThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
       this.platform.config.ws?.rain?.eventThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hourlyrainin),
       this.platform.config.ws?.rain?.hourlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.dailyrainin),
       this.platform.config.ws?.rain?.dailyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.weeklyrainin),
       this.platform.config.ws?.rain?.weeklyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.monthlyrainin),
       this.platform.config.ws?.rain?.monthlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yearlyrainin),
       this.platform.config.ws?.rain?.yearlyThreshold,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
     this.totalRain?.updateTotal(
       parseFloat(dataReport.totalrainin),
       undefined,
-      dataReport.dateutc
+      dataReport.dateutc,
     );
 
     // Dew point

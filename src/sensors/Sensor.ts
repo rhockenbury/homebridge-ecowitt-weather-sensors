@@ -12,8 +12,7 @@ export class Sensor {
     protected readonly accessory: PlatformAccessory,
     protected readonly service: Service,
   ) {
-    let configuredNameExists = this.service.testCharacteristic(this.platform.Characteristic.ConfiguredName);
-    if (!configuredNameExists) {
+    if (!this.service.testCharacteristic(this.platform.Characteristic.ConfiguredName)) {
       this.service.addCharacteristic(this.platform.Characteristic.ConfiguredName);
     }
   }
