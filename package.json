@@ -43,6 +43,7 @@
     "@typescript-eslint/parser": "^7.18.0",
     "chai": "^4.5.0",
     "eslint": "^8.56.0",
+    "hap-nodejs": "^1.1.0",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
     "rimraf": "^3.0.2",
