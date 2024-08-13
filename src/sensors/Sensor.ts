@@ -1,7 +1,4 @@
-import {
-  PlatformAccessory,
-  /*CharacteristicValue,*/ Service,
-} from 'homebridge';
+import { PlatformAccessory, Service } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 
 //------------------------------------------------------------------------------
@@ -26,11 +23,15 @@ export class Sensor {
 
   //---------------------------------------------------------------------------
 
-  setName(name: string) {
+  private setName(name: string) {
+    this.service.setCharacteristic(
+      this.platform.Characteristic.ConfiguredName,
+      name,
+    );
     this.service.setCharacteristic(this.platform.Characteristic.Name, name);
   }
 
-  updateName(name: string) {
+  private updateName(name: string) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.ConfiguredName,
       name,
@@ -40,28 +41,17 @@ export class Sensor {
 
   //---------------------------------------------------------------------------
 
-  setStatusActive(active: boolean) {
+  private setStatusActive(active: boolean) {
     this.service.setCharacteristic(
       this.platform.Characteristic.StatusActive,
       active,
     );
   }
 
-  updateStatusActive(active: boolean) {
+  private updateStatusActive(active: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.StatusActive,
       active,
-    );
-  }
-
-  //---------------------------------------------------------------------------
-
-  updateStatusLowBattery(lowBattery: boolean) {
-    this.service.updateCharacteristic(
-      this.platform.Characteristic.StatusLowBattery,
-      lowBattery
-        ? this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
-        : this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL,
     );
   }
 

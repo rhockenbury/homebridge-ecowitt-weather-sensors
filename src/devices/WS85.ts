@@ -1,7 +1,6 @@
-import { Service, PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
+import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
-
 import { WindSensor } from './../sensors/WindSensor';
 import { RainSensor } from './../sensors/RainSensor';
 
@@ -22,13 +21,12 @@ export class WS85 extends EcowittAccessory {
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
   protected yearlyRain: RainSensor | undefined;
-  //protected totalRain: RainSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WS85', 'Ecowitt WS-85');
+    super(platform, accessory, 'WS85', 'Weather Station (WS-85)');
 
     // Battery
 
@@ -39,11 +37,7 @@ export class WS85 extends EcowittAccessory {
     const windHide = this.platform.config?.ws?.wind?.hide || [];
 
     if (!windHide.includes('Direction')) {
-      this.windDirection = new WindSensor(
-        platform,
-        accessory,
-        'Wind Direction',
-      );
+      this.windDirection = new WindSensor(platform, accessory, 'Wind Direction');
     }
 
     if (!windHide.includes('Speed')) {
@@ -92,52 +86,30 @@ export class WS85 extends EcowittAccessory {
   }
 
   update(dataReport) {
-    this.platform.log.debug(`${this.model} Update`);
-    this.platform.log.debug('  wh85batt:', dataReport.wh85batt);
-    this.platform.log.debug('  ws85batt:', dataReport.ws85batt);
-
-    const winddir = parseFloat(dataReport.winddir);
-    const windspeedmph = parseFloat(dataReport.windspeedmph);
-    const windgustmph = parseFloat(dataReport.windgustmph);
-    const maxdailygust = parseFloat(dataReport.maxdailygust);
-
-    this.platform.log.debug('  winddir:', winddir);
-    this.platform.log.debug('  windspeedmph:', windspeedmph);
-    this.platform.log.debug('  windgustmph:', windgustmph);
-    this.platform.log.debug('  maxdailygust:', maxdailygust);
-
-    this.platform.log.debug('  rrain_piezo:', dataReport.rrain_piezo);
-    this.platform.log.debug('  erain_piezo:', dataReport.erain_piezo);
-    this.platform.log.debug('  hrain_piezo:', dataReport.hrain_piezo);
-    this.platform.log.debug('  drain_piezo:', dataReport.drain_piezo);
-    this.platform.log.debug('  wrain_piezo:', dataReport.wrain_piezo);
-    this.platform.log.debug('  mrain_piezo:', dataReport.mrain_piezo);
-    this.platform.log.debug('  yrain_piezo:', dataReport.yrain_piezo);
+    this.platform.log.debug(`Updating accessory ${this.model});
 
     // Battery
 
     const batt = parseFloat(dataReport.wh85batt || dataReport.ws85batt) / 5;
     const lowBattery = batt <= 0.25;
 
-    this.updateBatteryLevel(
-      this.battery,
-      Math.max(0, Math.min(100, batt * 100)),
-    );
+    this.updateBatteryLevel(this.battery, Math.max(0, Math.min(100, batt * 100)));
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     // Wind
 
-    this.windDirection?.updateDirection(winddir);
+    this.windDirection?.updateDirection(parseFloat(dataReport.winddir));
+
     this.windSpeed?.updateSpeed(
-      windspeedmph,
+      parseFloat(dataReport.windspeedmph)
       this.platform.config.ws.wind.speedThreshold,
     );
     this.windGust?.updateSpeed(
-      windgustmph,
+      parseFloat(dataReport.windgustmph),
       this.platform.config.ws.wind.gustThreshold,
     );
     this.maxDailyGust?.updateSpeed(
-      maxdailygust,
+      parseFloat(dataReport.maxdailygust),
       this.platform.config.ws.wind.maxDailyGustThreshold,
     );
 

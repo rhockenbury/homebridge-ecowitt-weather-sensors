@@ -1,7 +1,4 @@
-import {
-  PlatformAccessory,
-  /*CharacteristicValue,*/ Service,
-} from 'homebridge';
+import { PlatformAccessory, Formats, Perms, Service } from 'homebridge';
 import { EcowittPlatform } from './EcowittPlatform';
 
 import * as Utils from './Utils.js';
@@ -17,9 +14,13 @@ export class EcowittAccessory {
   ) {
     this.setModel(model, modelName);
 
-    this.accessory
-      .getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(this.platform.Characteristic.Manufacturer, 'Ecowitt')
+    const accessoryInfo = this.accessory.getService(this.platform.Service.AccessoryInformation)!;
+
+    accessoryInfo
+      .setCharacteristic(
+        this.platform.Characteristic.Manufacturer,
+        'Ecowitt'
+      )
       .setCharacteristic(
         this.platform.Characteristic.ProductData,
         `${platform.baseStationInfo.frequency}Hz`,
@@ -40,7 +41,24 @@ export class EcowittAccessory {
         this.platform.Characteristic.FirmwareRevision,
         platform.baseStationInfo.firmwareRevision,
       )
-      .addOptionalCharacteristic(this.platform.Characteristic.ConfiguredName);
+
+      // custom char does not appear in controller
+      // if (!accessoryInfo.testCharacteristic(Utils.CHAR_TIME_NAME)) {
+      //   accessoryInfo.addCharacteristic(
+      //     new this.platform.api.hap.Characteristic(Utils.CHAR_TIME_NAME, Utils.CHAR_TIME_UUID, {
+      //       format: Formats.STRING,
+      //       perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+      //     }));
+      // }
+      //
+      //
+      // accessoryInfo.updateCharacteristic(
+      //   Utils.CHAR_TIME_NAME,
+      //   "ABCDLFKJDLSJF",
+      // );
+      //
+
+      //.addOptionalCharacteristic(this.platform.Characteristic.ConfiguredName); // dont think this is needed
   }
 
   //----------------------------------------------------------------------------
@@ -60,6 +78,7 @@ export class EcowittAccessory {
 
   //----------------------------------------------------------------------------
 
+  // NOTE where is this called?
   setSerialNumber(serialNumber: string) {
     this.accessory
       .getService(this.platform.Service.AccessoryInformation)!
@@ -72,7 +91,7 @@ export class EcowittAccessory {
   //----------------------------------------------------------------------------
 
   update(dataReport) {
-    this.platform.log.error('Update not implemented:', dataReport);
+    this.platform.log.error(`Update function not implemented for this accessory. Please file a bug report at ${${utils.BUG_REPORT_LINK}`);
   }
 
   //---------------------------------------------------------------------------
@@ -159,7 +178,7 @@ export class EcowittAccessory {
       this.accessory.getService(this.platform.Service.Battery) ||
       this.accessory.addService(this.platform.Service.Battery);
 
-    battery.setCharacteristic(this.platform.Characteristic.Name, `${name} 🔋`);
+    battery.setCharacteristic(this.platform.Characteristic.Name, `${name}`);
 
     battery.setCharacteristic(
       this.platform.Characteristic.ChargingState,

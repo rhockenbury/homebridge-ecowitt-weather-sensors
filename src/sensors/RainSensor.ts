@@ -1,7 +1,7 @@
 import { PlatformAccessory, Formats, Perms } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { MotionSensor } from './MotionSensor';
-import * as Util from './../Utils';
+import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
@@ -13,29 +13,11 @@ export class RainSensor extends MotionSensor {
   ) {
     super(platform, accessory, name);
 
-    // custom sensor for value string
-    if (!this.service.testCharacteristic(Util.CHAR_VALUE_NAME)) {
-      this.service.addCharacteristic(
-        new this.platform.api.hap.Characteristic(Util.CHAR_VALUE_NAME, Util.CHAR_VALUE_UUID, {
-          format: Formats.STRING,
-          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
-        }));
-    }
-
-    // custom sensor for last updated timestamp
-    if (!this.service.testCharacteristic(Util.CHAR_TIME_NAME)) {
-      this.service.addCharacteristic(
-        new this.platform.api.hap.Characteristic(Util.CHAR_TIME_NAME, Util.CHAR_TIME_UUID, {
-          format: Formats.STRING,
-          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
-        }));
-    }
-
-    // custom sensor for intensity string
-    if (name.includes('Rate')) {
-      if (!this.service.testCharacteristic(Util.CHAR_INTENSITY_NAME)) {
+    // custom characteristic for intensity string
+    if (name.includes('Rate') || name.includes('rate')) {
+      if (!this.service.testCharacteristic(utils.CHAR_INTENSITY_NAME)) {
         this.service.addCharacteristic(
-          new this.platform.api.hap.Characteristic(Util.CHAR_INTENSITY_NAME, Util.CHAR_INTENSITY_UUID, {
+          new this.platform.api.hap.Characteristic(utils.CHAR_INTENSITY_NAME, utils.CHAR_INTENSITY_UUID, {
             format: Formats.STRING,
             perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
           }));
@@ -51,8 +33,10 @@ export class RainSensor extends MotionSensor {
     if (!isFinite(ratein)) {
       this.platform.log.warn(`Cannot update ${this.name}, rate ${ratein} is NaN`);
       this.updateStatusActive(false);
+      this.updateName(this.name);
       this.updateValue('NaN');
       this.updateIntensity(0);
+      this.updateMotionDetected(false);
       return;
     }
 
@@ -76,7 +60,7 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(Util.STATIC_NAMES ? this.name : `${this.name} ${rateStr}`);
+    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${rateStr}`);
     this.updateValue(rateStr);
     this.updateIntensity(ratemm);
     this.updateTime(time);
@@ -85,7 +69,7 @@ export class RainSensor extends MotionSensor {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
+        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. Verify plugin configuration.`);
       }
       this.updateMotionDetected(false);
       return;
@@ -100,7 +84,9 @@ export class RainSensor extends MotionSensor {
     if (!isFinite(totalin)) {
       this.platform.log.warn(`Cannot update ${this.name}, total ${totalin} is NaN`);
       this.updateStatusActive(false);
+      this.updateName(this.name);
       this.updateValue('NaN');
+      this.updateMotionDetected(false);
       return;
     }
 
@@ -124,7 +110,7 @@ export class RainSensor extends MotionSensor {
     }
 
     this.updateStatusActive(true);
-    this.updateName(Util.STATIC_NAMES ? this.name : `${this.name} ${totalStr}`);
+    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${totalStr}`);
     this.updateValue(totalStr);
     this.updateTime(time);
 
@@ -132,7 +118,7 @@ export class RainSensor extends MotionSensor {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN`);
+        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. Verify plugin configuration.`);
       }
       this.updateMotionDetected(false);
       return;
@@ -143,55 +129,13 @@ export class RainSensor extends MotionSensor {
 
   //----------------------------------------------------------------------------
 
-  private updateValue(value: string) {
-    this.platform.log.debug(`Setting ${this.name} value to ${value}`);
-    this.service.updateCharacteristic(
-      Util.CHAR_VALUE_NAME,
-      value,
-    );
-  }
-
-  //----------------------------------------------------------------------------
-
-  private updateTime(time: string) {
-    let timeStr = new Date(time).toLocaleString('en-US',
-      {timeZone: 'UTC', hour12: false, dateStyle: 'short', timeStyle: 'short'},
-    );
-    timeStr = `${timeStr} UTC`;
-
-    this.platform.log.debug(`Setting ${this.name} time to ${timeStr}`);
-    this.service.updateCharacteristic(
-      Util.CHAR_TIME_NAME,
-      timeStr,
-    );
-  }
-
-  //----------------------------------------------------------------------------
-
   private updateIntensity(ratemm: number) {
-    const intensity = this.toIntensity(ratemm);
+    const intensity = utils.toRainIntensity(ratemm);
     this.platform.log.debug(`Setting ${this.name} intensity to ${intensity}`);
     this.service.updateCharacteristic(
-      Util.CHAR_INTENSITY_NAME,
+      utils.CHAR_INTENSITY_NAME,
       intensity,
     );
-  }
-
-  //----------------------------------------------------------------------------
-
-  private toIntensity(ratemm: number): string {
-    // classifcations from MANOBS (Manual of Surface Weather Observations)
-    if (ratemm <= 0) {
-      return 'None';
-    } else if (ratemm <= 2.5) {
-      return 'Light';
-    } else if (ratemm <= 7.5) {
-      return 'Moderate';
-    } else if (ratemm <= 50.0) {
-      return 'Heavy';
-    } else {
-      return 'Violent';
-    }
   }
 
   //----------------------------------------------------------------------------

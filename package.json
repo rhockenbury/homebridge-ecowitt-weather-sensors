@@ -5,7 +5,7 @@
   "version": "2.0.0-beta",
   "description": "Complete HomeKit support for Ecowitt Weather Sensors through Homebrige",
   "license": "Apache-2.0",
-  "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/docs/assets/ecowitt_logo.png",
+  "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo.png",
   "repository": {
     "type": "git",
     "url": "git://github.com/rhockenbury/homebridge-ecowitt-weather-sensors.git"
@@ -21,17 +21,16 @@
   "scripts": {
     "lint": "eslint src/**/*.ts --max-warnings=0",
     "watch": "npm run build && npm link",
-    "test": "mocha tests/test.js",
+    "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",
     "build": "rimraf ./dist && tsc",
     "prepublishOnly": "npm run lint && npm run build"
   },
   "keywords": [
     "homebridge-plugin",
     "homebridge",
+    "homekit",
     "ecowitt",
-    "weather",
-    "outdoor",
-    "sensors"
+    "weather"
   ],
   "dependencies": {
     "restify": "^11.1.0"
@@ -44,10 +43,13 @@
     "chai": "^4.5.0",
     "eslint": "^8.56.0",
     "hap-nodejs": "^1.1.0",
+    "homebridge": "^2.0.0-beta.0",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.2"
+    "tsx": "^4.17.0",
+    "typescript": "^4.2.2",
+    "winston": "^3.14.1"
   }
 }

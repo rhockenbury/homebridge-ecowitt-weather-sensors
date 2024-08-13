@@ -24,7 +24,7 @@ import { WH65 } from './devices/WH65';
 import { WN34 } from './devices/WN34';
 import { WS85 } from './devices/WS85';
 
-import * as util from './Utils';
+import * as utils from './Utils';
 
 import * as restify from 'restify';
 import * as crypto from 'crypto';
@@ -86,7 +86,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.log.debug('Creating data report service');
     this.log.debug('  Port:', this.config.port);
     this.log.debug('  Path:', this.config.path);
-    this.log.debug('  Unregister:', this.config.unregister);
 
     this.dataReportServer = restify.createServer();
     this.dataReportServer.use(restify.plugins.bodyParser());
@@ -143,11 +142,13 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   public onDataReport(dataReport) {
     if (typeof dataReport !== 'object') {
-      this.log.warn('Received empty data report');
+      this.log.warn(`Received empty data report. Verify gateway or console configuration at ${utils.GATEWAY_SETUP_LINK}`);
+      return;
     }
 
     if ( !dataReport.hasOwnProperty('PASSKEY') || !dataReport.hasOwnProperty('stationtype') ) {
-      this.log.warn('Received incomplete data report');
+      this.log.warn(`Received incomplete data report. Verify gateway or console configuration at ${utils.GATEWAY_SETUP_LINK}`);
+      return;
     }
 
     // TODO - introduce property to toggle verification
@@ -159,6 +160,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       return;
     }
 
+    // TODO - add note about copying / pasting for debug github request
     this.log.debug('Recieved data report:', JSON.stringify(dataReport, undefined, 2));
 
     if (!this.lastDataReport) { // on first data report
@@ -414,7 +416,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         break;
 
       default:
-        this.log.error(`Unhandled sensor type: ${sensor.type}. Please file a feature request for support additional Ecowitt devices ${util.FEATURE_REQ_LINK}`);
+        this.log.error(`Unhandled sensor type: ${sensor.type}. Please file a feature request for additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
         break;
     }
   }
@@ -422,6 +424,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   updateAccessories(dataReport) {
+    // TODO - wrap in try/catch
+    
     const dateUTC = new Date(dataReport.dateutc);
     this.log.debug(`Received new data report for ${dateUTC}`);
 

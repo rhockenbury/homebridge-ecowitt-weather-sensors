@@ -1,4 +1,4 @@
-import { PlatformAccessory /*CharacteristicValue,*/ /*Service*/ } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { Sensor } from './Sensor';
 
@@ -23,7 +23,7 @@ export class ContactSensor extends Sensor {
 
   //---------------------------------------------------------------------------
 
-  updateState(detected: boolean) {
+  private updateState(detected: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.ContactSensorState,
       detected

@@ -1,8 +1,7 @@
-'use strict';
-
 // Github issue link short urls
 export const BUG_REPORT_LINK = "https://bit.ly/3yklrWZ";
 export const FEATURE_REQ_LINK = "https://bit.ly/4fzeAtj";
+export const GATEWAY_SETUP_LINK = "https://bit.ly/3YGnYVU";
 
 //------------------------------------------------------------------------------
 
@@ -59,116 +58,125 @@ const kWindSectors = [
 interface Beaufort {
   force: number;
   description: string;
-  kts: number[];
-  mph: number[];
-  kmh: number[];
-  mps: number[];
+  kts: number;
+  mph: number;
+  kmh: number;
+  mps: number;
 }
 
+// upper limits for each scale threshold
 const kBeaufortScale = [
+  {
+    force: undefined,
+    description: 'None',
+    kts: 0,
+    mph: 0,
+    kmh: 0,
+    mps: 0,
+  },
   {
     force: 0,
     description: 'Calm',
-    kts: [1],
-    mph: [1],
-    kmh: [2],
-    mps: [0.5],
+    kts: 1,
+    mph: 1,
+    kmh: 2,
+    mps: 0.5,
   },
   {
     force: 1,
     description: 'Light Air',
-    kts: [1, 3],
-    mph: [1, 3],
-    kmh: [2, 5],
-    mps: [0.5, 1.5],
+    kts: 3,
+    mph: 3,
+    kmh: 5,
+    mps: 1.5,
   },
   {
     force: 2,
     description: 'Light Breeze',
-    kts: [4, 6],
-    mph: [4, 7],
-    kmh: [6, 11],
-    mps: [1.6, 3.3],
+    kts: 6,
+    mph: 7,
+    kmh: 11,
+    mps: 3.3,
   },
   {
     force: 3,
     description: 'Gentle Breeze',
-    kts: [7, 10],
-    mph: [8, 12],
-    kmh: [12, 19],
-    mps: [3.4, 5.5],
+    kts: 10,
+    mph: 12,
+    kmh: 19,
+    mps: 5.5,
   },
   {
     force: 4,
     description: 'Moderate Breeze',
-    kts: [11, 16],
-    mph: [13, 18],
-    kmh: [20, 28],
-    mps: [5.5, 7.9],
+    kts: 16,
+    mph: 18,
+    kmh: 28,
+    mps: 7.9,
   },
   {
     force: 5,
     description: 'Fresh Breeze',
-    kts: [17, 21],
-    mph: [19, 24],
-    kmh: [29, 38],
-    mps: [8, 10.7],
+    kts: 21,
+    mph: 24,
+    kmh: 38,
+    mps: 10.7,
   },
   {
     force: 6,
     description: 'Strong Breeze',
-    kts: [22, 27],
-    mph: [25, 31],
-    kmh: [39, 49],
-    mps: [10.8, 13.8],
+    kts: 27,
+    mph: 31,
+    kmh: 49,
+    mps: 13.8,
   },
   {
     force: 7,
-    description: 'Moderate Gale',
-    kts: [28, 33],
-    mph: [32, 38],
-    kmh: [50, 61],
-    mps: [13.9, 17.1],
+    description: 'Near Gale',
+    kts: 33,
+    mph: 38,
+    kmh: 61,
+    mps: 17.1,
   },
   {
     force: 8,
     description: 'Gale',
-    kts: [34, 40],
-    mph: [39, 46],
-    kmh: [62, 74],
-    mps: [17.2, 20.7],
+    kts: 40,
+    mph: 46,
+    kmh: 74,
+    mps: 20.7,
   },
   {
     force: 9,
-    description: 'Severe Gale',
-    kts: [41, 47],
-    mph: [47, 54],
-    kmh: [75, 88],
-    mps: [20.8, 24.4],
+    description: 'Strong Gale',
+    kts: 47,
+    mph: 54,
+    kmh: 88,
+    mps: 24.4,
   },
   {
     force: 10,
     description: 'Storm',
-    kts: [48, 55],
-    mph: [55, 63],
-    kmh: [89, 102],
-    mps: [24.5, 28.4],
+    kts: 55,
+    mph: 63,
+    kmh: 102,
+    mps: 28.4,
   },
   {
     force: 11,
     description: 'Violent Storm',
-    kts: [56, 63],
-    mph: [64, 72],
-    kmh: [103, 117],
-    mps: [28.5, 32.6],
+    kts: 63,
+    mph: 72,
+    kmh: 117,
+    mps: 32.6,
   },
   {
     force: 12,
     description: 'Hurricane',
-    kts: [64, 9999],
-    mph: [73, 9999],
-    kmh: [118, 9999],
-    mps: [32.7, 9999],
+    kts: Number.POSITIVE_INFINITY,
+    mph: Number.POSITIVE_INFINITY,
+    kmh: Number.POSITIVE_INFINITY,
+    mps: Number.POSITIVE_INFINITY,
   },
 ];
 
@@ -194,36 +202,47 @@ export function toMps(mph): number {
 
 export function toBeafort(mph): Beaufort {
   mph = parseFloat(mph);
-  for (const beaufort of kBeaufortScale) {
-    if (beaufort.mph.length === 1 && mph < beaufort.mph[0]) {
-      return beaufort;
-    } else if (
-      beaufort.mph.length === 2 &&
-      mph >= beaufort.mph[0] &&
-      mph <= beaufort.mph[1]
-    ) {
-      return beaufort;
-    }
+
+  let beaufort = kBeaufortScale.find((scale) => mph <= scale.mph);
+
+  if (!beaufort) {
+    beaufort = kBeaufortScale[kBeaufortScale.length - 1];
   }
 
-  return kBeaufortScale[kBeaufortScale.length - 1];
+  return beaufort;
 }
 
 //------------------------------------------------------------------------------
 
 export function toWindSector(degrees): string {
   if (typeof degrees !== 'number' || isNaN(degrees)) {
-    return 'Unkown';
+    return 'NaN';
   }
 
   const index = Math.round((degrees % 360) / 22.5);
 
   let sectorName = kWindSectors[index];
   if (!sectorName) {
-    sectorName = 'Variable';
+    sectorName = 'None';
   }
 
   return sectorName;
 }
 
+//------------------------------------------------------------------------------
+
+// classifcations from MANOBS (Manual of Surface Weather Observations)
+export function toRainIntensity(ratemm: number): string {
+  if (ratemm <= 0) {
+    return 'None';
+  } else if (ratemm <= 2.5) {
+    return 'Light';
+  } else if (ratemm <= 7.5) {
+    return 'Moderate';
+  } else if (ratemm <= 50.0) {
+    return 'Heavy';
+  } else {
+    return 'Violent';
+  }
+}
 //------------------------------------------------------------------------------

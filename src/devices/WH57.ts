@@ -47,7 +47,7 @@ export class WH57 extends EcowittAccessory {
     // Strike count
 
     this.events.updateState(lightningNum <= 0);
-    this.events.updateStatusLowBattery(lowBattery);
+    //this.events.updateStatusLowBattery(lowBattery);  // comes from sensor parent class
     this.events.updateName(`⚡ ${lightningNum}`);
 
     // Time & Distance
@@ -112,6 +112,6 @@ export class WH57 extends EcowittAccessory {
 
     this.timeDistance.updateName(`⚡${distance} ${distanceUnits} ${timeText}`);
     this.timeDistance.updateOccupancyDetected(lightningNum > 0);
-    this.timeDistance.updateStatusLowBattery(lowBattery);
+    //this.timeDistance.updateStatusLowBattery(lowBattery);  // comes from sensor parent class
   }
 }
