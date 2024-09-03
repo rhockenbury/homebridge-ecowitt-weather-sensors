@@ -18,6 +18,8 @@ This plugin operates as a service that listens for data reports from an Ecowitt 
 
 For bugs, feature requests, and questions - [please file a new issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).
 
+> :arrow_up: :arrow_up: :arrow_up: **v2 is coming soon with a better plugin UI, more supported gateway and console devices, and many other improvements. See the [migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Migration-to-v2.0.0-Guide) for how to get started with v2.**
+
 ## Features
 * Stable support for most Ecowitt weather sensor products
 * Operates locally without the need for any cloud services
