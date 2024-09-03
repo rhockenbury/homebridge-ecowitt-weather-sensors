@@ -1,7 +1,11 @@
-// Github issue link short urls
+import { PlatformConfig } from 'homebridge';
+const merge = require('deepmerge');
+
+// external help links
 export const BUG_REPORT_LINK = "https://bit.ly/3yklrWZ";
 export const FEATURE_REQ_LINK = "https://bit.ly/4fzeAtj";
 export const GATEWAY_SETUP_LINK = "https://bit.ly/3YGnYVU";
+export const MIGRATION_GUIDE_LINK = "https://bit.ly/4g6X7bX";
 
 //------------------------------------------------------------------------------
 
@@ -17,13 +21,78 @@ export const CHAR_INTENSITY_UUID = 'fdd76937-37bb-49f2-b1a0-0705fe548782';
 
 //------------------------------------------------------------------------------
 
-// experimental plugin options
-export const STATIC_NAMES = false;
+// config keys
+export const v1ConfigKeys = ['mac', 'port', 'path', 'unregister', 'ws', 'thbin', 'th', 'tf', 'soil', 'leak', 'pm25', 'lightning'];
+export const v2ConfigKeys = ['baseStation', 'nameOverrides', 'additional', 'thresholds', 'hidden', 'units'];
+
+//------------------------------------------------------------------------------
+
+export function boundRange(percent: number, lowerBound: number = 0, upperBound: number = 100): number {
+  return Math.max(lowerBound, Math.min(upperBound, percent))
+};
+
+//------------------------------------------------------------------------------
+
+export function truthy(val): boolean {
+  if (typeof val === 'undefined') {
+    return false;
+  }
+  return String(val).toLowerCase() == "true";
+}
+
+//------------------------------------------------------------------------------
+
+export function falsy(val): boolean {
+  if (typeof val === 'undefined') {
+    return true;
+  }
+  return String(val).toLowerCase() == "false";
+}
+
+//------------------------------------------------------------------------------
+
+export function lookup(object, key): any {
+  if (typeof object === 'undefined' || typeof key === 'undefined') {
+    return undefined;
+  }
+
+  let obj = {};
+  if (Array.isArray(object)) {
+    object.forEach(x => obj[x.key] = x.value);
+  } else {
+    obj = object;
+  }
+
+  const lowKey = key.toLowerCase();
+  const index = Object.keys(obj).find(k => k.toLowerCase() === lowKey);
+
+  if (typeof index === 'undefined') {
+    return undefined;
+  } else {
+    return obj[index];
+  }
+}
+
+//------------------------------------------------------------------------------
+
+export function includesAll(arr, values): boolean {
+  const lowArr = arr.map(name => name.toLowerCase());
+  const lowVal = values.map(name => name.toLowerCase());
+  return lowVal.every(k => lowArr.includes(k));
+}
+
+//------------------------------------------------------------------------------
+
+export function includesAny(arr, values): boolean {
+  const lowArr = arr.map(name => name.toLowerCase());
+  const lowVal = values.map(name => name.toLowerCase());
+  return lowVal.some(k => lowArr.includes(k));
+}
 
 //------------------------------------------------------------------------------
 
 export function toCelcius(fahrenheit): number {
-  return Math.round(((parseFloat(fahrenheit) - 32) * 5) / 9);
+  return ((parseFloat(fahrenheit) - 32) * 5) / 9;
 }
 
 //------------------------------------------------------------------------------
@@ -66,14 +135,6 @@ interface Beaufort {
 
 // upper limits for each scale threshold
 const kBeaufortScale = [
-  {
-    force: undefined,
-    description: 'None',
-    kts: 0,
-    mph: 0,
-    kmh: 0,
-    mps: 0,
-  },
   {
     force: 0,
     description: 'Calm',
@@ -245,4 +306,292 @@ export function toRainIntensity(ratemm: number): string {
     return 'Violent';
   }
 }
+
 //------------------------------------------------------------------------------
+
+export function v1ConfigTest(v1Config: object): boolean {
+  if (includesAny(Object.keys(v1Config), v1ConfigKeys)) {
+    return true
+  }
+
+  return false;
+}
+
+//------------------------------------------------------------------------------
+
+export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConfig {
+  let v2Config: any = {
+    "baseStation": {},
+    "nameOverrides": [],
+    "additional": {},
+    "thresholds": {},
+    "hidden": {},
+    "units": {},
+    "platform": "Ecowitt"
+  };
+
+  // base station
+  if (v1Config?.mac) {
+    v2Config.baseStation.mac = v1Config.mac;
+  }
+
+  if (v1Config?.port) {
+    v2Config.baseStation.port = v1Config.port;
+  }
+
+  if (v1Config?.path) {
+    v2Config.baseStation.path = v1Config.path;
+  }
+
+  // units
+  if (v1Config?.ws?.wind?.units) {
+    v2Config.units.wind = v1Config?.ws?.wind?.units;
+  }
+
+  if (v1Config?.ws?.rain?.units) {
+    v2Config.units.rain = v1Config?.ws?.rain?.units;
+  }
+
+  if (v1Config?.lightning?.units ) {
+    v2Config.units.distance = v1Config?.lightning?.units;
+  }
+
+  v2Config.units.temperature = "fh";
+
+  // hidden
+  if (truthy(v1Config?.thbin?.hide)) {
+    v2Config.hidden.temperature = true;
+    v2Config.hidden.humidity = true;
+    //v2Config.hidden[`${serviceId}:GW1000`] = true;
+    //v2Config.hidden[`${serviceId}:GW1200`] = true;
+    //v2Config.hidden[`${serviceId}:GW2000`] = true;
+  }
+
+  // if (truthy(v1Config?.ws?.hide)) {
+  //   v2Config.hidden[`${serviceId}:WS85`] = true;
+  //   v2Config.hidden[`${serviceId}:WH65`] = true;
+  // }
+
+  if (truthy(v1Config?.th?.hide)) {
+    v2Config.hidden.temperature = true;
+    v2Config.hidden.humidity = true;
+    //v2Config.hidden[`${serviceId}:WH31`] = true;
+  }
+
+  if (truthy(v1Config?.tf?.hide)) {
+    v2Config.hidden.temperature = true;
+    //v2Config.hidden[`${serviceId}:WH34`] = true;
+  }
+
+  if (truthy(v1Config?.soil?.hide)) {
+    v2Config.hidden.soilMoisture = true;
+    //v2Config.hidden[`${serviceId}:WH51`] = true;
+  }
+
+  if (truthy(v1Config?.leak?.hide)) {
+    v2Config.hidden.waterLeak = true;
+    //v2Config.hidden[`${serviceId}:WH55`] = true;
+  }
+
+  if (truthy(v1Config?.pm25?.hide)) {
+    v2Config.hidden.pm25AirQuality = true;
+    //v2Config.hidden[`${serviceId}:WH41`] = true;
+  }
+
+  if (truthy(v1Config?.lightning?.hide)) {
+    v2Config.hidden.lightning = true;
+    //v2Config.hidden[`${serviceId}:WH57`] = true;
+  }
+
+  if (truthy(v1Config?.ws?.uv?.hide)) {
+    v2Config.hidden.uvIndex = true;
+    //v2Config.hidden[`${serviceId}:WH65:uvindex`] = true;
+  }
+
+  if (truthy(v1Config?.ws?.solarradiation?.hide)) {
+    v2Config.hidden.solarRadiation = true;
+    //v2Config.hidden[`${serviceId}:WH65:solarradiation`] = true;
+  }
+
+  const rainHide = v1Config?.ws?.rain?.hide;
+  if (Array.isArray(rainHide)) {
+    if (rainHide.includes("Rate")) {
+      v2Config.hidden.rainRate = true;
+      //v2Config.hidden[`${serviceId}:WS85:rainrate`] = true;
+      //v2Config.hidden[`${serviceId}:WH65:rainrate`] = true;
+      //v2Config.hidden[`${serviceId}:WH40:rainrate`] = true;
+    }
+
+    if (rainHide.includes("Event")) {
+      v2Config.hidden.rainEventTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:raineventtotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:raineventtotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:raineventtotal`] = true;
+    }
+
+    if (rainHide.includes("Hourly")) {
+      v2Config.hidden.rainHourlyTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:rainhourlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:rainhourlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:rainhourlytotal`] = true;
+    }
+
+    if (rainHide.includes("Daily")) {
+      v2Config.hidden.rainDailyTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:raindailytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:raindailytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:raindailytotal`] = true;
+    }
+
+    if (rainHide.includes("Weekly")) {
+      v2Config.hidden.rainWeeklyTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:rainweeklytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:rainweeklytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:rainweeklytotal`] = true;
+    }
+
+    if (rainHide.includes("Monthly")) {
+      v2Config.hidden.rainMonthlyTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:rainmonthlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:rainmonthlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:rainmonthlytotal`] = true;
+    }
+
+    if (rainHide.includes("Yearly")) {
+      v2Config.hidden.rainYearlyTotal = true;
+      // v2Config.hidden[`${serviceId}:WS85:rainyearlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:rainyearlytotal`] = true;
+      // v2Config.hidden[`${serviceId}:WH40:rainyearlytotal`] = true;
+    }
+  }
+
+  const windHide = v1Config?.ws?.wind?.hide;
+  if (Array.isArray(windHide)) {
+    if (windHide.includes("Direction")) {
+      v2Config.hidden.windDirection = true;
+      //v2Config.hidden[`${serviceId}:WS85:winddirection`] = true;
+      //v2Config.hidden[`${serviceId}:WH65:winddirection`] = true;
+    }
+
+    if (windHide.includes("Speed")) {
+      v2Config.hidden.windSpeed = true;
+      // v2Config.hidden[`${serviceId}:WS85:windspeed`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:windspeed`] = true;
+    }
+
+    if (windHide.includes("Gust")) {
+      v2Config.hidden.windGustSpeed = true;
+      // v2Config.hidden[`${serviceId}:WS85:windgustspeed`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:windgustspeed`] = true;
+    }
+
+    if (windHide.includes("MaxDailyGust")) {
+      v2Config.hidden.windMaxDailySpeed = true;
+      // v2Config.hidden[`${serviceId}:WS85:windmaxdailyspeed`] = true;
+      // v2Config.hidden[`${serviceId}:WH65:windmaxdailyspeed`] = true;
+    }
+  }
+
+  // thresholds
+  if (v1Config?.ws?.uv?.threshold) {
+    v2Config.thresholds.uvIndex = v1Config?.ws?.uv?.threshold;
+  }
+
+  const windUnits = v2Config.units.wind;
+  if (v1Config?.ws?.wind?.speedThreshold) {
+    const threshold = boundRange(v1Config?.ws?.wind?.speedThreshold, 0, 11);
+    v2Config.thresholds.windSpeed = kBeaufortScale[threshold][windUnits];
+  }
+
+  if (v1Config?.ws?.wind?.gustThreshold) {
+    const threshold = boundRange(v1Config?.ws?.wind?.gustThreshold, 0, 11);
+    v2Config.thresholds.windGustSpeed = kBeaufortScale[threshold][windUnits];
+  }
+
+  if (v1Config?.ws?.wind?.maxDailyGustThreshold) {
+    const threshold = boundRange(v1Config?.ws?.wind?.maxDailyGustThreshold, 0, 11);
+    v2Config.thresholds.windMaxDailySpeed = kBeaufortScale[threshold][windUnits];
+  }
+
+  const rainUnits = v2Config.units.rain;
+  if (v1Config?.ws?.rain?.rateThreshold) {
+    v2Config.thresholds.rainRate = rainUnits === 'mm' ? v1Config?.ws?.rain?.rateThreshold : parseFloat((v1Config?.ws?.rain?.rateThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.eventThreshold) {
+    v2Config.thresholds.rainEventTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.eventThreshold : parseFloat((v1Config?.ws?.rain?.eventThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.hourlyThreshold) {
+    v2Config.thresholds.rainHourlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.hourlyThreshold : parseFloat((v1Config?.ws?.rain?.hourlyThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.dailyThreshold) {
+    v2Config.thresholds.rainDailyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.dailyThreshold : parseFloat((v1Config?.ws?.rain?.dailyThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.weeklyThreshold) {
+    v2Config.thresholds.rainWeeklyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.weeklyThreshold : parseFloat((v1Config?.ws?.rain?.weeklyThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.monthlyThreshold) {
+    v2Config.thresholds.rainMonthlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.monthlyThreshold : parseFloat((v1Config?.ws?.rain?.monthlyThreshold / 25.4).toFixed(3));
+  }
+
+  if (v1Config?.ws?.rain?.yearlyThreshold) {
+    v2Config.thresholds.rainYearlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.yearlyThreshold : parseFloat((v1Config?.ws?.rain?.yearlyThreshold / 25.4).toFixed(3));
+  }
+
+  // name overrides
+  for (let channel = 1; channel <= 8; channel++) {
+    if (v1Config?.th?.[`name${channel}`]) {
+      v2Config.nameOverrides.push({"key": `${serviceId}:WH31CH${channel}`, "value": v1Config?.th?.[`name${channel}`]});
+    }
+  }
+
+  for (let channel = 1; channel <= 8; channel++) {
+    if (v1Config?.tf?.[`name${channel}`]) {
+      v2Config.nameOverrides.push({"key": `${serviceId}:WH34CH${channel}`, "value": v1Config?.tf?.[`name${channel}`]});
+    }
+  }
+
+  for (let channel = 1; channel <= 4; channel++) {
+    if (v1Config?.pm25?.[`name${channel}`]) {
+      v2Config.nameOverrides.push({"key": `${serviceId}:WH41CH${channel}`, "value": v1Config?.pm25?.[`name${channel}`]});
+    }
+  }
+
+  for (let channel = 1; channel <= 8; channel++) {
+    if (v1Config?.soil?.[`name${channel}`]) {
+      v2Config.nameOverrides.push({"key": `${serviceId}:WH51CH${channel}`, "value": v1Config?.soil?.[`name${channel}`]});
+    }
+  }
+
+  for (let channel = 1; channel <= 4; channel++) {
+    if (v1Config?.leak?.[`name${channel}`]) {
+      v2Config.nameOverrides.push({"key": `${serviceId}:WH55CH${channel}`, "value": v1Config?.leak?.[`name${channel}`]});
+    }
+  }
+
+  // advanced
+  if (v1Config?.ws?.solarradiation?.luxFactor) {
+    v2Config.additional.luxFactor = v1Config?.ws?.solarradiation?.luxFactor || 126.7;
+  }
+
+  v2Config.additional.staticNames = "false";
+  v2Config.additional.validateMac = "true";
+  v2Config.additional.acceptAnyPath = "false";
+  v2Config.additional.validateTimestamp = "true";
+
+  // ensure nameOverrides is array so v1 v2 merge concats overrides
+  if (!Array.isArray(v1Config?.nameOverrides)) {
+    v1Config.nameOverrides = [];
+  }
+
+  // v1config may be partially or fully migrated to v2
+  v1ConfigKeys.forEach(v => delete v1Config[v]); // remove all migrated keys from v1
+  let mergedConfig = merge(v2Config, v1Config); // merge, v1 wins conflicts
+  mergedConfig = Object.fromEntries(v2ConfigKeys.map(key => [key, mergedConfig[key]])); // retain only valid v2 keys
+
+  return mergedConfig;
+}

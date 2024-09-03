@@ -1,7 +1,6 @@
 import * as hap from 'hap-nodejs';
 import * as winston from 'winston';
-import { EcowittPlatform } from './../dist/EcowittPlatform';
-import * as platformConfig from './configs/default.json';
+import { EcowittPlatform } from './../src/EcowittPlatform';
 
 //------------------------------------------------------------------------------
 
@@ -15,11 +14,12 @@ export const api = {
 };
 
 // homebridge platform generator
-export function createPlatform() {
+export function createPlatform(configName) {
   const logger = winston.createLogger({
     level: 'warn',
     format: winston.format.simple(),
     transports: [new winston.transports.Console()],
   });
-  return new EcowittPlatform(logger, platformConfig, api);
+  const config = typeof configName === 'undefined' ? require('./configs/v2Default.json') : require(`./configs/${configName}.json`)
+  return new EcowittPlatform(logger, config, api);
 }

@@ -1,0 +1,61 @@
+{
+    "platform": "Ecowitt",
+    "baseStation": {
+      "mac": "AA:BB:CC:DD:EE:FF",
+      "port": 8090,
+      "path": "/data/report/test"
+    },
+    "additional": {
+      "validateMac": true
+    },
+    "mac": "00:00:00:00:00:00",
+    "port": 8080,
+    "path": "/data/report",
+    "unregister": false,
+    "units": {},
+    "hidden": {},
+    "nameOverrides": {},
+    "ws": {
+        "hide": false,
+        "uv": {
+            "hide": false,
+            "threshold": 6
+        },
+        "solarradiation": {
+            "hide": false,
+            "luxFactor": 126.7
+        },
+        "wind": {
+            "units": "mph",
+            "speedThreshold": 5
+        },
+        "rain": {
+            "units": "in",
+            "hide": ["Rate"]
+        }
+    },
+    "thbin": {
+        "hide": false
+    },
+    "th": {
+        "hide": false
+    },
+    "tf": {
+        "hide": false,
+        "name1": "THERM NAME1VALUE",
+        "name2": "THERM NAME2VALUE"
+    },
+    "soil": {
+        "hide": false
+    },
+    "leak": {
+        "hide": true
+    },
+    "pm25": {
+        "hide": false
+    },
+    "lightning": {
+        "hide": true,
+        "units": "mi"
+    }
+}

@@ -1,14 +1,11 @@
 import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
-
 import { RainSensor } from './../sensors/RainSensor';
+import * as utils from './../Utils';
 
 export class WH40 extends EcowittAccessory {
-  protected name: string;
-
   protected battery: Service;
-
   protected rainRate: RainSensor | undefined;
   protected eventRain: RainSensor | undefined;
   protected hourlyRain: RainSensor | undefined;
@@ -22,99 +19,137 @@ export class WH40 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
   ) {
     super(
-      platform,
-      accessory,
-      'WH40',
-      'Self-Emptying Rain Collector Rainfall Sensor',
-    );
+      platform, accessory, 'WH40', 'Rainfall Sensor (WH40)');
 
-    this.name = 'Rainfall Sensor';
-    this.battery = this.addBattery(this.name);
+      this.requiredData = [
+        'rainbatt', 'rainratein', 'eventrainin', 'hourlyrainin', 'dailyrainin',
+        'weeklyrainin', 'monthlyrainin', 'yearlyrainin'
+      ];
 
-    const rainHide = this.platform.config?.ws?.rain?.hide || [];
+      this.battery = this.addBattery('', false);
 
-    if (!rainHide.includes('Rate')) {
-      this.rainRate = new RainSensor(platform, accessory, 'Rain Rate');
-    }
+      const hideConfig = this.platform.config?.hidden || {};
+      const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!rainHide.includes('Event')) {
-      this.eventRain = new RainSensor(platform, accessory, 'Event Rain');
-    }
+      let nameOverride: string | undefined;
 
-    if (!rainHide.includes('Hourly')) {
-      this.hourlyRain = new RainSensor(platform, accessory, 'Hourly Rain');
-    }
+      if (!utils.includesAny(hidden, ['rainrate', `${this.accessoryId}:rainrate`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainrate`);
+        this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, nameOverride || 'Rain Rate');
+      } else {
+        this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, 'Rain Rate');
+        this.rainRate.removeService();
+        this.rainRate = undefined;
+      }
 
-    if (!rainHide.includes('Daily')) {
-      this.dailyRain = new RainSensor(platform, accessory, 'Daily Rain');
-    }
+      if (!utils.includesAny(hidden, ['raineventtotal', `${this.accessoryId}:raineventtotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raineventtotal`);
+        this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, nameOverride || `Rain Event Total`);
+      } else {
+        this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, `Rain Event Total`);
+        this.eventRain.removeService();
+        this.eventRain = undefined;
+      }
 
-    if (!rainHide.includes('Weekly')) {
-      this.weeklyRain = new RainSensor(platform, accessory, 'Weekly Rain');
-    }
+      if (!utils.includesAny(hidden, ['rainhourlytotal', `${this.accessoryId}:rainhourlytotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainhourlytotal`);
+        this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, nameOverride || `Rain Hourly Total`);
+      } else {
+        this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, `Rain Hourly Total`);
+        this.hourlyRain.removeService();
+        this.hourlyRain = undefined;
+      }
 
-    if (!rainHide.includes('Monthly')) {
-      this.monthlyRain = new RainSensor(platform, accessory, 'Monthly Rain');
-    }
+      if (!utils.includesAny(hidden, ['raindailytotal', `${this.accessoryId}:raindailytotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raindailytotal`);
+        this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, nameOverride || `Rain Daily Total`);
+      } else {
+        this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, `Rain Daily Total`);
+        this.dailyRain.removeService();
+        this.dailyRain = undefined;
+      }
 
-    if (!rainHide.includes('Yearly')) {
-      this.yearlyRain = new RainSensor(platform, accessory, 'Yearly Rain');
-    }
+      if (!utils.includesAny(hidden, ['rainweeklytotal', `${this.accessoryId}:rainweeklytotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainweeklytotal`);
+        this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, nameOverride || `Rain Weekly Total`);
+      } else {
+        this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, `Rain Weekly Total`);
+        this.weeklyRain.removeService();
+        this.weeklyRain = undefined;
+      }
+
+      if (!utils.includesAny(hidden, ['rainmonthlytotal', `${this.accessoryId}:rainmonthlytotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainmonthlytotal`);
+        this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, nameOverride || `Rain Monthly Total`);
+      } else {
+        this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, `Rain Monthly Total`);
+        this.monthlyRain.removeService();
+        this.monthlyRain = undefined;
+      }
+
+      if (!utils.includesAny(hidden, ['rainyearlytotal', `${this.accessoryId}:rainyearlytotal`])) {
+        nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainyearlytotal`);
+        this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, nameOverride || `Rain Yearly Total`);
+      } else {
+        this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, `Rain Yearly Total`);
+        this.yearlyRain.removeService();
+        this.yearlyRain = undefined;
+      }
   }
 
-  update(dataReport) {
-    const rainbatt = dataReport.wh40batt;
+  public update(dataReport, parseOptionals: boolean = false) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
-    this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info('  wh40batt:', rainbatt);
+    const batt = parseFloat(dataReport[`rainbatt`]);
+    const batteryLevel = batt / 1.6;
+    const lowBattery = batt <= 1.1;
 
-    this.platform.log.info('  rainratein:', dataReport.rainratein);
-    this.platform.log.info('  eventrainin:', dataReport.eventrainin);
-    this.platform.log.info('  hourlyrainin:', dataReport.hourlyrainin);
-    this.platform.log.info('  dailyrainin:', dataReport.dailyrainin);
-    this.platform.log.info('  weeklyrainin:', dataReport.weeklyrainin);
-    this.platform.log.info('  monthlyrainin:', dataReport.monthlyrainin);
-    this.platform.log.info('  yearlyrainin:', dataReport.yearlyrainin);
-
-    const voltage = parseFloat(rainbatt);
-    const lowBattery = voltage <= 1.1;
-
-    this.updateBatteryLevel(this.battery, (voltage / 1.6) * 100);
+    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     this.rainRate?.updateRate(
       parseFloat(dataReport.rainratein),
-      this.platform.config.ws?.rain?.rateThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainRate"),
       dataReport.dateutc,
     );
+
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
-      this.platform.config.ws?.rain?.eventThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainEventTotal"),
       dataReport.dateutc,
     );
+
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hourlyrainin),
-      this.platform.config.ws?.rain?.hourlyThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainHourlyTotal"),
       dataReport.dateutc,
     );
+
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.dailyrainin),
-      this.platform.config.ws?.rain?.dailyThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainDailyTotal"),
       dataReport.dateutc,
     );
+
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.weeklyrainin),
-      this.platform.config.ws?.rain?.weeklyThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainWeeklyTotal"),
       dataReport.dateutc,
     );
+
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.monthlyrainin),
-      this.platform.config.ws?.rain?.monthlyThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainMonthlyTotal"),
       dataReport.dateutc,
     );
+
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yearlyrainin),
-      this.platform.config.ws?.rain?.yearlyThreshold,
+      utils.lookup(this.platform.config?.thresholds, "rainYearlyTotal"),
       dataReport.dateutc,
     );
   }

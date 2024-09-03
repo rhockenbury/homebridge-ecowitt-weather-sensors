@@ -10,16 +10,17 @@ export class OccupancySensor extends Sensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected readonly id: string,
     protected readonly name: string,
   ) {
 
     super(platform,
       accessory,
-      accessory.getService(name)
+      accessory.services.filter(s => s.subtype === platform.serviceUuid(id))[0]
       || accessory.addService(
         platform.Service.OccupancySensor,
         name,
-        platform.serviceUuid(name)));
+        platform.serviceUuid(id)));
 
     // custom characteristic for value string
     if (!this.service.testCharacteristic(utils.CHAR_VALUE_NAME)) {
@@ -29,20 +30,11 @@ export class OccupancySensor extends Sensor {
           perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
         }));
     }
-
-    // custom characteristic for last updated timestamp
-    if (!this.service.testCharacteristic(utils.CHAR_TIME_NAME)) {
-      this.service.addCharacteristic(
-        new this.platform.api.hap.Characteristic(utils.CHAR_TIME_NAME, utils.CHAR_TIME_UUID, {
-          format: Formats.STRING,
-          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
-        }));
-    }
   }
 
   //---------------------------------------------------------------------------
 
-  private setOccupancyDetected(occupancyDetected: boolean) {
+  public setOccupancyDetected(occupancyDetected: boolean) {
     this.service.setCharacteristic(
       this.platform.Characteristic.OccupancyDetected,
       occupancyDetected
@@ -50,7 +42,7 @@ export class OccupancySensor extends Sensor {
         : this.platform.Characteristic.OccupancyDetected.OCCUPANCY_NOT_DETECTED);
   }
 
-  private updateOccupancyDetected(occupancyDetected: boolean) {
+  public updateOccupancyDetected(occupancyDetected: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.OccupancyDetected,
       occupancyDetected
@@ -60,19 +52,10 @@ export class OccupancySensor extends Sensor {
 
   //---------------------------------------------------------------------------
 
-  private updateValue(value: string) {
+  protected updateValue(value: string) {
     this.service.updateCharacteristic(
       utils.CHAR_VALUE_NAME,
       value,
-    );
-  }
-
-  //----------------------------------------------------------------------------
-
-  private updateTime(time: string) {
-    this.service.updateCharacteristic(
-      utils.CHAR_TIME_NAME,
-      `${time} UTC`,
     );
   }
 

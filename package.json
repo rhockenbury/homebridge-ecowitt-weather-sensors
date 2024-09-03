@@ -20,10 +20,11 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src/**/*.ts --max-warnings=0",
+    "remark": "remark --frail --use remark-validate-links --use remark-lint-no-dead-urls . --quiet --frail --output",
     "watch": "npm run build && npm link",
     "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",
     "build": "rimraf ./dist && tsc",
-    "prepublishOnly": "npm run lint && npm run build"
+    "prepublishOnly": "npm run lint && npm run remark && npm run build"
   },
   "keywords": [
     "homebridge-plugin",
@@ -33,7 +34,9 @@
     "weather"
   ],
   "dependencies": {
-    "restify": "^11.1.0"
+    "body-parser": "^1.20.2",
+    "deepmerge": "^4.3.1",
+    "express": "^4.19.2"
   },
   "devDependencies": {
     "@types/node": "^20.14.12",
@@ -46,6 +49,9 @@
     "homebridge": "^2.0.0-beta.0",
     "mocha": "^10.7.3",
     "nodemon": "^3.1.4",
+    "remark-cli": "^12.0.1",
+    "remark-lint-no-dead-urls": "^1.1.0",
+    "remark-validate-links": "^13.0.1",
     "rimraf": "^3.0.2",
     "ts-node": "^9.1.1",
     "tsx": "^4.17.0",

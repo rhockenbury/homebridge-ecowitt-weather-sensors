@@ -1,45 +1,63 @@
-import { PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
+import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
-import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
+import { EcowittAccessory } from './../EcowittAccessory';
+import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { HumiditySensor } from './../sensors/HumiditySensor';
+import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class GW2000 extends ThermoHygroBaroSensor {
+export class GW2000 extends EcowittAccessory {
+  protected temperature: TemperatureSensor | undefined;
+  protected humidity: HumiditySensor | undefined;
+
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected readonly model: string,
   ) {
-    super(platform, accessory, 'GW2000', 'Ecowitt GW2000');
+    super(platform, accessory, `${model}`, `Ecowitt Gateway (${model})`);
 
-    this.accessory
-      .getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(
-        this.platform.Characteristic.ConfiguredName,
-        this.platform.baseStationInfo.deviceName,
-      )
-      .setCharacteristic(
-        this.platform.Characteristic.HardwareRevision,
-        platform.baseStationInfo.model,
-      );
+    this.requiredData = ["tempinf", "humidityin"];
+    this.optionalData = ["baromrelin", "baromabsin"];
+
+    const hideConfig = this.platform.config?.hidden || {};
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
+    } else {
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
+      this.temperature.removeService();
+      this.temperature = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['humidity', `${this.accessoryId}:humidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:humidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
+    } else {
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
+      this.humidity.removeService();
+      this.humidity = undefined;
+    }
   }
 
-  update(dataReport) {
-    this.platform.log.debug(`${this.model} Update`);
-    this.platform.log.debug('  tempinf:', dataReport.tempinf);
-    this.platform.log.debug('  humidityin:', dataReport.humidityin);
-    this.platform.log.debug('  baromrelin:', dataReport.baromrelin);
-    this.platform.log.debug('  baromabsin:', dataReport.baromabsin);
+  public update(dataReport) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
-    this.updateStatusActive(this.temperatureSensor, true);
-    this.updateStatusActive(this.humiditySensor, true);
-
-    this.updateCurrentTemperature(this.temperatureSensor, dataReport.tempinf);
-    this.updateCurrentRelativeHumidity(
-      this.humiditySensor,
-      dataReport.humidityin,
+    this.temperature?.update(
+      parseFloat(dataReport.tempinf),
+      dataReport.dateutc,
     );
 
-    this.updateRelativePressure(dataReport.baromrelin);
-    this.updateAbsolutePressure(dataReport.baromabsin);
+    this.humidity?.update(
+      parseFloat(dataReport.humidityin),
+      dataReport.dateutc,
+    );
   }
 }

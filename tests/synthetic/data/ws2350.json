@@ -23,5 +23,6 @@
   "yearlyrainin": "0.118",
   "solarradiation": "0.00",
   "uv": "0",
+  "freq": "868M",
   "model": "WS2350"
 }

@@ -9,9 +9,10 @@ export class RainSensor extends MotionSensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected readonly id: string,
     protected readonly name: string,
   ) {
-    super(platform, accessory, name);
+    super(platform, accessory, id, name);
 
     // custom characteristic for intensity string
     if (name.includes('Rate') || name.includes('rate')) {
@@ -30,13 +31,9 @@ export class RainSensor extends MotionSensor {
   //----------------------------------------------------------------------------
 
   public updateRate(ratein: number, threshold: number, time: string) {
-    if (!isFinite(ratein)) {
+    if (!Number.isFinite(ratein)) {
       this.platform.log.warn(`Cannot update ${this.name}, rate ${ratein} is NaN`);
       this.updateStatusActive(false);
-      this.updateName(this.name);
-      this.updateValue('NaN');
-      this.updateIntensity(0);
-      this.updateMotionDetected(false);
       return;
     }
 
@@ -44,28 +41,30 @@ export class RainSensor extends MotionSensor {
     let rateStr: string;
     let thresholdmm: number;
 
-    switch (this.platform.config?.ws?.rain?.units) {
-      case 'in':
-        ratemm = ratein * 25.4;
-        thresholdmm = threshold * 25.4;
-        rateStr = `${ratein.toFixed(1)} in/hour`;
-        break;
-
-      default:
+    switch (this.platform.config?.units?.rain) {
       case 'mm':
         ratemm = ratein * 25.4;
         thresholdmm = threshold;
         rateStr = `${ratemm.toFixed(1)} mm/hour`;
         break;
+
+      default:
+      case 'in':
+        ratemm = ratein * 25.4;
+        thresholdmm = threshold * 25.4;
+        rateStr = `${ratein.toFixed(1)} in/hour`;
+        break;
     }
 
+    const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+
     this.updateStatusActive(true);
-    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${rateStr}`);
+    this.updateName(staticNames ? this.name : `${this.name} ${rateStr}`);
     this.updateValue(rateStr);
     this.updateIntensity(ratemm);
     this.updateTime(time);
 
-    if (!isFinite(threshold)) {
+    if (!Number.isFinite(threshold)) {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
@@ -81,12 +80,9 @@ export class RainSensor extends MotionSensor {
   //----------------------------------------------------------------------------
 
   public updateTotal(totalin: number, threshold, time: string) {
-    if (!isFinite(totalin)) {
+    if (!Number.isFinite(totalin)) {
       this.platform.log.warn(`Cannot update ${this.name}, total ${totalin} is NaN`);
       this.updateStatusActive(false);
-      this.updateName(this.name);
-      this.updateValue('NaN');
-      this.updateMotionDetected(false);
       return;
     }
 
@@ -94,27 +90,29 @@ export class RainSensor extends MotionSensor {
     let totalStr: string;
     let thresholdmm: number;
 
-    switch (this.platform.config?.ws?.rain?.units) {
-      case 'in':
-        totalmm = totalin * 25.4;
-        thresholdmm = threshold * 25.4;
-        totalStr = `${totalin.toFixed(1)} in`;
-        break;
-
-      default:
+    switch (this.platform.config?.units?.rain) {
       case 'mm':
         totalmm = totalin * 25.4;
         thresholdmm = threshold;
         totalStr = `${totalmm.toFixed(1)} mm`;
         break;
+
+      default:
+      case 'in':
+        totalmm = totalin * 25.4;
+        thresholdmm = threshold * 25.4;
+        totalStr = `${totalin.toFixed(1)} in`;
+        break;
     }
 
+    const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+
     this.updateStatusActive(true);
-    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${totalStr}`);
+    this.updateName(staticNames ? this.name : `${this.name} ${totalStr}`);
     this.updateValue(totalStr);
     this.updateTime(time);
 
-    if (!isFinite(threshold)) {
+    if (!Number.isFinite(threshold)) {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {

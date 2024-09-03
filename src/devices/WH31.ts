@@ -1,49 +1,68 @@
-import { PlatformAccessory } from 'homebridge';
+import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
-import { ThermoHygroSensor } from './../ThermoHygroSensor';
+import { EcowittAccessory } from './../EcowittAccessory';
+import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { HumiditySensor } from './../sensors/HumiditySensor';
+import * as utils from './../Utils';
 
-export class WH31 extends ThermoHygroSensor {
+//------------------------------------------------------------------------------
+
+export class WH31 extends EcowittAccessory {
+  protected battery: Service;
+  protected temperature: TemperatureSensor | undefined;
+  protected humidity: HumiditySensor | undefined;
+
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(
-      platform,
-      accessory,
-      'WH31',
-      'Wireless Multi-channel Thermometer and Hygrometer Sensor',
-    );
+    super(platform, accessory, 'WH31', 'Indoor Thermo Hygro Sensor (WH31)', channel);
 
-    this.setSerialNumber(`CH${this.channel}`);
+    this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
 
-    const name = this.platform.config?.th?.[`name${this.channel}`];
+    this.battery = this.addBattery('', false);
 
-    this.setName(
-      this.temperatureSensor,
-      name || `CH${this.channel} Temperature`,
-    );
-    this.setName(this.humiditySensor, name || `CH${this.channel} Humidity`);
+    const hideConfig = this.platform.config?.hidden || {};
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
+    } else {
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
+      this.temperature.removeService();
+      this.temperature = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['humidity', `${this.accessoryId}:humidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:humidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
+    } else {
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
+      this.humidity.removeService();
+      this.humidity = undefined;
+    }
   }
 
-  update(dataReport) {
-    const batt = dataReport[`batt${this.channel}`];
-    const tempf = dataReport[`temp${this.channel}f`];
-    const humidity = dataReport[`humidity${this.channel}`];
+  public update(dataReport, parseOptionals: boolean = false) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
-    this.platform.log.info(`${this.model} Channel ${this.channel} Update`);
-    this.platform.log.info('  batt:', batt);
-    this.platform.log.info('  tempf:', tempf);
-    this.platform.log.info('  humidity:', humidity);
+    const lowBattery = dataReport[`batt${this.channel}`] === '1';
+    this.updateStatusLowBattery(this.battery, lowBattery);
 
-    const lowBattery = batt === '1';
+    this.temperature?.update(
+      parseFloat(dataReport[`temp${this.channel}f`]),
+      dataReport.dateutc,
+    );
 
-    this.updateTemperature(tempf);
-    this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
-    this.updateStatusActive(this.temperatureSensor, true);
-
-    this.updateHumidity(humidity);
-    this.updateStatusLowBattery(this.humiditySensor, lowBattery);
-    this.updateStatusActive(this.humiditySensor, true);
+    this.humidity?.update(
+      parseFloat(dataReport[`humidity${this.channel}`]),
+      dataReport.dateutc,
+    );
   }
 }

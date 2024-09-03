@@ -1,45 +1,70 @@
-import { PlatformAccessory } from 'homebridge';
+import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
-import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
+import { EcowittAccessory } from './../EcowittAccessory';
+import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { HumiditySensor } from './../sensors/HumiditySensor';
+import * as utils from './../Utils';
 
-export class WH25 extends ThermoHygroBaroSensor {
+//------------------------------------------------------------------------------
+
+export class WH25 extends EcowittAccessory {
+  protected battery: Service;
+  protected temperature: TemperatureSensor | undefined;
+  protected humidity: HumiditySensor | undefined;
+
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(
-      platform,
-      accessory,
-      'WH25',
-      'Indoor Temperature, Humidity and Barometric Sensor',
-    );
+    super(platform, accessory, 'WH25', 'Indoor Thermo Hygro Baro Sensor (WH25)');
 
-    this.setName(this.temperatureSensor, 'Indoor Temperature');
-    this.setName(this.humiditySensor, 'Indoor Humidity');
+    this.requiredData = ["wh25batt", "tempinf", "humidityin"];
+    this.optionalData = ["baromrelin", "baromabsin"];
+
+    this.battery = this.addBattery('', false);
+
+    const hideConfig = this.platform.config?.hidden || {};
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
+    } else {
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
+      this.temperature.removeService();
+      this.temperature = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['humidity', `${this.accessoryId}:humidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:humidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
+    } else {
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
+      this.humidity.removeService();
+      this.humidity = undefined;
+    }
   }
 
-  update(dataReport) {
-    this.platform.log.info(`${this.model} Update`);
-    this.platform.log.info('  wh25batt:', dataReport.wh25batt);
-    this.platform.log.info('  tempinf:', dataReport.tempinf);
-    this.platform.log.info('  humidityin:', dataReport.humidityin);
-    this.platform.log.info('  baromrelin', dataReport.baromrelin);
-    this.platform.log.info('  baromabsin', dataReport.baromabsin);
+  //----------------------------------------------------------------------------
+
+  public update(dataReport, parseOptionals: boolean = false) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
     const lowBattery = dataReport.wh25batt === '1';
+    this.updateStatusLowBattery(this.battery, lowBattery);
 
-    this.updateTemperature(dataReport.tempinf);
-    this.updateStatusLowBattery(this.temperatureSensor, lowBattery);
+    this.temperature?.update(
+      parseFloat(dataReport.tempinf),
+      dataReport.dateutc,
+    );
 
-    this.updateHumidity(dataReport.humidityin);
-    this.updateStatusLowBattery(this.humiditySensor, lowBattery);
-
-    this.updateAbsolutePressure(dataReport.baromabsin);
-    // TODO: Not supported by HomeKit yet.
-    // this.absolutePressureSensor.updateStatusLowBattery(lowBattery);
-
-    this.updateRelativePressure(dataReport.baromrelin);
-    // TODO: Not supported by HomeKit yet.
-    // this.relativePressureSensor.updateStatusLowBattery(lowBattery);
+    this.humidity?.update(
+      parseFloat(dataReport.humidityin),
+      dataReport.dateutc,
+    );
   }
 }

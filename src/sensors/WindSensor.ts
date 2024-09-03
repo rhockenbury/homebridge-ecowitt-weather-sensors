@@ -9,9 +9,10 @@ export class WindSensor extends MotionSensor {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected readonly id: string,
     protected readonly name: string,
   ) {
-    super(platform, accessory, name);
+    super(platform, accessory, id, name);
 
     // custom characteristic for intensity string
     if (name.includes('Speed') || name.includes('speed') || name.includes('Gust') || name.includes('gust')) {
@@ -30,19 +31,17 @@ export class WindSensor extends MotionSensor {
   //----------------------------------------------------------------------------
 
   public updateDirection(windDir: number, time: string) {
-    if (!isFinite(windDir)) {
+    if (!Number.isFinite(windDir)) {
       this.platform.log.warn(`Cannot update ${this.name}, direction ${windDir} is NaN`);
       this.updateStatusActive(false);
-      this.updateName(this.name);
-      this.updateValue('NaN');
-      this.updateMotionDetected(false);
       return;
     }
 
-    const windDirStr = `${windDir.toFixed(0)} deg (${utils.toWindSector(windDir)})`;
+    const windDirStr = `${windDir.toFixed(0)}° (${utils.toWindSector(windDir)})`;
+    const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
     this.updateStatusActive(true);
-    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${windDirStr}`);
+    this.updateName(staticNames ? this.name : `${this.name} ${windDirStr}`);
     this.updateValue(windDirStr);
     this.updateTime(time);
   }
@@ -50,20 +49,16 @@ export class WindSensor extends MotionSensor {
   //----------------------------------------------------------------------------
 
   public updateSpeed(windSpeedmph: number, threshold: number, time: string) {
-    if (!isFinite(windSpeedmph)) {
+    if (!Number.isFinite(windSpeedmph)) {
       this.platform.log.warn(`Cannot update ${this.name}, speed ${windSpeedmph} is NaN`);
       this.updateStatusActive(false);
-      this.updateName(this.name);
-      this.updateValue('NaN');
-      this.updateIntensity(0);
-      this.updateMotionDetected(false);
       return;
     }
 
     let speedStr: string;
     let thresholdmph: number;
 
-    switch (this.platform.config?.ws?.wind?.units) {
+    switch (this.platform.config?.units?.wind) {
       case 'kts':
         thresholdmph = threshold * 1.15078;
         speedStr = `${utils.toKts(windSpeedmph).toFixed(1)} kts`;
@@ -86,13 +81,15 @@ export class WindSensor extends MotionSensor {
         break;
     }
 
+    const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+
     this.updateStatusActive(true);
-    this.updateName(utils.STATIC_NAMES ? this.name : `${this.name} ${speedStr}`);
+    this.updateName(staticNames ? this.name : `${this.name} ${speedStr}`);
     this.updateValue(speedStr);
     this.updateIntensity(windSpeedmph);
     this.updateTime(time);
 
-    if (!isFinite(threshold)) {
+    if (!Number.isFinite(threshold)) {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
