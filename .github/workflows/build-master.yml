@@ -42,7 +42,7 @@ jobs:
       - name: Audit dependencies
         run: |
           npm list --outdated
-          npm audit
+          npm audit --audit-level=high
 
       - name: Run the tests
         run: npm test
