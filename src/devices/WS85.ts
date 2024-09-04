@@ -33,6 +33,8 @@ export class WS85 extends EcowittAccessory {
       'mrain_piezo', 'yrain_piezo'
     ];
 
+    this.optionalData = ['ws85cap_volt'];
+
     this.battery = this.addBattery('', false);
 
     const hideConfig = this.platform.config?.hidden || {};
@@ -147,7 +149,8 @@ export class WS85 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const batteryLevel = parseFloat(dataReport.wh85batt || dataReport.ws85batt) / 5.5;
+    const batteryMax = dataReport?.ws85cap_volt || 5.5;
+    const batteryLevel = parseFloat(dataReport.wh85batt || dataReport.ws85batt) / batteryMax;
     const lowBattery = batteryLevel <= 0.25;
 
     this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));

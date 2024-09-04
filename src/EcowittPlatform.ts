@@ -79,9 +79,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
-    let encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report');
-    let port = this.config?.baseStation?.port || 8080;
-    let mac = this.config?.baseStation?.mac;
+    let mac = this.config?.baseStation?.mac || this.config?.mac;
 
     if (typeof mac === 'undefined') {
       if (typeof this.config?.additional === 'undefined') {
@@ -89,7 +87,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
       this.config.additional.validateMac = false;
       mac = '00:00:00:00:00:00'
-      this.log.warn(`Disabling MAC validation because MAC address was not provided. To enable MAC validation, provide a valid MAC address and enable MAC validation in advanced settings`)
+      this.log.warn(`Disabling MAC validation because MAC address was not provided. Provide a valid MAC address to have MAC validation enabled`)
     }
 
     this.baseStationInfo.serialNumber = mac;
@@ -104,6 +102,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     } else {
       this.log.debug(`Plugin config \n ${JSON.stringify(this.config, undefined, 2)}`);
     }
+
+    let encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report');
+    let port = this.config?.baseStation?.port || 8080;
 
     this.log.debug(`Creating data report service on ${port} ${encodedPath}`);
 
@@ -139,9 +140,13 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.dataReportServer.listen(port, () => {
           this.log.info(`Listening for data reports on ${port} ${encodedPath}`);
           this.log.debug(`Finished initializing plugin`);
-      }).on("error", (err) => {
+      }).on("error", (err: any) => {
         if (err instanceof Error) {
-          this.log.error(`Unable to start data report service on ${port} ${encodedPath}. Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, update plugin configuration, and restart homebridge \n ${err.stack}`);
+          if (err["code"] === 'EADDRINUSE') {
+            this.log.error(`Unable to start data report service on ${port} ${encodedPath} because port ${port} is in use. Try setting the port to ${port + 1} and restart Homebridge`);
+          } else {
+            this.log.error(`Unable to start data report service on ${port} ${encodedPath}. Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, update plugin configuration, and restart homebridge \n ${err.stack}`);
+          }
         }
       });
     });

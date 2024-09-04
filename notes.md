@@ -1,25 +1,22 @@
 
 
-- docs (migration guide )
+- add screenshots to v2 preview branch, one more to add (case 2)
+
+- docs (migration guide ) - IN PROGRESS
 
 - docs (readme)
-
-- v2 coming soon note in README, push new logo image for testing
-
-- WS85 unit tests
-
-
 
 
 
 
 - redo battery service on Ecowitt Accessory -> FEATURE
-- implement hierarchy between multiple sensors -> FEATURE
 - figure out "extended" hidden config - advanced section?? -> FEATURE??
 
 
 
+- WS85 unit tests - DONE
 
+- v2 coming soon note in README, push new logo image for testing - DONE
 
 - tsignore for utils remapper - DONE
 

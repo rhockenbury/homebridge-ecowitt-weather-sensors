@@ -2,7 +2,7 @@
   "pluginAlias": "Ecowitt",
   "pluginType": "platform",
   "singular": true,
-  "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Migration-to-v2.0.0-Guide\">V2 Migration Guide</a></p><p align=\"center\">",
+  "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide\">V2 Migration Guide</a></p><p align=\"center\">",
   "schema": {
     "type": "object",
     "properties": {
@@ -20,7 +20,6 @@
           "port": {
             "title": "Port",
             "type": "integer",
-            "required": true,
             "default": 8080,
             "minimum": 1024,
             "description": "Port number to listen for data reports"
