@@ -1,49 +1,52 @@
 
 
-- add screenshots to v2 preview branch, one more to add (case 2)
 
-- docs (migration guide ) - IN PROGRESS
+* add screenshots to v2 preview branch, one more to add (case 2)
 
-- docs (readme)
+* docs (migration guide ) - IN PROGRESS
 
-
-
-
-- redo battery service on Ecowitt Accessory -> FEATURE
-- figure out "extended" hidden config - advanced section?? -> FEATURE??
+* docs (readme)
 
 
 
-- WS85 unit tests - DONE
 
-- v2 coming soon note in README, push new logo image for testing - DONE
+* redo battery service on Ecowitt Accessory -> FEATURE
+* figure out "extended" hidden config - advanced section?? -> FEATURE??
 
-- tsignore for utils remapper - DONE
 
-- catch and handle port in use exception 8080 - DONE
 
-- generate full v1 and v2 config files - DONE
+- lint issues - DONE
 
-- change up links in plugin UI - DONE
+* WS85 unit tests - DONE
 
-- array merging issues in combining configs - DONE
+* v2 coming soon note in README, push new logo image for testing - DONE
 
-- clean up in ecowitt accessory file - DONE
+* tsignore for utils remapper - DONE
 
-- fix threholds lookups -> they are case sensitive, use lookup util - DONE
+* catch and handle port in use exception 8080 - DONE
 
-- fix up unit tests to work (do integration tests) - DONE
+* generate full v1 and v2 config files - DONE
 
-- clean up utils file - DONE
+* change up links in plugin UI - DONE
 
-- run unit tests for each "platform" - DONE
+* array merging issues in combining configs - DONE
 
-- parsing / migrating config file to new version -> DONE?
+* clean up in ecowitt accessory file - DONE
 
-- integrated static_names options from config file in all sensor fiiles - DONE
+* fix threholds lookups -> they are case sensitive, use lookup util - DONE
 
-- redo sensor class instantiating to work with showing / hiding - DONE
+* fix up unit tests to work (do integration tests) - DONE
 
-- should log which properties on data report were not consumed by devices -> DONE?
+* clean up utils file - DONE
 
-- use falsy and truthy when dealing with "additional" config properities - DONE
+* run unit tests for each "platform" - DONE
+
+* parsing / migrating config file to new version -> DONE?
+
+* integrated static\_names options from config file in all sensor fiiles - DONE
+
+* redo sensor class instantiating to work with showing / hiding - DONE
+
+* should log which properties on data report were not consumed by devices -> DONE?
+
+* use falsy and truthy when dealing with "additional" config properities - DONE

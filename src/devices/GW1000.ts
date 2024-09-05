@@ -1,4 +1,4 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { TemperatureSensor } from './../sensors/TemperatureSensor';
@@ -18,8 +18,8 @@ export class GW1000 extends EcowittAccessory {
   ) {
     super(platform, accessory, `${model}`, `Ecowitt Gateway (${model})`);
 
-    this.requiredData = ["tempinf", "humidityin"];
-    this.optionalData = ["baromrelin", "baromabsin"];
+    this.requiredData = ['tempinf', 'humidityin'];
+    this.optionalData = ['baromrelin', 'baromabsin'];
 
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
@@ -42,6 +42,8 @@ export class GW1000 extends EcowittAccessory {
       this.humidity = undefined;
     }
   }
+
+  //----------------------------------------------------------------------------
 
   public update(dataReport) {
     if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {

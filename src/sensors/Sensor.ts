@@ -5,9 +5,6 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class Sensor {
-  // protected failedUpdateCounter: number = 0;
-  // protected failedUpdateThreshold: number = 10;
-
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
@@ -75,15 +72,6 @@ export class Sensor {
       `${time} UTC`,
     );
   }
-
-  //----------------------------------------------------------------------------
-
-  // protected handleFailedUpdate() {
-  //   if (this.failedUpdateCounter >= this.failedUpdateThreshold) {
-  //     this.failedUpdateCounter = 0;
-  //     throw new Error(`Update on ${this.name} has repeatedly failed. Verify data report from Ecowitt Gateway or Console, and submit a bug report at ${utils.BUG_REPORT_LINK} for assistance`)
-  //   }
-  // }
 
   //----------------------------------------------------------------------------
 }

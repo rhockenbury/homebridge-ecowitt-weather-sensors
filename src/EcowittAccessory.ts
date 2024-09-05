@@ -1,4 +1,4 @@
-import { PlatformAccessory, Formats, Perms, Service } from 'homebridge';
+import { PlatformAccessory, Service } from 'homebridge';
 import { EcowittPlatform } from './EcowittPlatform';
 import * as utils from './Utils';
 
@@ -23,15 +23,15 @@ export class EcowittAccessory {
     accessoryInfo
       .setCharacteristic(
         this.platform.Characteristic.Manufacturer,
-        'Ecowitt'
+        'Ecowitt',
       )
       .setCharacteristic(
         this.platform.Characteristic.Model,
-        modelName
+        modelName,
       )
       .setCharacteristic(
         this.platform.Characteristic.Name,
-        this.accessoryName
+        this.accessoryName,
       )
       .setCharacteristic(
         this.platform.Characteristic.ProductData,
@@ -52,13 +52,15 @@ export class EcowittAccessory {
       .setCharacteristic(
         this.platform.Characteristic.FirmwareRevision,
         platform.baseStationInfo.firmwareRevision,
-      )
+      );
   }
 
   //----------------------------------------------------------------------------
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public update(dataReport) {
-    this.platform.log.error(`Update function not implemented for this accessory. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
+    this.platform.log.error(`Update function not implemented for ${this.modelName}. \
+      Please file a bug report at ${utils.BUG_REPORT_LINK}`);
   }
 
   //---------------------------------------------------------------------------

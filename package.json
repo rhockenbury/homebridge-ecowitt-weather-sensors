@@ -19,7 +19,7 @@
   },
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint src/**/*.ts --max-warnings=0",
+    "lint": "eslint src/*.ts src/**/*.ts --max-warnings=0",
     "remark": "remark --frail --use remark-validate-links --use remark-lint-no-dead-urls . --quiet --frail --output",
     "watch": "npm run build && npm link",
     "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",

@@ -30,10 +30,10 @@ export class WS85 extends EcowittAccessory {
     this.requiredData = [
       'wh85batt', 'winddir', 'windspeedmph', 'windgustmph', 'maxdailygust',
       'rrain_piezo', 'erain_piezo', 'hrain_piezo', 'drain_piezo', 'wrain_piezo',
-      'mrain_piezo', 'yrain_piezo'
+      'mrain_piezo', 'yrain_piezo',
     ];
 
-    this.optionalData = ['ws85cap_volt'];
+    this.optionalData = ['ws85cap_volt', 'ws85_ver'];
 
     this.battery = this.addBattery('', false);
 
@@ -71,7 +71,8 @@ export class WS85 extends EcowittAccessory {
 
     if (!utils.includesAny(hidden, ['windmaxdailyspeed', `${this.accessoryId}:windmaxdailyspeed`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:windmaxdailyspeed`);
-      this.maxDailyGust = new WindSensor(platform, accessory, `${this.accessoryId}:windmaxdailyspeed`, nameOverride || 'Wind Max Daily Speed');
+      this.maxDailyGust = new WindSensor(platform, accessory,
+        `${this.accessoryId}:windmaxdailyspeed`, nameOverride || 'Wind Max Daily Speed');
     } else {
       this.maxDailyGust = new WindSensor(platform, accessory, `${this.accessoryId}:windmaxdailyspeed`, 'Wind Max Daily Speed');
       this.maxDailyGust.removeService();
@@ -89,58 +90,60 @@ export class WS85 extends EcowittAccessory {
 
     if (!utils.includesAny(hidden, ['raineventtotal', `${this.accessoryId}:raineventtotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raineventtotal`);
-      this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, nameOverride || `Rain Event Total`);
+      this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, nameOverride || 'Rain Event Total');
     } else {
-      this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, `Rain Event Total`);
+      this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, 'Rain Event Total');
       this.eventRain.removeService();
       this.eventRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['rainhourlytotal', `${this.accessoryId}:rainhourlytotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainhourlytotal`);
-      this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, nameOverride || `Rain Hourly Total`);
+      this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, nameOverride || 'Rain Hourly Total');
     } else {
-      this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, `Rain Hourly Total`);
+      this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, 'Rain Hourly Total');
       this.hourlyRain.removeService();
       this.hourlyRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['raindailytotal', `${this.accessoryId}:raindailytotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raindailytotal`);
-      this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, nameOverride || `Rain Daily Total`);
+      this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, nameOverride || 'Rain Daily Total');
     } else {
-      this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, `Rain Daily Total`);
+      this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, 'Rain Daily Total');
       this.dailyRain.removeService();
       this.dailyRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['rainweeklytotal', `${this.accessoryId}:rainweeklytotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainweeklytotal`);
-      this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, nameOverride || `Rain Weekly Total`);
+      this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, nameOverride || 'Rain Weekly Total');
     } else {
-      this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, `Rain Weekly Total`);
+      this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, 'Rain Weekly Total');
       this.weeklyRain.removeService();
       this.weeklyRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['rainmonthlytotal', `${this.accessoryId}:rainmonthlytotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainmonthlytotal`);
-      this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, nameOverride || `Rain Monthly Total`);
+      this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, nameOverride || 'Rain Monthly Total');
     } else {
-      this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, `Rain Monthly Total`);
+      this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, 'Rain Monthly Total');
       this.monthlyRain.removeService();
       this.monthlyRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['rainyearlytotal', `${this.accessoryId}:rainyearlytotal`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainyearlytotal`);
-      this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, nameOverride || `Rain Yearly Total`);
+      this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, nameOverride || 'Rain Yearly Total');
     } else {
-      this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, `Rain Yearly Total`);
+      this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, 'Rain Yearly Total');
       this.yearlyRain.removeService();
       this.yearlyRain = undefined;
     }
   }
+
+  //----------------------------------------------------------------------------
 
   public update(dataReport) {
     if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
@@ -163,62 +166,62 @@ export class WS85 extends EcowittAccessory {
 
     this.windSpeed?.updateSpeed(
       parseFloat(dataReport.windspeedmph),
-      utils.lookup(this.platform.config?.thresholds, "windSpeed"),
+      utils.lookup(this.platform.config?.thresholds, 'windSpeed'),
       dataReport.dateutc,
 
     );
 
     this.windGust?.updateSpeed(
       parseFloat(dataReport.windgustmph),
-      utils.lookup(this.platform.config?.thresholds, "windGustSpeed"),
+      utils.lookup(this.platform.config?.thresholds, 'windGustSpeed'),
       dataReport.dateutc,
     );
 
     this.maxDailyGust?.updateSpeed(
       parseFloat(dataReport.maxdailygust),
-      utils.lookup(this.platform.config?.thresholds, "windMaxDailySpeed"),
+      utils.lookup(this.platform.config?.thresholds, 'windMaxDailySpeed'),
       dataReport.dateutc,
     );
 
     this.rainRate?.updateRate(
       parseFloat(dataReport.rrain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainRate"),
+      utils.lookup(this.platform.config?.thresholds, 'rainRate'),
       dataReport.dateutc,
     );
 
     this.eventRain?.updateTotal(
       parseFloat(dataReport.erain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainEventTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainEventTotal'),
       dataReport.dateutc,
     );
 
     this.hourlyRain?.updateTotal(
       parseFloat(dataReport.hrain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainHourlyTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainHourlyTotal'),
       dataReport.dateutc,
     );
 
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.drain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainDailyTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainDailyTotal'),
       dataReport.dateutc,
     );
 
     this.weeklyRain?.updateTotal(
       parseFloat(dataReport.wrain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainWeeklyTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainWeeklyTotal'),
       dataReport.dateutc,
     );
 
     this.monthlyRain?.updateTotal(
       parseFloat(dataReport.mrain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainMonthlyTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainMonthlyTotal'),
       dataReport.dateutc,
     );
 
     this.yearlyRain?.updateTotal(
       parseFloat(dataReport.yrain_piezo),
-      utils.lookup(this.platform.config?.thresholds, "rainYearlyTotal"),
+      utils.lookup(this.platform.config?.thresholds, 'rainYearlyTotal'),
       dataReport.dateutc,
     );
   }

@@ -28,9 +28,17 @@ import * as utils from './Utils';
 import * as bodyParser from 'body-parser';
 import * as crypto from 'crypto';
 
-import express, { Express, Request, Response } from "express";
+import { EcowittAccessory } from './EcowittAccessory';
 
-interface BaseStationInfo {
+import express, { Request, Response, Next } from 'express';
+
+interface SensorType {
+  type: string;
+  channel: number | undefined;
+  accessory: EcowittAccessory | undefined;
+}
+
+interface BaseStationInfoType {
   model: string;
   deviceName: string;
   serialNumber: string;
@@ -40,7 +48,7 @@ interface BaseStationInfo {
   firmwareRevision: string;
   frequency: string;
   PASSKEY: string;
-  sensors: any[];
+  sensors: SensorType[];
 }
 
 /**
@@ -59,9 +67,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   public lastDataReport = null;
   public consumedReportData: string[] = [];
-  public requiredReportData: string[] = ["PASSKEY", "stationtype", "dateutc", "model", "freq"];
+  public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
 
-  public baseStationInfo: BaseStationInfo = {
+  public baseStationInfo: BaseStationInfoType = {
     model: '',
     deviceName: '',
     serialNumber: '',
@@ -86,40 +94,44 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         this.config.additional = {};
       }
       this.config.additional.validateMac = false;
-      mac = '00:00:00:00:00:00'
-      this.log.warn(`Disabling MAC validation because MAC address was not provided. Provide a valid MAC address to have MAC validation enabled`)
+      mac = '00:00:00:00:00:00';
+      this.log.warn('Disabling MAC validation because MAC address was not provided. \
+        Provide a valid MAC address to have MAC validation enabled');
     }
 
     this.baseStationInfo.serialNumber = mac;
-    this.baseStationInfo.shortSerial = mac.replaceAll(':','').slice(8);
-    this.baseStationInfo.PASSKEY = crypto.createHash('md5').update(mac).digest('hex').toUpperCase()
+    this.baseStationInfo.shortSerial = mac.replaceAll(':', '').slice(8);
+    this.baseStationInfo.PASSKEY = crypto.createHash('md5').update(mac).digest('hex').toUpperCase();
 
     if (utils.v1ConfigTest(this.config)) {
       const v2Config = utils.v1ConfigRemapper(this.config, this.baseStationInfo.shortSerial);
-      this.log.warn(`Plugin configuration currently has v1 properties and needs to be migrated to v2. A migrated v2-compatible version of your plugin configuration has been generated below, see ${utils.MIGRATION_GUIDE_LINK} for the migration guide \n ${JSON.stringify(v2Config, undefined, 2)}`);
+      this.log.warn(`Plugin configuration currently has v1 properties and needs to be migrated to v2. \
+        A migrated v2-compatible version of your plugin configuration has been generated below, \
+        see ${utils.MIGRATION_GUIDE_LINK} for the migration guide \n ${JSON.stringify(v2Config, undefined, 2)}`);
       this.config = v2Config;
       this.log.debug(`Plugin config has been auto-migrated to v2 \n ${JSON.stringify(this.config, undefined, 2)}`);
     } else {
       this.log.debug(`Plugin config \n ${JSON.stringify(this.config, undefined, 2)}`);
     }
 
-    let encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report');
-    let port = this.config?.baseStation?.port || 8080;
+    const encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report');
+    const port = this.config?.baseStation?.port || 8080;
 
     this.log.debug(`Creating data report service on ${port} ${encodedPath}`);
 
-    this.dataReportServer = express()
+    this.dataReportServer = express();
     this.dataReportServer.use(bodyParser.json());
 
-    this.dataReportServer.post(encodedPath, (req, res, next) => {
+    this.dataReportServer.post(encodedPath, (req: Request, res: Response) => {
       this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
       this.onDataReport(req.body);
       res.send();
     });
 
-    this.dataReportServer.all('*', (req, res, next) => {
+    this.dataReportServer.all('*', (req: Request, res: Response) => {
       if (utils.falsy(this.config?.additional?.acceptAnyPath)) {
-        this.log.warn(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}. Configure the Ecowitt base station to send data reports to POST ${encodedPath}`);
+        this.log.warn(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}. \
+          Configure the Ecowitt base station to send data reports to POST ${encodedPath}`);
       } else {
         this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
         this.onDataReport(req.body);
@@ -127,9 +139,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       res.send();
     });
 
-    this.dataReportServer.use((err, req, res, next) => {
-      this.log.warn(`An issue occured while processing a data report. Review the error message below and file a bug report at ${utils.BUG_REPORT_LINK} \n ${err.stack}`);
-      res.status(500).send('Error processing data report')
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    this.dataReportServer.use((err, req: Request, res: Response, next: Next) => {
+      this.log.warn(`An issue occured while processing a data report. \
+        Review the error message below and file a bug report at ${utils.BUG_REPORT_LINK} \n ${err.stack}`);
+      res.status(500).send('Error processing data report');
     });
 
     // When this event is fired it means Homebridge has restored all cached accessories from disk.
@@ -138,14 +152,17 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     // to start discovery of new accessories.
     this.api.on('didFinishLaunching', () => {
       this.dataReportServer.listen(port, () => {
-          this.log.info(`Listening for data reports on ${port} ${encodedPath}`);
-          this.log.debug(`Finished initializing plugin`);
-      }).on("error", (err: any) => {
+        this.log.info(`Listening for data reports on ${port} ${encodedPath}`);
+        this.log.debug('Finished initializing plugin');
+      }).on('error', (err) => {
         if (err instanceof Error) {
-          if (err["code"] === 'EADDRINUSE') {
-            this.log.error(`Unable to start data report service on ${port} ${encodedPath} because port ${port} is in use. Try setting the port to ${port + 1} and restart Homebridge`);
+          if (err['code'] === 'EADDRINUSE') {
+            this.log.error(`Unable to start data report service on ${port} ${encodedPath} because port ${port} is in use. \
+              Try setting the port to ${port + 1} and restart Homebridge`);
           } else {
-            this.log.error(`Unable to start data report service on ${port} ${encodedPath}. Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, update plugin configuration, and restart homebridge \n ${err.stack}`);
+            this.log.error(`Unable to start data report service on ${port} ${encodedPath}. \
+              Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, update plugin configuration, \
+              and restart homebridge \n ${err.stack}`);
           }
         }
       });
@@ -163,9 +180,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public serviceId(name: string, channel: number | undefined) {
     const serviceId = this.baseStationInfo.shortSerial;
     if (typeof channel !== 'undefined') {
-       return `${serviceId}:${name}CH${channel}`;
+      return `${serviceId}:${name}CH${channel}`;
     } else {
-       return `${serviceId}:${name}`;
+      return `${serviceId}:${name}`;
     }
   }
 
@@ -192,20 +209,23 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     if (!utils.includesAll(Object.keys(dataReport), this.requiredReportData)) {
-      this.log.warn(`Received incomplete data report. Missing one of ${this.requiredReportData}. Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}`);
+      this.log.warn(`Received incomplete data report. Missing one of ${this.requiredReportData}. \
+        Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}`);
       return;
     }
 
     if (dataReport.PASSKEY !== this.baseStationInfo.PASSKEY) {
       if (utils.truthy(this.config?.additional?.validateMac)) {
-        this.log.warn(`Ignoring data report from unknown MAC address. Verify MAC address is set properly, or disable MAC validation in advanced settings`)
+        this.log.warn('Ignoring data report from unknown MAC address. Verify MAC address is set properly, \
+          or disable MAC validation in advanced settings');
         return;
       } else {
-        this.log.debug(`Processing data report from unknown MAC address. MAC validation is disabled`);
+        this.log.debug('Processing data report from unknown MAC address. MAC validation is disabled');
       }
     }
 
-    this.log.debug(`Recieved data report, if you are submitting a bug report copy and paste the full data report object \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    this.log.debug(`Recieved data report, if you are submitting a bug report copy and paste the full data \
+      report object \n ${JSON.stringify(dataReport, undefined, 2)}`);
 
     if (!this.lastDataReport) { // on first data report after startup
       this.log.info('Registering accessories from data report');
@@ -225,6 +245,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.baseStationInfo.sensors.push({
         type: type,
         channel: channel,
+        accessory: undefined,
       });
 
       if (typeof channel !== 'undefined') {
@@ -251,8 +272,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     const hideConfig = this.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (Array.isArray(modelInfo)) {
-      this.baseStationInfo.deviceName = `${this.baseStationInfo.shortSerial}:${modelInfo[1]}`
+    if (Array.isArray(modelInfo) && modelInfo.length === 3) {
+      this.baseStationInfo.deviceName = `${this.baseStationInfo.shortSerial}:${modelInfo[1]}`;
 
       switch (modelInfo[1]) {
         case 'GW1000':
@@ -284,10 +305,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           break;
 
         default:
-          this.log.warn(`Base station was not detected. Please file a feature request for additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
+          this.log.warn(`Base station was not detected from data report. Please file a feature request to add support for \
+            device ${modelInfo[1]} at ${utils.FEATURE_REQ_LINK}`);
       }
     } else {
-       this.log.warn(`There may have been an issue with detecting the base station device from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK} if base station was not detected`)
+      this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
     }
 
     // if (!utils.includesAll(hidden, [`${this.baseStationInfo.shortSerial}:WH65`])) {
@@ -375,7 +397,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     if (this.baseStationInfo.sensors.length === 0) {
-      this.log.warn(`No devices discovered from data report. Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, and/or file a feature request for additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
+      this.log.warn(`No devices discovered from data report. Verify plugin configuration with docs \
+        at ${utils.GATEWAY_SETUP_LINK}, and/or file a feature request to support your Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
       return;
     }
 
@@ -409,16 +432,20 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           accessory,
         ]);
       }
+
+      if (typeof sensor.accessory !== 'undefined') {
+        this.consumedReportData.push(...sensor.accessory.requiredData);
+        this.consumedReportData.push(...sensor.accessory.optionalData);
+      }
     }
 
     // determine which data from the data report were not used with any detected sensors
     let unconsumed = Object.keys(dataReport).filter(x => !this.consumedReportData.includes(x));
-    unconsumed = unconsumed .filter(x => !this.requiredReportData.includes(x));
+    unconsumed = unconsumed.filter(x => !this.requiredReportData.includes(x));
 
     if (unconsumed.length > 0 ) {
-      this.log.debug(`Unused data from data report ${unconsumed}`)
+      this.log.info(`Unused data from data report ${unconsumed}`);
     }
-
   }
 
   createAccessory(sensor, accessory) {
@@ -427,71 +454,61 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       case 'GW1100':
       case 'GW1200':
         sensor.accessory = new GW1000(this, accessory, sensor.type);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'GW2000':
         sensor.accessory = new GW2000(this, accessory, sensor.type);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'HP2560':
       case 'HP2561':
       case 'HP2564':
         sensor.accessory = new HP2560(this, accessory, sensor.type);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'WH25':
         sensor.accessory = new WH25(this, accessory);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'WH31':
         sensor.accessory = new WH31(this, accessory, sensor.channel);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'WH40':
         sensor.accessory = new WH40(this, accessory);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
-      // case 'WH41':
-      //   sensor.accessory = new WH41(this, accessory, sensor.channel);
-      //     this.consumedReportData.push(...sensor.accessory.requiredData);
-      //   break;
+        // case 'WH41':
+        //   sensor.accessory = new WH41(this, accessory, sensor.channel);
+        //   break;
 
       case 'WH51':
         sensor.accessory = new WH51(this, accessory, sensor.channel);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'WH55':
         sensor.accessory = new WH55(this, accessory, sensor.channel);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
-      // case 'WH57':
-      //   sensor.accessory = new WH57(this, accessory);
-      //   break;
+        // case 'WH57':
+        //   sensor.accessory = new WH57(this, accessory);
+        //   break;
 
-      // case 'WH65':
-      //   sensor.accessory = new WH65(this, accessory);
-      //   break;
+        // case 'WH65':
+        //   sensor.accessory = new WH65(this, accessory);
+        //   break;
 
       case 'WH34':
         sensor.accessory = new WH34(this, accessory, sensor.channel);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       case 'WS85':
         sensor.accessory = new WS85(this, accessory);
-        this.consumedReportData.push(...sensor.accessory.requiredData);
         break;
 
       default:
-        this.log.error(`Unsupported device type for ${sensor.type}. Please file a feature request for additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
+        this.log.error(`Unsupported device type for ${sensor.type}. Please file a feature request to support \
+          additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
         break;
     }
   }
@@ -507,10 +524,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     if (dateDiff >= threshold * 1000) {
       if (utils.truthy(this.config.additional?.validateTimestamp)) {
-        this.log.error(`Received data report for ${dataReport.dateutc} UTC which appears to be old, discarding data report. To process old data reports, disable timestamp validation in advanced settings`);
+        this.log.error(`Received data report for ${dataReport.dateutc} UTC which appears to be old, \
+          discarding data report. To process old data reports, disable timestamp validation in advanced settings`);
         return;
       } else {
-        this.log.info(`Received data report for ${dataReport.dateutc} UTC which appears to be old, this could indicate an issue if it occurs frequently`);
+        this.log.info(`Received data report for ${dataReport.dateutc} UTC which appears to be old, \
+          this could indicate an issue if it occurs frequently`);
       }
     } else {
       this.log.debug(`Received new data report for ${dataReport.dateutc} UTC`);
@@ -524,7 +543,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
 
       try {
-        sensor.accessory.update(dataReport);
+        if (typeof sensor.accessory !== 'undefined') {
+          sensor.accessory.update(dataReport);
+        } else {
+          this.log.warn(`Skipping update on ${sensor.type}, accessory is not defined. Please file a \
+            bug report at ${utils.BUG_REPORT_LINK}`);
+        }
       } catch(err) {
         let stack: string | undefined = undefined;
         if (err instanceof Error) {
@@ -533,7 +557,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           stack = String(err);
         }
 
-        this.log.warn(`An issue occured while updating sensor values for ${sensor.type}. Review the error message below and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
+        this.log.warn(`An issue occured while updating sensor values for ${sensor.type}. Review the error message below \
+          and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
       }
     }
   }

@@ -34,11 +34,11 @@ export class LeakSensor extends Sensor {
       return;
     }
 
-    const leakStr = !!leak ? 'Detected' : 'Not Detected';
+    const leakStr = utils.truthy(leak) ? 'Detected' : 'Not Detected';
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
-    this.updateName(staticNames ? this.name : `${this.name} ${leakStr}`)
-    this.updateLeak(!!leak);
+    this.updateName(staticNames ? this.name : `${this.name} ${leakStr}`);
+    this.updateLeak(utils.truthy(leak));
     this.updateStatusActive(true);
     this.updateTime(time);
   }

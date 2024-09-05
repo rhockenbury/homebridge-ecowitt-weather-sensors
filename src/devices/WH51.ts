@@ -26,15 +26,17 @@ export class WH51 extends EcowittAccessory {
 
     if (!utils.includesAny(hidden, ['soilmoisture', `${this.accessoryId}:soilmoisture`])) {
       const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:soilmoisture`);
-      this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, nameOverride || `Soil Moisture`);
+      this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, nameOverride || 'Soil Moisture');
     } else {
-      this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, `Soil Moisture`);
+      this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, 'Soil Moisture');
       this.soilMoisture.removeService();
       this.soilMoisture = undefined;
     }
   }
 
-  public update(dataReport, parseOptionals: boolean = false) {
+  //----------------------------------------------------------------------------
+
+  public update(dataReport) {
     if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
       throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
     } else {

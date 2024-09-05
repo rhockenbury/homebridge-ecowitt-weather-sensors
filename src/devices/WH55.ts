@@ -26,15 +26,17 @@ export class WH55 extends EcowittAccessory {
 
     if (!utils.includesAny(hidden, ['waterleak', `${this.accessoryId}:waterleak`])) {
       const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:waterleak`);
-      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || `Water Leak`);
+      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || 'Water Leak');
     } else {
-      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, `Water Leak`);
+      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, 'Water Leak');
       this.leak.removeService();
       this.leak = undefined;
     }
   }
 
-  public update(dataReport, parseOptionals: boolean = false) {
+  //----------------------------------------------------------------------------
+
+  public update(dataReport) {
     if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
       throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
     } else {

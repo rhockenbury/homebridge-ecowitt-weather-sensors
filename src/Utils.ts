@@ -1,11 +1,12 @@
 import { PlatformConfig } from 'homebridge';
+// eslint-disable-next-line  @typescript-eslint/no-var-requires
 const merge = require('deepmerge');
 
 // external help links
-export const BUG_REPORT_LINK = "https://bit.ly/3yklrWZ";
-export const FEATURE_REQ_LINK = "https://bit.ly/4fzeAtj";
-export const GATEWAY_SETUP_LINK = "https://bit.ly/3YGnYVU";
-export const MIGRATION_GUIDE_LINK = "https://bit.ly/4g6X7bX";
+export const BUG_REPORT_LINK = 'https://bit.ly/3yklrWZ';
+export const FEATURE_REQ_LINK = 'https://bit.ly/4fzeAtj';
+export const GATEWAY_SETUP_LINK = 'https://bit.ly/3YGnYVU';
+export const MIGRATION_GUIDE_LINK = 'https://bit.ly/4g6X7bX';
 
 //------------------------------------------------------------------------------
 
@@ -28,8 +29,8 @@ export const v2ConfigKeys = ['baseStation', 'nameOverrides', 'additional', 'thre
 //------------------------------------------------------------------------------
 
 export function boundRange(percent: number, lowerBound: number = 0, upperBound: number = 100): number {
-  return Math.max(lowerBound, Math.min(upperBound, percent))
-};
+  return Math.max(lowerBound, Math.min(upperBound, percent));
+}
 
 //------------------------------------------------------------------------------
 
@@ -37,7 +38,7 @@ export function truthy(val): boolean {
   if (typeof val === 'undefined') {
     return false;
   }
-  return String(val).toLowerCase() == "true";
+  return String(val).toLowerCase() === 'true' || String(val).toLowerCase() === '1';
 }
 
 //------------------------------------------------------------------------------
@@ -46,11 +47,12 @@ export function falsy(val): boolean {
   if (typeof val === 'undefined') {
     return true;
   }
-  return String(val).toLowerCase() == "false";
+  return String(val).toLowerCase() === 'false' || String(val).toLowerCase() === '0';
 }
 
 //------------------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function lookup(object, key): any {
   if (typeof object === 'undefined' || typeof key === 'undefined') {
     return undefined;
@@ -311,7 +313,7 @@ export function toRainIntensity(ratemm: number): string {
 
 export function v1ConfigTest(v1Config: object): boolean {
   if (includesAny(Object.keys(v1Config), v1ConfigKeys)) {
-    return true
+    return true;
   }
 
   return false;
@@ -319,15 +321,17 @@ export function v1ConfigTest(v1Config: object): boolean {
 
 //------------------------------------------------------------------------------
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConfig {
-  let v2Config: any = {
-    "baseStation": {},
-    "nameOverrides": [],
-    "additional": {},
-    "thresholds": {},
-    "hidden": {},
-    "units": {},
-    "platform": "Ecowitt"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const v2Config: any = {
+    'baseStation': {},
+    'nameOverrides': [],
+    'additional': {},
+    'thresholds': {},
+    'hidden': {},
+    'units': {},
+    'platform': 'Ecowitt',
   };
 
   // base station
@@ -356,7 +360,7 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
     v2Config.units.distance = v1Config?.lightning?.units;
   }
 
-  v2Config.units.temperature = "fh";
+  v2Config.units.temperature = 'fh';
 
   // hidden
   if (truthy(v1Config?.thbin?.hide)) {
@@ -415,49 +419,49 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
 
   const rainHide = v1Config?.ws?.rain?.hide;
   if (Array.isArray(rainHide)) {
-    if (rainHide.includes("Rate")) {
+    if (rainHide.includes('Rate')) {
       v2Config.hidden.rainRate = true;
       //v2Config.hidden[`${serviceId}:WS85:rainrate`] = true;
       //v2Config.hidden[`${serviceId}:WH65:rainrate`] = true;
       //v2Config.hidden[`${serviceId}:WH40:rainrate`] = true;
     }
 
-    if (rainHide.includes("Event")) {
+    if (rainHide.includes('Event')) {
       v2Config.hidden.rainEventTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:raineventtotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:raineventtotal`] = true;
       // v2Config.hidden[`${serviceId}:WH40:raineventtotal`] = true;
     }
 
-    if (rainHide.includes("Hourly")) {
+    if (rainHide.includes('Hourly')) {
       v2Config.hidden.rainHourlyTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:rainhourlytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:rainhourlytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH40:rainhourlytotal`] = true;
     }
 
-    if (rainHide.includes("Daily")) {
+    if (rainHide.includes('Daily')) {
       v2Config.hidden.rainDailyTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:raindailytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:raindailytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH40:raindailytotal`] = true;
     }
 
-    if (rainHide.includes("Weekly")) {
+    if (rainHide.includes('Weekly')) {
       v2Config.hidden.rainWeeklyTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:rainweeklytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:rainweeklytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH40:rainweeklytotal`] = true;
     }
 
-    if (rainHide.includes("Monthly")) {
+    if (rainHide.includes('Monthly')) {
       v2Config.hidden.rainMonthlyTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:rainmonthlytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:rainmonthlytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH40:rainmonthlytotal`] = true;
     }
 
-    if (rainHide.includes("Yearly")) {
+    if (rainHide.includes('Yearly')) {
       v2Config.hidden.rainYearlyTotal = true;
       // v2Config.hidden[`${serviceId}:WS85:rainyearlytotal`] = true;
       // v2Config.hidden[`${serviceId}:WH65:rainyearlytotal`] = true;
@@ -467,25 +471,25 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
 
   const windHide = v1Config?.ws?.wind?.hide;
   if (Array.isArray(windHide)) {
-    if (windHide.includes("Direction")) {
+    if (windHide.includes('Direction')) {
       v2Config.hidden.windDirection = true;
       //v2Config.hidden[`${serviceId}:WS85:winddirection`] = true;
       //v2Config.hidden[`${serviceId}:WH65:winddirection`] = true;
     }
 
-    if (windHide.includes("Speed")) {
+    if (windHide.includes('Speed')) {
       v2Config.hidden.windSpeed = true;
       // v2Config.hidden[`${serviceId}:WS85:windspeed`] = true;
       // v2Config.hidden[`${serviceId}:WH65:windspeed`] = true;
     }
 
-    if (windHide.includes("Gust")) {
+    if (windHide.includes('Gust')) {
       v2Config.hidden.windGustSpeed = true;
       // v2Config.hidden[`${serviceId}:WS85:windgustspeed`] = true;
       // v2Config.hidden[`${serviceId}:WH65:windgustspeed`] = true;
     }
 
-    if (windHide.includes("MaxDailyGust")) {
+    if (windHide.includes('MaxDailyGust')) {
       v2Config.hidden.windMaxDailySpeed = true;
       // v2Config.hidden[`${serviceId}:WS85:windmaxdailyspeed`] = true;
       // v2Config.hidden[`${serviceId}:WH65:windmaxdailyspeed`] = true;
@@ -515,61 +519,68 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
 
   const rainUnits = v2Config.units.rain;
   if (v1Config?.ws?.rain?.rateThreshold) {
-    v2Config.thresholds.rainRate = rainUnits === 'mm' ? v1Config?.ws?.rain?.rateThreshold : parseFloat((v1Config?.ws?.rain?.rateThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainRate = rainUnits === 'mm' ? v1Config?.ws?.rain?.rateThreshold :
+      parseFloat((v1Config?.ws?.rain?.rateThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.eventThreshold) {
-    v2Config.thresholds.rainEventTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.eventThreshold : parseFloat((v1Config?.ws?.rain?.eventThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainEventTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.eventThreshold :
+      parseFloat((v1Config?.ws?.rain?.eventThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.hourlyThreshold) {
-    v2Config.thresholds.rainHourlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.hourlyThreshold : parseFloat((v1Config?.ws?.rain?.hourlyThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainHourlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.hourlyThreshold :
+      parseFloat((v1Config?.ws?.rain?.hourlyThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.dailyThreshold) {
-    v2Config.thresholds.rainDailyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.dailyThreshold : parseFloat((v1Config?.ws?.rain?.dailyThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainDailyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.dailyThreshold :
+      parseFloat((v1Config?.ws?.rain?.dailyThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.weeklyThreshold) {
-    v2Config.thresholds.rainWeeklyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.weeklyThreshold : parseFloat((v1Config?.ws?.rain?.weeklyThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainWeeklyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.weeklyThreshold :
+      parseFloat((v1Config?.ws?.rain?.weeklyThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.monthlyThreshold) {
-    v2Config.thresholds.rainMonthlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.monthlyThreshold : parseFloat((v1Config?.ws?.rain?.monthlyThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainMonthlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.monthlyThreshold :
+      parseFloat((v1Config?.ws?.rain?.monthlyThreshold / 25.4).toFixed(3));
   }
 
   if (v1Config?.ws?.rain?.yearlyThreshold) {
-    v2Config.thresholds.rainYearlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.yearlyThreshold : parseFloat((v1Config?.ws?.rain?.yearlyThreshold / 25.4).toFixed(3));
+    v2Config.thresholds.rainYearlyTotal = rainUnits === 'mm' ? v1Config?.ws?.rain?.yearlyThreshold :
+      parseFloat((v1Config?.ws?.rain?.yearlyThreshold / 25.4).toFixed(3));
   }
 
   // name overrides
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.th?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({"key": `${serviceId}:WH31CH${channel}`, "value": v1Config?.th?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `${serviceId}:WH31CH${channel}`, 'value': v1Config?.th?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.tf?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({"key": `${serviceId}:WH34CH${channel}`, "value": v1Config?.tf?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `${serviceId}:WH34CH${channel}`, 'value': v1Config?.tf?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 4; channel++) {
     if (v1Config?.pm25?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({"key": `${serviceId}:WH41CH${channel}`, "value": v1Config?.pm25?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `${serviceId}:WH41CH${channel}`, 'value': v1Config?.pm25?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.soil?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({"key": `${serviceId}:WH51CH${channel}`, "value": v1Config?.soil?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `${serviceId}:WH51CH${channel}`, 'value': v1Config?.soil?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 4; channel++) {
     if (v1Config?.leak?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({"key": `${serviceId}:WH55CH${channel}`, "value": v1Config?.leak?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `${serviceId}:WH55CH${channel}`, 'value': v1Config?.leak?.[`name${channel}`]});
     }
   }
 
@@ -578,10 +589,10 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
     v2Config.additional.luxFactor = v1Config?.ws?.solarradiation?.luxFactor || 126.7;
   }
 
-  v2Config.additional.staticNames = "false";
-  v2Config.additional.validateMac = "true";
-  v2Config.additional.acceptAnyPath = "false";
-  v2Config.additional.validateTimestamp = "true";
+  v2Config.additional.staticNames = 'false';
+  v2Config.additional.validateMac = 'true';
+  v2Config.additional.acceptAnyPath = 'false';
+  v2Config.additional.validateTimestamp = 'true';
 
   // ensure nameOverrides is array so v1 v2 merge concats overrides
   if (!Array.isArray(v1Config?.nameOverrides)) {

@@ -59,7 +59,7 @@ export class TemperatureSensor extends Sensor {
   private updateTemperature(tempc: number) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.CurrentTemperature,
-      tempc
+      tempc,
     );
   }
 

@@ -34,7 +34,9 @@ export class WH34 extends EcowittAccessory {
     }
   }
 
-  public update(dataReport, parseOptionals: boolean = false) {
+  //----------------------------------------------------------------------------
+
+  public update(dataReport) {
     if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
       throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
     } else {
