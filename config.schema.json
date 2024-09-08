@@ -3,18 +3,21 @@
   "pluginType": "platform",
   "singular": true,
   "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide\">V2 Migration Guide</a></p><p align=\"center\">",
+  "footerDisplay": "All config changes take effect <em><strong>when a new data report is received</strong></em> after the next Homebridge restart.</p>",
   "schema": {
     "type": "object",
+    "additionalProperties": true,
     "properties": {
       "baseStation": {
         "type": "object",
+        "additionalProperties": true,
         "properties": {
           "mac": {
             "title": "MAC Address",
             "type": "string",
             "pattern": "^([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}$",
             "required": true,
-            "placeholder": "e.g. 2c:54:91:88:c9:e3",
+            "placeholder": "e.g. 30:C9:22:3E:DD:2B",
             "description": "The MAC address of the console or gateway"
           },
           "port": {
@@ -43,11 +46,13 @@
           "properties": {
             "key": {
               "title": "Sensor ID",
-              "type": "string"
+              "type": "string",
+              "placeholder": "e.g. WS85:rainRate, WH51CH1:waterLeak"
             },
             "value": {
               "title": "Name Override",
-              "type": "string"
+              "type": "string",
+              "placeholder": "e.g. Current Precip, Utility Room"
             }
           }
         }
@@ -239,8 +244,23 @@
             "type": "boolean",
             "required": false
           },
+          "dewPoint": {
+            "title": "Dew Point",
+            "type": "boolean",
+            "required": false
+          },
+          "indoorTemperature": {
+            "title": "Indoor Temperature",
+            "type": "boolean",
+            "required": false
+          },
           "temperature": {
             "title": "Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "indoorHumidity": {
+            "title": "Indoor Humidity",
             "type": "boolean",
             "required": false
           },
@@ -254,18 +274,58 @@
             "type": "boolean",
             "required": false
           },
-          "lightning": {
-            "title": "Lightning",
-            "type": "boolean",
-            "required": false
-          },
-          "pm25AirQuality": {
-            "title": "PM2.5 Air Quality",
-            "type": "boolean",
-            "required": false
-          },
           "waterLeak": {
             "title": "Water Leak",
+            "type": "boolean",
+            "required": false
+          },
+          "GW1000": {
+            "title": "GW1000",
+            "type": "boolean",
+            "required": false
+          },
+          "GW2000": {
+            "title": "GW2000",
+            "type": "boolean",
+            "required": false
+          },
+          "HP2560": {
+            "title": "HP2560",
+            "type": "boolean",
+            "required": false
+          },
+          "WH25": {
+            "title": "WH25",
+            "type": "boolean",
+            "required": false
+          },
+          "WH31": {
+            "title": "WH31",
+            "type": "boolean",
+            "required": false
+          },
+          "WH34": {
+            "title": "WH34",
+            "type": "boolean",
+            "required": false
+          },
+          "WH40": {
+            "title": "WH40",
+            "type": "boolean",
+            "required": false
+          },
+          "WH51": {
+            "title": "WH51",
+            "type": "boolean",
+            "required": false
+          },
+          "WH55": {
+            "title": "WH55",
+            "type": "boolean",
+            "required": false
+          },
+          "WS85": {
+            "title": "WS85",
             "type": "boolean",
             "required": false
           }
@@ -379,7 +439,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive weather data</p>"
+          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive weather data.</p>"
         },
         {
           "type": "flex",
@@ -411,7 +471,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the units for the weather data</p>"
+          "helpvalue": "<p class=\"help-block\">Select the units for the weather data.</p>"
         },
         {
           "type": "flex",
@@ -442,7 +502,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the weather data that should not be displayed. Changes take effect when a new data report is received <em>after</em> the Homebridge restart</p>"
+          "helpvalue": "<p class=\"help-block\">Select the weather data that should not be displayed."
         },
         {
           "type": "flex",
@@ -470,17 +530,54 @@
                 "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
                 "hidden.uvIndex",
-                "hidden.temperature"
+                "hidden.dewPoint"
               ]
             },
             {
               "type": "flex",
               "items": [
+                "hidden.indoorTemperature",
+                "hidden.temperature",
+                "hidden.indoorHumidity",
                 "hidden.humidity",
                 "hidden.soilMoisture",
-                "hidden.lightning",
-                "hidden.pm25AirQuality",
                 "hidden.waterLeak"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Select the devices that should not be displayed."
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "2 2",
+          "items": [
+            {
+              "type": "flex",
+              "items": [
+                "hidden.GW1000",
+                "hidden.GW2000",
+                "hidden.HP2560",
+                "hidden.WH25"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
+                "hidden.WH31",
+                "hidden.WH34",
+                "hidden.WH40"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
+                "hidden.WH51",
+                "hidden.WH55",
+                "hidden.WS85"
               ]
             }
           ]
@@ -496,7 +593,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<div class=\"help-block\">Configure the thresholds to trigger the sensor. Leave empty for no trigger. Select units first before configuring thresholds</div>"
+          "helpvalue": "<div class=\"help-block\">Configure the thresholds to trigger the sensor. Select units first and leave empty for no trigger.</div>"
         },
         {
           "type": "flex",
@@ -723,7 +820,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor. Changes take effect when a new data report is received <em>after</em> the Homebridge restart</p>"
+          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor."
         },
         {
           "key": "nameOverrides",
@@ -751,6 +848,10 @@
       "title": "Advanced Options",
       "displayFlex": true,
       "items": [
+        {
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Configure internal plugin behavior."
+        },
         {
           "type": "flex",
           "flex-flow": "row wrap",

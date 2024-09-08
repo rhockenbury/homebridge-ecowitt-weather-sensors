@@ -7,6 +7,7 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WH34 extends EcowittAccessory {
+  static readonly properties: string[] = ['temperature'];
   protected battery: Service;
   protected temperature: TemperatureSensor | undefined;
 
@@ -24,8 +25,9 @@ export class WH34 extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
+    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`) ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
     } else {
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');

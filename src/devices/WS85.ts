@@ -8,6 +8,7 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WS85 extends EcowittAccessory {
+  static readonly properties: string[] = ['windDirection', 'windSpeed', 'windGustSpeed', 'windMaDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
   protected battery: Service;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
@@ -42,8 +43,8 @@ export class WS85 extends EcowittAccessory {
 
     let nameOverride: string | undefined;
 
-    if (!utils.includesAny(hidden, ['winddirection', `${this.accessoryId}:winddirection`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:winddirection`);
+    if (!utils.includesAny(hidden, ['winddirection', `${this.shortServiceId}:winddirection`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:winddirection`);
       this.windDirection = new WindSensor(platform, accessory, `${this.accessoryId}:winddirection`, nameOverride || 'Wind Direction');
     } else {
       this.windDirection = new WindSensor(platform, accessory, `${this.accessoryId}:winddirection`, 'Wind Direction');
@@ -51,8 +52,8 @@ export class WS85 extends EcowittAccessory {
       this.windDirection = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['windspeed', `${this.accessoryId}:windspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:windspeed`);
+    if (!utils.includesAny(hidden, ['windspeed', `${this.shortServiceId}:windspeed`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windspeed`);
       this.windSpeed = new WindSensor(platform, accessory, `${this.accessoryId}:windspeed`, nameOverride || 'Wind Speed');
     } else {
       this.windSpeed = new WindSensor(platform, accessory, `${this.accessoryId}:windspeed`, 'Wind Speed');
@@ -60,8 +61,8 @@ export class WS85 extends EcowittAccessory {
       this.windSpeed = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['windgustspeed', `${this.accessoryId}:windgustspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:windgustspeed`);
+    if (!utils.includesAny(hidden, ['windgustspeed', `${this.shortServiceId}:windgustspeed`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windgustspeed`);
       this.windGust = new WindSensor(platform, accessory, `${this.accessoryId}:windgustspeed`, nameOverride || 'Wind Gust Speed');
     } else {
       this.windGust = new WindSensor(platform, accessory, `${this.accessoryId}:windgustspeed`, 'Wind Gust Speed');
@@ -69,8 +70,8 @@ export class WS85 extends EcowittAccessory {
       this.windGust = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['windmaxdailyspeed', `${this.accessoryId}:windmaxdailyspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:windmaxdailyspeed`);
+    if (!utils.includesAny(hidden, ['windmaxdailyspeed', `${this.shortServiceId}:windmaxdailyspeed`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windmaxdailyspeed`);
       this.maxDailyGust = new WindSensor(platform, accessory,
         `${this.accessoryId}:windmaxdailyspeed`, nameOverride || 'Wind Max Daily Speed');
     } else {
@@ -79,8 +80,8 @@ export class WS85 extends EcowittAccessory {
       this.maxDailyGust = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainrate', `${this.accessoryId}:rainrate`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainrate`);
+    if (!utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainrate`);
       this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, nameOverride || 'Rain Rate');
     } else {
       this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, 'Rain Rate');
@@ -88,8 +89,8 @@ export class WS85 extends EcowittAccessory {
       this.rainRate = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['raineventtotal', `${this.accessoryId}:raineventtotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raineventtotal`);
+    if (!utils.includesAny(hidden, ['raineventtotal', `${this.shortServiceId}:raineventtotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:raineventtotal`);
       this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, nameOverride || 'Rain Event Total');
     } else {
       this.eventRain = new RainSensor(platform, accessory, `${this.accessoryId}:raineventtotal`, 'Rain Event Total');
@@ -97,8 +98,8 @@ export class WS85 extends EcowittAccessory {
       this.eventRain = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainhourlytotal', `${this.accessoryId}:rainhourlytotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainhourlytotal`);
+    if (!utils.includesAny(hidden, ['rainhourlytotal', `${this.shortServiceId}:rainhourlytotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainhourlytotal`);
       this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, nameOverride || 'Rain Hourly Total');
     } else {
       this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, 'Rain Hourly Total');
@@ -106,8 +107,8 @@ export class WS85 extends EcowittAccessory {
       this.hourlyRain = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['raindailytotal', `${this.accessoryId}:raindailytotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:raindailytotal`);
+    if (!utils.includesAny(hidden, ['raindailytotal', `${this.shortServiceId}:raindailytotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:raindailytotal`);
       this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, nameOverride || 'Rain Daily Total');
     } else {
       this.dailyRain = new RainSensor(platform, accessory, `${this.accessoryId}:raindailytotal`, 'Rain Daily Total');
@@ -115,8 +116,8 @@ export class WS85 extends EcowittAccessory {
       this.dailyRain = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainweeklytotal', `${this.accessoryId}:rainweeklytotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainweeklytotal`);
+    if (!utils.includesAny(hidden, ['rainweeklytotal', `${this.shortServiceId}:rainweeklytotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainweeklytotal`);
       this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, nameOverride || 'Rain Weekly Total');
     } else {
       this.weeklyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainweeklytotal`, 'Rain Weekly Total');
@@ -124,8 +125,8 @@ export class WS85 extends EcowittAccessory {
       this.weeklyRain = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainmonthlytotal', `${this.accessoryId}:rainmonthlytotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainmonthlytotal`);
+    if (!utils.includesAny(hidden, ['rainmonthlytotal', `${this.shortServiceId}:rainmonthlytotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainmonthlytotal`);
       this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, nameOverride || 'Rain Monthly Total');
     } else {
       this.monthlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainmonthlytotal`, 'Rain Monthly Total');
@@ -133,8 +134,8 @@ export class WS85 extends EcowittAccessory {
       this.monthlyRain = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainyearlytotal', `${this.accessoryId}:rainyearlytotal`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:rainyearlytotal`);
+    if (!utils.includesAny(hidden, ['rainyearlytotal', `${this.shortServiceId}:rainyearlytotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainyearlytotal`);
       this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, nameOverride || 'Rain Yearly Total');
     } else {
       this.yearlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainyearlytotal`, 'Rain Yearly Total');

@@ -7,6 +7,7 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WH55 extends EcowittAccessory {
+  static readonly properties: string[] = ['waterLeak'];
   protected battery: Service;
   protected leak: LeakSensor | undefined;
 
@@ -24,8 +25,9 @@ export class WH55 extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['waterleak', `${this.accessoryId}:waterleak`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:waterleak`);
+    if (!utils.includesAny(hidden, ['waterleak', `${this.shortServiceId}:waterleak`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:waterleak`) ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
       this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || 'Water Leak');
     } else {
       this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, 'Water Leak');

@@ -8,6 +8,7 @@ export class EcowittAccessory {
   public requiredData: string[] = [];
   public optionalData: string[] = [];
   protected readonly accessoryId: string;
+  protected readonly shortServiceId: string;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -17,6 +18,7 @@ export class EcowittAccessory {
     protected readonly channel: number | undefined = undefined,
   ) {
     this.accessoryId = this.platform.serviceId(this.modelName, this.channel);
+    this.shortServiceId = this.platform.shortServiceId(this.modelName, this.channel);
 
     const accessoryInfo = this.accessory.getService(this.platform.Service.AccessoryInformation)!;
 
@@ -59,8 +61,8 @@ export class EcowittAccessory {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public update(dataReport) {
-    this.platform.log.error(`Update function not implemented for ${this.modelName}. \
-      Please file a bug report at ${utils.BUG_REPORT_LINK}`);
+    this.platform.log.error(`Update function not implemented for ${this.modelName}. `
+      + `Please file a bug report at ${utils.BUG_REPORT_LINK}`);
   }
 
   //---------------------------------------------------------------------------

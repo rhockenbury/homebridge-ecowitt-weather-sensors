@@ -322,7 +322,7 @@ export function v1ConfigTest(v1Config: object): boolean {
 //------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConfig {
+export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const v2Config: any = {
     'baseStation': {},
@@ -364,108 +364,76 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
 
   // hidden
   if (truthy(v1Config?.thbin?.hide)) {
-    v2Config.hidden.temperature = true;
-    v2Config.hidden.humidity = true;
-    //v2Config.hidden[`${serviceId}:GW1000`] = true;
-    //v2Config.hidden[`${serviceId}:GW1200`] = true;
-    //v2Config.hidden[`${serviceId}:GW2000`] = true;
+    v2Config.hidden[`GW1000`] = true;
+    v2Config.hidden[`GW2000`] = true;
+    v2Config.hidden[`HP2560`] = true;
   }
 
-  // if (truthy(v1Config?.ws?.hide)) {
-  //   v2Config.hidden[`${serviceId}:WS85`] = true;
-  //   v2Config.hidden[`${serviceId}:WH65`] = true;
-  // }
+  if (truthy(v1Config?.ws?.hide)) {
+    v2Config.hidden[`WS85`] = true;
+    v2Config.hidden[`WH65`] = true;
+  }
 
   if (truthy(v1Config?.th?.hide)) {
-    v2Config.hidden.temperature = true;
-    v2Config.hidden.humidity = true;
-    //v2Config.hidden[`${serviceId}:WH31`] = true;
+    v2Config.hidden[`WH31`] = true;
   }
 
   if (truthy(v1Config?.tf?.hide)) {
-    v2Config.hidden.temperature = true;
-    //v2Config.hidden[`${serviceId}:WH34`] = true;
+    v2Config.hidden[`WH34`] = true;
   }
 
   if (truthy(v1Config?.soil?.hide)) {
-    v2Config.hidden.soilMoisture = true;
-    //v2Config.hidden[`${serviceId}:WH51`] = true;
+    v2Config.hidden[`WH51`] = true;
   }
 
   if (truthy(v1Config?.leak?.hide)) {
-    v2Config.hidden.waterLeak = true;
-    //v2Config.hidden[`${serviceId}:WH55`] = true;
+    v2Config.hidden[`WH55`] = true;
   }
 
   if (truthy(v1Config?.pm25?.hide)) {
-    v2Config.hidden.pm25AirQuality = true;
-    //v2Config.hidden[`${serviceId}:WH41`] = true;
+    v2Config.hidden[`WH41`] = true;
   }
 
   if (truthy(v1Config?.lightning?.hide)) {
-    v2Config.hidden.lightning = true;
-    //v2Config.hidden[`${serviceId}:WH57`] = true;
+    v2Config.hidden[`WH57`] = true;
   }
 
   if (truthy(v1Config?.ws?.uv?.hide)) {
     v2Config.hidden.uvIndex = true;
-    //v2Config.hidden[`${serviceId}:WH65:uvindex`] = true;
   }
 
   if (truthy(v1Config?.ws?.solarradiation?.hide)) {
     v2Config.hidden.solarRadiation = true;
-    //v2Config.hidden[`${serviceId}:WH65:solarradiation`] = true;
   }
 
   const rainHide = v1Config?.ws?.rain?.hide;
   if (Array.isArray(rainHide)) {
     if (rainHide.includes('Rate')) {
       v2Config.hidden.rainRate = true;
-      //v2Config.hidden[`${serviceId}:WS85:rainrate`] = true;
-      //v2Config.hidden[`${serviceId}:WH65:rainrate`] = true;
-      //v2Config.hidden[`${serviceId}:WH40:rainrate`] = true;
     }
 
     if (rainHide.includes('Event')) {
       v2Config.hidden.rainEventTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:raineventtotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:raineventtotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:raineventtotal`] = true;
     }
 
     if (rainHide.includes('Hourly')) {
       v2Config.hidden.rainHourlyTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:rainhourlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:rainhourlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:rainhourlytotal`] = true;
     }
 
     if (rainHide.includes('Daily')) {
       v2Config.hidden.rainDailyTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:raindailytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:raindailytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:raindailytotal`] = true;
     }
 
     if (rainHide.includes('Weekly')) {
       v2Config.hidden.rainWeeklyTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:rainweeklytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:rainweeklytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:rainweeklytotal`] = true;
     }
 
     if (rainHide.includes('Monthly')) {
       v2Config.hidden.rainMonthlyTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:rainmonthlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:rainmonthlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:rainmonthlytotal`] = true;
     }
 
     if (rainHide.includes('Yearly')) {
       v2Config.hidden.rainYearlyTotal = true;
-      // v2Config.hidden[`${serviceId}:WS85:rainyearlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:rainyearlytotal`] = true;
-      // v2Config.hidden[`${serviceId}:WH40:rainyearlytotal`] = true;
     }
   }
 
@@ -473,26 +441,18 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
   if (Array.isArray(windHide)) {
     if (windHide.includes('Direction')) {
       v2Config.hidden.windDirection = true;
-      //v2Config.hidden[`${serviceId}:WS85:winddirection`] = true;
-      //v2Config.hidden[`${serviceId}:WH65:winddirection`] = true;
     }
 
     if (windHide.includes('Speed')) {
       v2Config.hidden.windSpeed = true;
-      // v2Config.hidden[`${serviceId}:WS85:windspeed`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:windspeed`] = true;
     }
 
     if (windHide.includes('Gust')) {
       v2Config.hidden.windGustSpeed = true;
-      // v2Config.hidden[`${serviceId}:WS85:windgustspeed`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:windgustspeed`] = true;
     }
 
     if (windHide.includes('MaxDailyGust')) {
       v2Config.hidden.windMaxDailySpeed = true;
-      // v2Config.hidden[`${serviceId}:WS85:windmaxdailyspeed`] = true;
-      // v2Config.hidden[`${serviceId}:WH65:windmaxdailyspeed`] = true;
     }
   }
 
@@ -556,31 +516,33 @@ export function v1ConfigRemapper(v1Config: any, serviceId: string): PlatformConf
   // name overrides
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.th?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `${serviceId}:WH31CH${channel}`, 'value': v1Config?.th?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH31CH${channel}:temperature`, 'value': v1Config?.th?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH31CH${channel}:humidity`, 'value': v1Config?.th?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.tf?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `${serviceId}:WH34CH${channel}`, 'value': v1Config?.tf?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH34CH${channel}:temperature`, 'value': v1Config?.tf?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 4; channel++) {
     if (v1Config?.pm25?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `${serviceId}:WH41CH${channel}`, 'value': v1Config?.pm25?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQuality`, 'value': v1Config?.pm25?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQuality24h`, 'value': v1Config?.pm25?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.soil?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `${serviceId}:WH51CH${channel}`, 'value': v1Config?.soil?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH51CH${channel}:soilMoisture`, 'value': v1Config?.soil?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 4; channel++) {
     if (v1Config?.leak?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `${serviceId}:WH55CH${channel}`, 'value': v1Config?.leak?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH55CH${channel}:waterLeak`, 'value': v1Config?.leak?.[`name${channel}`]});
     }
   }
 

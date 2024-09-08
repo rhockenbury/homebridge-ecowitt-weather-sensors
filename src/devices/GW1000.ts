@@ -8,15 +8,16 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class GW1000 extends EcowittAccessory {
+  static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly model: string,
+    protected readonly modelName: string,
   ) {
-    super(platform, accessory, `${model}`, `Ecowitt Gateway (${model})`);
+    super(platform, accessory, `${modelName}`, `Ecowitt Gateway (${modelName})`);
 
     this.requiredData = ['tempinf', 'humidityin'];
     this.optionalData = ['baromrelin', 'baromabsin'];
@@ -24,20 +25,20 @@ export class GW1000 extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
+    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
     } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, 'Temperature');
       this.temperature.removeService();
       this.temperature = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['humidity', `${this.accessoryId}:humidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:humidity`);
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
+    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
     } else {
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
       this.humidity.removeService();
       this.humidity = undefined;
     }

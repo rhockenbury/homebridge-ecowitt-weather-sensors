@@ -93,8 +93,8 @@ export class WindSensor extends MotionSensor {
       if (typeof threshold === 'undefined') {
         this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
       } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. \
-          Verify plugin configuration.`);
+        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
+          + 'Verify plugin configuration');
       }
       this.updateMotionDetected(false);
       return;

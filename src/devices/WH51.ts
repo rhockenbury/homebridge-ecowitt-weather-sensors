@@ -7,6 +7,7 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WH51 extends EcowittAccessory {
+  static readonly properties: string[] = ['soilMoisture'];
   protected battery: Service;
   protected soilMoisture: HumiditySensor | undefined;
 
@@ -18,14 +19,16 @@ export class WH51 extends EcowittAccessory {
     super(platform, accessory, 'WH51', 'Soil Moisture Sensor (WH51)', channel);
 
     this.requiredData = [`soilbatt${this.channel}`, `soilmoisture${this.channel}`];
+    this.optionalData = [`soilad${this.channel}`];
 
     this.battery = this.addBattery('', false);
 
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['soilmoisture', `${this.accessoryId}:soilmoisture`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:soilmoisture`);
+    if (!utils.includesAny(hidden, ['soilmoisture', `${this.shortServiceId}:soilmoisture`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:soilmoisture`)  ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
       this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, nameOverride || 'Soil Moisture');
     } else {
       this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, 'Soil Moisture');

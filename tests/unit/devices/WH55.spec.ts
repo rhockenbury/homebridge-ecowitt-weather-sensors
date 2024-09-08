@@ -47,7 +47,7 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:WH55CH1:waterleak", "value": "Test Leak Name"};
+      platform.config.nameOverrides[0] = {"key": "WH55CH1:waterleak", "value": "Test Leak Name"};
 
       device = new WH55(platform, accessory, 1);
 
@@ -66,7 +66,7 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:WH55CH1:waterleak"] = true;
+      platform.config.hidden["WH55CH1:waterleak"] = true;
 
       device = new WH55(platform, accessory, 1);
 

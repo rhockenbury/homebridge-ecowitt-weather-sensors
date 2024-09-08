@@ -46,8 +46,8 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:GW1000:temperature", "value": "Test Temperature Name"};
-      platform.config.nameOverrides[1] = {"key": "0000:GW1000:humidity", "value": "Test Humidity Name"};
+      platform.config.nameOverrides[0] = {"key": "GW1000:indoorTemperature", "value": "Test Temperature Name"};
+      platform.config.nameOverrides[1] = {"key": "GW1000:indoorHumidity", "value": "Test Humidity Name"};
 
       device = new GW1000(platform, accessory, "GW1000");
 
@@ -59,8 +59,8 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with general override', (done) => {
-      platform.config.hidden["temperature"] = true;
-      platform.config.hidden["humidity"] = true;
+      platform.config.hidden["indoorTemperature"] = true;
+      platform.config.hidden["indoorHumidity"] = true;
 
       device = new GW1000(platform, accessory, "GW1000");
 
@@ -70,8 +70,8 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:GW1000:temperature"] = true;
-      platform.config.hidden["0000:GW1000:humidity"] = true;
+      platform.config.hidden["GW1000:indoorTemperature"] = true;
+      platform.config.hidden["GW1000:indoorHumidity"] = true;
 
       device = new GW1000(platform, accessory, "GW1000");
 

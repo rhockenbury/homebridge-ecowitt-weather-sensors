@@ -8,6 +8,7 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WH31 extends EcowittAccessory {
+  static readonly properties: string[] = ['temperature', 'humidity'];
   protected battery: Service;
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
@@ -17,7 +18,7 @@ export class WH31 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH31', 'Indoor Thermo Hygro Sensor (WH31)', channel);
+    super(platform, accessory, 'WH31', 'Thermo Hygro Sensor (WH31)', channel);
 
     this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
 
@@ -26,8 +27,8 @@ export class WH31 extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.accessoryId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:temperature`);
+    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
     } else {
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
@@ -35,8 +36,8 @@ export class WH31 extends EcowittAccessory {
       this.temperature = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['humidity', `${this.accessoryId}:humidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.accessoryId}:humidity`);
+    if (!utils.includesAny(hidden, ['humidity', `${this.shortServiceId}:humidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:humidity`);
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
     } else {
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');

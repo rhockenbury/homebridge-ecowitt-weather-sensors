@@ -50,8 +50,8 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:WH31CH1:temperature", "value": "Test Temperature Name"};
-      platform.config.nameOverrides[1] = {"key": "0000:WH31CH1:humidity", "value": "Test Humidity Name"};
+      platform.config.nameOverrides[0] = {"key": "WH31CH1:temperature", "value": "Test Temperature Name"};
+      platform.config.nameOverrides[1] = {"key": "WH31CH1:humidity", "value": "Test Humidity Name"};
 
       device = new WH31(platform, accessory, 1);
 
@@ -74,8 +74,8 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:WH31CH1:temperature"] = true;
-      platform.config.hidden["0000:WH31CH1:humidity"] = true;
+      platform.config.hidden["WH31CH1:temperature"] = true;
+      platform.config.hidden["WH31CH1:humidity"] = true;
 
       device = new WH31(platform, accessory, 1);
 

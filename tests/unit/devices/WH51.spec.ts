@@ -47,7 +47,7 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:WH51CH1:soilmoisture", "value": "Test Soil Moisture Name"};
+      platform.config.nameOverrides[0] = {"key": "WH51CH1:soilmoisture", "value": "Test Soil Moisture Name"};
 
       device = new WH51(platform, accessory, 1);
 
@@ -66,7 +66,7 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:WH51CH1:soilmoisture"] = true;
+      platform.config.hidden["WH51CH1:soilmoisture"] = true;
 
       device = new WH51(platform, accessory, 1);
 

@@ -95,17 +95,17 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:WS85:windDirection", "value": "Test Wind Direction Name"};
-      platform.config.nameOverrides[1] = {"key": "0000:WS85:windSpeed", "value": "Test Wind Speed Name"};
-      platform.config.nameOverrides[2] = {"key": "0000:WS85:windGustSpeed", "value": "Test Wind Gust Speed Name"};
-      platform.config.nameOverrides[3] = {"key": "0000:WS85:windMaxDailySpeed", "value": "Test Wind Max Daily Speed Name"};
-      platform.config.nameOverrides[4] = {"key": "0000:WS85:rainRate", "value": "Test Rain Rate Name"};
-      platform.config.nameOverrides[5] = {"key": "0000:WS85:rainEventTotal", "value": "Test Rain Event Total Name"};
-      platform.config.nameOverrides[6] = {"key": "0000:WS85:rainHourlyTotal", "value": "Test Rain Hourly Total Name"};
-      platform.config.nameOverrides[7] = {"key": "0000:WS85:rainDailyTotal", "value": "Test Rain Daily Total Name"};
-      platform.config.nameOverrides[8] = {"key": "0000:WS85:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
-      platform.config.nameOverrides[9] = {"key": "0000:WS85:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
-      platform.config.nameOverrides[10] = {"key": "0000:WS85:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
+      platform.config.nameOverrides[0] = {"key": "WS85:windDirection", "value": "Test Wind Direction Name"};
+      platform.config.nameOverrides[1] = {"key": "WS85:windSpeed", "value": "Test Wind Speed Name"};
+      platform.config.nameOverrides[2] = {"key": "WS85:windGustSpeed", "value": "Test Wind Gust Speed Name"};
+      platform.config.nameOverrides[3] = {"key": "WS85:windMaxDailySpeed", "value": "Test Wind Max Daily Speed Name"};
+      platform.config.nameOverrides[4] = {"key": "WS85:rainRate", "value": "Test Rain Rate Name"};
+      platform.config.nameOverrides[5] = {"key": "WS85:rainEventTotal", "value": "Test Rain Event Total Name"};
+      platform.config.nameOverrides[6] = {"key": "WS85:rainHourlyTotal", "value": "Test Rain Hourly Total Name"};
+      platform.config.nameOverrides[7] = {"key": "WS85:rainDailyTotal", "value": "Test Rain Daily Total Name"};
+      platform.config.nameOverrides[8] = {"key": "WS85:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
+      platform.config.nameOverrides[9] = {"key": "WS85:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
+      platform.config.nameOverrides[10] = {"key": "WS85:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
 
       device = new WS85(platform, accessory);
 
@@ -154,17 +154,17 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:WS85:windDirection"] = true;
-      platform.config.hidden["0000:WS85:windSpeed"] = true;
-      platform.config.hidden["0000:WS85:windGustSpeed"] = true;
-      platform.config.hidden["0000:WS85:windMaxDailySpeed"] = true;
-      platform.config.hidden["0000:WS85:rainRate"] = true;
-      platform.config.hidden["0000:WS85:rainEventTotal"] = true;
-      platform.config.hidden["0000:WS85:rainHourlyTotal"] = true;
-      platform.config.hidden["0000:WS85:rainDailyTotal"] = true;
-      platform.config.hidden["0000:WS85:rainWeeklyTotal"] = true;
-      platform.config.hidden["0000:WS85:rainMonthlyTotal"] = true;
-      platform.config.hidden["0000:WS85:rainYearlyTotal"] = true;
+      platform.config.hidden["WS85:windDirection"] = true;
+      platform.config.hidden["WS85:windSpeed"] = true;
+      platform.config.hidden["WS85:windGustSpeed"] = true;
+      platform.config.hidden["WS85:windMaxDailySpeed"] = true;
+      platform.config.hidden["WS85:rainRate"] = true;
+      platform.config.hidden["WS85:rainEventTotal"] = true;
+      platform.config.hidden["WS85:rainHourlyTotal"] = true;
+      platform.config.hidden["WS85:rainDailyTotal"] = true;
+      platform.config.hidden["WS85:rainWeeklyTotal"] = true;
+      platform.config.hidden["WS85:rainMonthlyTotal"] = true;
+      platform.config.hidden["WS85:rainYearlyTotal"] = true;
 
       device = new WS85(platform, accessory);
 

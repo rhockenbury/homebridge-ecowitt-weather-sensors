@@ -72,13 +72,13 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:WH40:rainRate", "value": "Test Rain Rate Name"};
-      platform.config.nameOverrides[1] = {"key": "0000:WH40:rainEventTotal", "value": "Test Rain Event Total Name"};
-      platform.config.nameOverrides[2] = {"key": "0000:WH40:rainHourlyTotal", "value": "Test Rain Hourly Total Name"};
-      platform.config.nameOverrides[3] = {"key": "0000:WH40:rainDailyTotal", "value": "Test Rain Daily Total Name"};
-      platform.config.nameOverrides[4] = {"key": "0000:WH40:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
-      platform.config.nameOverrides[5] = {"key": "0000:WH40:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
-      platform.config.nameOverrides[6] = {"key": "0000:WH40:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
+      platform.config.nameOverrides[0] = {"key": "WH40:rainRate", "value": "Test Rain Rate Name"};
+      platform.config.nameOverrides[1] = {"key": "WH40:rainEventTotal", "value": "Test Rain Event Total Name"};
+      platform.config.nameOverrides[2] = {"key": "WH40:rainHourlyTotal", "value": "Test Rain Hourly Total Name"};
+      platform.config.nameOverrides[3] = {"key": "WH40:rainDailyTotal", "value": "Test Rain Daily Total Name"};
+      platform.config.nameOverrides[4] = {"key": "WH40:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
+      platform.config.nameOverrides[5] = {"key": "WH40:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
+      platform.config.nameOverrides[6] = {"key": "WH40:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
 
       device = new WH40(platform, accessory);
 
@@ -115,13 +115,13 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:WH40:rainRate"] = true;
-      platform.config.hidden["0000:WH40:rainEventTotal"] = true;
-      platform.config.hidden["0000:WH40:rainHourlyTotal"] = true;
-      platform.config.hidden["0000:WH40:rainDailyTotal"] = true;
-      platform.config.hidden["0000:WH40:rainWeeklyTotal"] = true;
-      platform.config.hidden["0000:WH40:rainMonthlyTotal"] = true;
-      platform.config.hidden["0000:WH40:rainYearlyTotal"] = true;
+      platform.config.hidden["WH40:rainRate"] = true;
+      platform.config.hidden["WH40:rainEventTotal"] = true;
+      platform.config.hidden["WH40:rainHourlyTotal"] = true;
+      platform.config.hidden["WH40:rainDailyTotal"] = true;
+      platform.config.hidden["WH40:rainWeeklyTotal"] = true;
+      platform.config.hidden["WH40:rainMonthlyTotal"] = true;
+      platform.config.hidden["WH40:rainYearlyTotal"] = true;
 
       device = new WH40(platform, accessory);
 

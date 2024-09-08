@@ -46,8 +46,8 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "0000:HP2560:temperature", "value": "Test Temperature Name"};
-      platform.config.nameOverrides[1] = {"key": "0000:HP2560:humidity", "value": "Test Humidity Name"};
+      platform.config.nameOverrides[0] = {"key": "HP2560:indoorTemperature", "value": "Test Temperature Name"};
+      platform.config.nameOverrides[1] = {"key": "HP2560:indoorHumidity", "value": "Test Humidity Name"};
 
       device = new HP2560(platform, accessory, "HP2560");
 
@@ -59,8 +59,8 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with general override', (done) => {
-      platform.config.hidden["temperature"] = true;
-      platform.config.hidden["humidity"] = true;
+      platform.config.hidden["indoorTemperature"] = true;
+      platform.config.hidden["indoorHumidity"] = true;
 
       device = new HP2560(platform, accessory, "HP2560");
 
@@ -70,8 +70,8 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["0000:HP2560:temperature"] = true;
-      platform.config.hidden["0000:HP2560:humidity"] = true;
+      platform.config.hidden["HP2560:indoorTemperature"] = true;
+      platform.config.hidden["HP2560:indoorHumidity"] = true;
 
       device = new HP2560(platform, accessory, "HP2560");
 
