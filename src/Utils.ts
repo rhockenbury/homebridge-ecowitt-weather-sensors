@@ -364,38 +364,38 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
 
   // hidden
   if (truthy(v1Config?.thbin?.hide)) {
-    v2Config.hidden[`GW1000`] = true;
-    v2Config.hidden[`GW2000`] = true;
-    v2Config.hidden[`HP2560`] = true;
+    v2Config.hidden['GW1000'] = true;
+    v2Config.hidden['GW2000'] = true;
+    v2Config.hidden['HP2560'] = true;
   }
 
   if (truthy(v1Config?.ws?.hide)) {
-    v2Config.hidden[`WS85`] = true;
-    v2Config.hidden[`WH65`] = true;
+    v2Config.hidden['WS85'] = true;
+    v2Config.hidden['WH65'] = true;
   }
 
   if (truthy(v1Config?.th?.hide)) {
-    v2Config.hidden[`WH31`] = true;
+    v2Config.hidden['WH31'] = true;
   }
 
   if (truthy(v1Config?.tf?.hide)) {
-    v2Config.hidden[`WH34`] = true;
+    v2Config.hidden['WH34'] = true;
   }
 
   if (truthy(v1Config?.soil?.hide)) {
-    v2Config.hidden[`WH51`] = true;
+    v2Config.hidden['WH51'] = true;
   }
 
   if (truthy(v1Config?.leak?.hide)) {
-    v2Config.hidden[`WH55`] = true;
+    v2Config.hidden['WH55'] = true;
   }
 
   if (truthy(v1Config?.pm25?.hide)) {
-    v2Config.hidden[`WH41`] = true;
+    v2Config.hidden['WH41'] = true;
   }
 
   if (truthy(v1Config?.lightning?.hide)) {
-    v2Config.hidden[`WH57`] = true;
+    v2Config.hidden['WH57'] = true;
   }
 
   if (truthy(v1Config?.ws?.uv?.hide)) {

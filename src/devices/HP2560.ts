@@ -9,6 +9,7 @@ import * as utils from './../Utils';
 
 export class HP2560 extends EcowittAccessory {
   static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
+
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
 
@@ -27,7 +28,8 @@ export class HP2560 extends EcowittAccessory {
 
     if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
       const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
+      this.temperature = new TemperatureSensor(platform, accessory,
+        `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
     } else {
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, 'Temperature');
       this.temperature.removeService();

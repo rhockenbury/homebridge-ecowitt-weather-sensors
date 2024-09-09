@@ -8,6 +8,7 @@ import * as utils from './../Utils';
 
 export class WH55 extends EcowittAccessory {
   static readonly properties: string[] = ['waterLeak'];
+
   protected battery: Service;
   protected leak: LeakSensor | undefined;
 

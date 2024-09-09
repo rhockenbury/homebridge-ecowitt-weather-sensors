@@ -8,6 +8,7 @@ import * as utils from './../Utils';
 
 export class WH34 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature'];
+
   protected battery: Service;
   protected temperature: TemperatureSensor | undefined;
 

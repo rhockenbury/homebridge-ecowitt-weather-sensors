@@ -8,7 +8,10 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WS85 extends EcowittAccessory {
-  static readonly properties: string[] = ['windDirection', 'windSpeed', 'windGustSpeed', 'windMaDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
+  static readonly properties: string[] = ['windDirection', 'windSpeed', 'windGustSpeed',
+    'windMaDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal',
+    'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
+
   protected battery: Service;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;

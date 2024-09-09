@@ -18,7 +18,7 @@ This plugin operates as a service that listens for data reports from an Ecowitt 
 
 For bugs, feature requests, and questions - [please file a new issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).
 
-> :arrow_up: :arrow_up: :arrow_up: **v2 beta is now available! These docs are for v2, and v1 docs can be found [here](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/v1). The [v2 config migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide) is also available. Note that the initial v2 beta has temporarily removed support for WH41, WH57, and WH65.  These will be added back shortly in an upcoming release. Please [report any issues](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).**
+> :arrow\_up: :arrow\_up: :arrow\_up: **v2 beta is now available! These docs are for v2, and v1 docs can be found [here](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/v1-release). The [v2 config migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide) is also available. Note that the initial v2 beta has temporarily removed support for WH41, WH57, and WH65.  These will be added back shortly in an upcoming release. Please [report any issues](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose).**
 
 ## Features
 
