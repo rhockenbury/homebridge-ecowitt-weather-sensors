@@ -1,0 +1,100 @@
+{
+    "platform": "Ecowitt",
+    "mac": "00:00:00:00:00:00",
+    "port": 8080,
+    "path": "/data/report",
+    "unregister": false,
+    "ws": {
+        "hide": false,
+        "uv": {
+            "hide": true,
+            "threshold": 6
+        },
+        "solarradiation": {
+            "hide": true,
+            "luxFactor": 126.7
+        },
+        "wind": {
+            "units": "mph",
+            "hide": [
+                "Direction",
+                "Speed",
+                "Gust",
+                "MaxDailyGust"
+            ],
+            "speedThreshold": 15,
+            "speedHighThreshold": 7,
+            "gustThreshold": 20,
+            "maxDailyGustThreshold": 20
+        },
+        "rain": {
+            "units": "in",
+            "hide": [
+                "Rate",
+                "Event",
+                "Hourly",
+                "Daily",
+                "Weekly",
+                "Monthly",
+                "Yearly"
+            ],
+            "rateThreshold": 0.05,
+            "eventThreshold": 1,
+            "hourlyThreshold": 1
+        }
+    },
+    "thbin": {
+        "hide": false
+    },
+    "th": {
+        "hide": false,
+        "name1": "THERM/HYDRO NAME1VALUE",
+        "name2": "THERM/HYDRO NAME2VALUE",
+        "name3": "THERM/HYDRO NAME3VALUE",
+        "name4": "THERM/HYDRO NAME4VALUE",
+        "name5": "THERM/HYDRO NAME5VALUE",
+        "name6": "THERM/HYDRO NAME6VALUE",
+        "name7": "THERM/HYDRO NAME7VALUE",
+        "name8": "THERM/HYDRO NAME8VALUE"
+    },
+    "tf": {
+        "hide": false,
+        "name1": "THERM NAME1VALUE",
+        "name2": "THERM NAME2VALUE",
+        "name3": "THERM NAME3VALUE",
+        "name4": "THERM NAME4VALUE",
+        "name5": "THERM NAME5VALUE",
+        "name6": "THERM NAME6VALUE",
+        "name7": "THERM NAME7VALUE",
+        "name8": "THERM NAME8VALUE"
+    },
+    "soil": {
+        "hide": false,
+        "name1": "SOIL NAME1VALUE",
+        "name2": "SOIL NAME2VALUE",
+        "name3": "SOIL NAME3VALUE",
+        "name4": "SOIL NAME4VALUE",
+        "name5": "SOIL NAME5VALUE",
+        "name6": "SOIL NAME6VALUE",
+        "name7": "SOIL NAME7VALUE",
+        "name8": "SOIL NAME8VALUE"
+    },
+    "leak": {
+        "hide": false,
+        "name1": "LEAK NAME1VALUE",
+        "name2": "LEAK NAME2VALUE",
+        "name3": "LEAK NAME3VALUE",
+        "name4": "LEAK NAME4VALUE"
+    },
+    "pm25": {
+        "hide": false,
+        "name1": "AIR NAME1VALUE",
+        "name2": "AIR NAME2VALUE",
+        "name3": "AIR NAME3VALUE",
+        "name4": "AIR NAME4VALUE"
+    },
+    "lightning": {
+        "hide": false,
+        "units": "km"
+    }
+}

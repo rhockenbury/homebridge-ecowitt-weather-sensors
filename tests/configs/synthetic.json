@@ -1,0 +1,21 @@
+{
+    "platform": "Ecowitt",
+    "baseStation": {
+        "mac": "00:00:00:00:00:00",
+        "port": 8080,
+        "path": "/data/report"
+    },
+    "additional": {
+        "staticNames": "false",
+        "validateMac": "true",
+        "luxFactor": 126.7,
+        "acceptAnyPath": "false",
+        "validateTimestamp": "false"
+    },
+    "units": {
+        "wind": "mph",
+        "rain": "in",
+        "distance": "mi",
+        "temperature": "fh"
+    }
+}
