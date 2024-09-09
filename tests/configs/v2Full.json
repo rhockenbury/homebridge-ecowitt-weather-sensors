@@ -1,0 +1,175 @@
+{
+    "platform": "Ecowitt",
+    "baseStation": {
+        "mac": "00:00:00:00:00:00",
+        "port": 8080,
+        "path": "/data/report"
+    },
+    "nameOverrides": [
+        {
+            "key": "WH31CH1",
+            "value": "THERM/HYDRO NAME1VALUE"
+        },
+        {
+            "key": "WH31CH2",
+            "value": "THERM/HYDRO NAME2VALUE"
+        },
+        {
+            "key": "WH31CH3",
+            "value": "THERM/HYDRO NAME3VALUE"
+        },
+        {
+            "key": "WH31CH4",
+            "value": "THERM/HYDRO NAME4VALUE"
+        },
+        {
+            "key": "WH31CH5",
+            "value": "THERM/HYDRO NAME5VALUE"
+        },
+        {
+            "key": "WH31CH6",
+            "value": "THERM/HYDRO NAME6VALUE"
+        },
+        {
+            "key": "WH31CH7",
+            "value": "THERM/HYDRO NAME7VALUE"
+        },
+        {
+            "key": "WH31CH8",
+            "value": "THERM/HYDRO NAME8VALUE"
+        },
+        {
+            "key": "WH34CH1",
+            "value": "THERM NAME1VALUE"
+        },
+        {
+            "key": "WH34CH2",
+            "value": "THERM NAME2VALUE"
+        },
+        {
+            "key": "WH34CH3",
+            "value": "THERM NAME3VALUE"
+        },
+        {
+            "key": "WH34CH4",
+            "value": "THERM NAME4VALUE"
+        },
+        {
+            "key": "WH34CH5",
+            "value": "THERM NAME5VALUE"
+        },
+        {
+            "key": "WH34CH6",
+            "value": "THERM NAME6VALUE"
+        },
+        {
+            "key": "WH34CH7",
+            "value": "THERM NAME7VALUE"
+        },
+        {
+            "key": "WH34CH8",
+            "value": "THERM NAME8VALUE"
+        },
+        {
+            "key": "WH41CH1",
+            "value": "AIR NAME1VALUE"
+        },
+        {
+            "key": "WH41CH2",
+            "value": "AIR NAME2VALUE"
+        },
+        {
+            "key": "WH41CH3",
+            "value": "AIR NAME3VALUE"
+        },
+        {
+            "key": "WH41CH4",
+            "value": "AIR NAME4VALUE"
+        },
+        {
+            "key": "WH51CH1",
+            "value": "SOIL NAME1VALUE"
+        },
+        {
+            "key": "WH51CH2",
+            "value": "SOIL NAME2VALUE"
+        },
+        {
+            "key": "WH51CH3",
+            "value": "SOIL NAME3VALUE"
+        },
+        {
+            "key": "WH51CH4",
+            "value": "SOIL NAME4VALUE"
+        },
+        {
+            "key": "WH51CH5",
+            "value": "SOIL NAME5VALUE"
+        },
+        {
+            "key": "WH51CH6",
+            "value": "SOIL NAME6VALUE"
+        },
+        {
+            "key": "WH51CH7",
+            "value": "SOIL NAME7VALUE"
+        },
+        {
+            "key": "WH51CH8",
+            "value": "SOIL NAME8VALUE"
+        },
+        {
+            "key": "WH55CH1",
+            "value": "LEAK NAME1VALUE"
+        },
+        {
+            "key": "WH55CH2",
+            "value": "LEAK NAME2VALUE"
+        },
+        {
+            "key": "WH55CH3",
+            "value": "LEAK NAME3VALUE"
+        },
+        {
+            "key": "WH55CH4",
+            "value": "LEAK NAME4VALUE"
+        }
+    ],
+    "additional": {
+        "luxFactor": 126.7,
+        "staticNames": "false",
+        "validateMac": "true",
+        "acceptAnyPath": "false",
+        "validateTimestamp": "true"
+    },
+    "thresholds": {
+        "uvIndex": 6,
+        "windSpeed": 72,
+        "windGustSpeed": 72,
+        "windMaxDailySpeed": 72,
+        "rainRate": 0.002,
+        "rainEventTotal": 0.039,
+        "rainHourlyTotal": 0.039
+    },
+    "hidden": {
+        "uvIndex": true,
+        "solarRadiation": true,
+        "rainRate": true,
+        "rainEventTotal": true,
+        "rainHourlyTotal": true,
+        "rainDailyTotal": true,
+        "rainWeeklyTotal": true,
+        "rainMonthlyTotal": true,
+        "rainYearlyTotal": true,
+        "windDirection": true,
+        "windSpeed": true,
+        "windGustSpeed": true,
+        "windMaxDailySpeed": true
+    },
+    "units": {
+        "wind": "mph",
+        "rain": "in",
+        "distance": "km",
+        "temperature": "fh"
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "PASSKEY": "528C8E6CD4A3C6598999A0E9DF15AD32",
+  "stationtype": "GW1000B_V1.7.4",
+  "runtime": "20231",
+  "dateutc": "2022-07-13 21:54:43",
+  "tempinf": "75.92",
+  "humidityin": "53",
+  "baromrelin": "29.341",
+  "baromabsin": "29.341",
+  "freq": "915M",
+  "model": "GW1000B_Pro"
+}

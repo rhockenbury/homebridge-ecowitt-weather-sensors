@@ -1,0 +1,23 @@
+{
+  "PASSKEY": "528C8E6CD4A3C6598999A0E9DF15AD32",
+  "stationtype": "GW2000B_V3.1.4",
+  "runtime": "151251",
+  "heap": "101300",
+  "dateutc": "2024-08-01 18:18:24",
+  "tempinf": "74.48",
+  "humidityin": "40",
+  "baromrelin": "29.822",
+  "baromabsin": "29.822",
+  "soilmoisture1": "53",
+  "soilad1": "274",
+  "soilmoisture2": "43",
+  "soilad2": "235",
+  "soilmoisture3": "50",
+  "soilad3": "253",
+  "soilbatt1": "1.5",
+  "soilbatt2": "1.5",
+  "soilbatt3": "1.5",
+  "freq": "915M",
+  "model": "GW2000B",
+  "interval": "60"
+}
