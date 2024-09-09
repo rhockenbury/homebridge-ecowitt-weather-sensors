@@ -1,67 +1,60 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory, Service } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
+import { LeakSensor } from './../sensors/LeakSensor';
+import * as utils from './../Utils';
+
+//------------------------------------------------------------------------------
 
 export class WH55 extends EcowittAccessory {
+  static readonly properties: string[] = ['waterLeak'];
+
   protected battery: Service;
-  protected leakSensor: Service;
-  protected name: string;
+  protected leak: LeakSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected readonly channel: number,
+    protected channel: number,
   ) {
-    super(
-      platform,
-      accessory,
-      'WH55',
-      'Wireless Multi-channel Water Leak Detection Sensor',
-    );
+    super(platform, accessory, 'WH55', 'Water Leak Sensor (WH55)', channel);
 
-    this.setSerialNumber(`CH${this.channel}`);
+    this.requiredData = [`leakbatt${this.channel}`, `leak_ch${this.channel}`];
 
-    this.name =
-      this.platform.config?.leak?.[`name${this.channel}`] ||
-      `CH${this.channel}`;
+    this.battery = this.addBattery('', false);
 
-    this.leakSensor =
-      this.accessory.getService(this.platform.Service.LeakSensor) ||
-      this.accessory.addService(this.platform.Service.LeakSensor);
+    const hideConfig = this.platform.config?.hidden || {};
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    this.setName(this.leakSensor, this.name);
-    //this.setStatusActive(this.leakSensor, false);
-
-    this.battery = this.addBattery(this.name);
+    if (!utils.includesAny(hidden, ['waterleak', `${this.shortServiceId}:waterleak`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:waterleak`) ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
+      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || 'Water Leak');
+    } else {
+      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, 'Water Leak');
+      this.leak.removeService();
+      this.leak = undefined;
+    }
   }
 
-  update(dataReport) {
-    const leakbatt = dataReport[`leakbatt${this.channel}`];
-    const leak = dataReport[`leak_ch${this.channel}`];
+  //----------------------------------------------------------------------------
 
-    this.platform.log.info(`${this.model} Channel ${this.channel} Update`);
-    this.platform.log.info('  leakbatt:', leakbatt);
-    this.platform.log.info('  leak:', leak);
+  public update(dataReport) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
-    //this.setStatusActive(this.leakSensor, true);
-
-    // Battery
-
-    const batteryLevel = parseFloat(leakbatt) / 5;
+    const batteryLevel = parseFloat(dataReport[`leakbatt${this.channel}`]) / 5.0;
     const lowBattery = batteryLevel <= 0.2;
 
-    this.updateBatteryLevel(this.battery, batteryLevel * 100);
+    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
     this.updateStatusLowBattery(this.battery, lowBattery);
 
-    // Leak
-
-    this.leakSensor.updateCharacteristic(
-      this.platform.Characteristic.LeakDetected,
-      leak === '1'
-        ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED,
+    this.leak?.update(
+      parseFloat(dataReport[`leak_ch${this.channel}`]),
+      dataReport.dateutc,
     );
-
-    this.updateStatusLowBattery(this.leakSensor, lowBattery);
   }
 }

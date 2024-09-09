@@ -1,45 +1,68 @@
-import { PlatformAccessory /*ServiceEventTypes*/ } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
-import { ThermoHygroBaroSensor } from './../ThermoHygroBaroSensor';
+import { EcowittAccessory } from './../EcowittAccessory';
+import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { HumiditySensor } from './../sensors/HumiditySensor';
+import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class GW2000 extends ThermoHygroBaroSensor {
+export class GW2000 extends EcowittAccessory {
+  static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
+
+  protected temperature: TemperatureSensor | undefined;
+  protected humidity: HumiditySensor | undefined;
+
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected readonly modelName: string,
   ) {
-    super(platform, accessory, 'GW2000', 'Ecowitt GW2000');
+    super(platform, accessory, `${modelName}`, `Ecowitt Gateway (${modelName})`);
 
-    this.accessory
-      .getService(this.platform.Service.AccessoryInformation)!
-      .setCharacteristic(
-        this.platform.Characteristic.ConfiguredName,
-        this.platform.baseStationInfo.deviceName,
-      )
-      .setCharacteristic(
-        this.platform.Characteristic.HardwareRevision,
-        platform.baseStationInfo.model,
-      );
+    this.requiredData = ['tempinf', 'humidityin'];
+    this.optionalData = ['baromrelin', 'baromabsin'];
+
+    const hideConfig = this.platform.config?.hidden || {};
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
+      this.temperature = new TemperatureSensor(platform, accessory,
+        `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
+    } else {
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, 'Temperature');
+      this.temperature.removeService();
+      this.temperature = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
+    } else {
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
+      this.humidity.removeService();
+      this.humidity = undefined;
+    }
   }
 
-  update(dataReport) {
-    this.platform.log.debug(`${this.model} Update`);
-    this.platform.log.debug('  tempinf:', dataReport.tempinf);
-    this.platform.log.debug('  humidityin:', dataReport.humidityin);
-    this.platform.log.debug('  baromrelin:', dataReport.baromrelin);
-    this.platform.log.debug('  baromabsin:', dataReport.baromabsin);
+  //----------------------------------------------------------------------------
 
-    this.updateStatusActive(this.temperatureSensor, true);
-    this.updateStatusActive(this.humiditySensor, true);
+  public update(dataReport) {
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    } else {
+      this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
+    }
 
-    this.updateCurrentTemperature(this.temperatureSensor, dataReport.tempinf);
-    this.updateCurrentRelativeHumidity(
-      this.humiditySensor,
-      dataReport.humidityin,
+    this.temperature?.update(
+      parseFloat(dataReport.tempinf),
+      dataReport.dateutc,
     );
 
-    this.updateRelativePressure(dataReport.baromrelin);
-    this.updateAbsolutePressure(dataReport.baromabsin);
+    this.humidity?.update(
+      parseFloat(dataReport.humidityin),
+      dataReport.dateutc,
+    );
   }
 }

@@ -7,7 +7,7 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class GW1000 extends EcowittAccessory {
+export class HP2560 extends EcowittAccessory {
   static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
 
   protected temperature: TemperatureSensor | undefined;

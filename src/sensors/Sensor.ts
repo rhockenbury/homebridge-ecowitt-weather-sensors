@@ -1,8 +1,6 @@
-import {
-  PlatformAccessory,
-  /*CharacteristicValue,*/ Service,
-} from 'homebridge';
+import { PlatformAccessory, Service, Formats, Perms } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
+import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
@@ -15,22 +13,28 @@ export class Sensor {
     if (!this.service.testCharacteristic(this.platform.Characteristic.ConfiguredName)) {
       this.service.addCharacteristic(this.platform.Characteristic.ConfiguredName);
     }
+
+    // custom characteristic for last updated timestamp
+    if (!this.service.testCharacteristic(utils.CHAR_TIME_NAME)) {
+      this.service.addCharacteristic(
+        new this.platform.api.hap.Characteristic(utils.CHAR_TIME_NAME, utils.CHAR_TIME_UUID, {
+          format: Formats.STRING,
+          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+        }));
+    }
   }
 
   //---------------------------------------------------------------------------
 
-  protected serviceUuid(name: string) {
-    const serviceId = this.platform.config.mac + '_' + name;
-    return this.platform.api.hap.uuid.generate(serviceId);
-  }
-
-  //---------------------------------------------------------------------------
-
-  setName(name: string) {
+  protected setName(name: string) {
+    this.service.setCharacteristic(
+      this.platform.Characteristic.ConfiguredName,
+      name,
+    );
     this.service.setCharacteristic(this.platform.Characteristic.Name, name);
   }
 
-  updateName(name: string) {
+  public updateName(name: string) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.ConfiguredName,
       name,
@@ -40,14 +44,14 @@ export class Sensor {
 
   //---------------------------------------------------------------------------
 
-  setStatusActive(active: boolean) {
+  protected setStatusActive(active: boolean) {
     this.service.setCharacteristic(
       this.platform.Characteristic.StatusActive,
       active,
     );
   }
 
-  updateStatusActive(active: boolean) {
+  protected updateStatusActive(active: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.StatusActive,
       active,
@@ -56,14 +60,18 @@ export class Sensor {
 
   //---------------------------------------------------------------------------
 
-  updateStatusLowBattery(lowBattery: boolean) {
-    this.service.updateCharacteristic(
-      this.platform.Characteristic.StatusLowBattery,
-      lowBattery
-        ? this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_LOW
-        : this.platform.Characteristic.StatusLowBattery.BATTERY_LEVEL_NORMAL,
-    );
+  public removeService() {
+    this.accessory.removeService(this.service);
   }
 
   //---------------------------------------------------------------------------
+
+  protected updateTime(time: string) {
+    this.service.updateCharacteristic(
+      utils.CHAR_TIME_NAME,
+      `${time} UTC`,
+    );
+  }
+
+  //----------------------------------------------------------------------------
 }
