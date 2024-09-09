@@ -2,420 +2,429 @@
   "pluginAlias": "Ecowitt",
   "pluginType": "platform",
   "singular": true,
-  "footerDisplay": "For help with configuring this plugin, [see the configuration docs](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration)",
+  "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide\">V2 Migration Guide</a></p><p align=\"center\">",
+  "footerDisplay": "All config changes take effect <em><strong>when a new data report is received</strong></em> after the next Homebridge restart.</p>",
   "schema": {
     "type": "object",
+    "additionalProperties": true,
     "properties": {
-      "mac": {
-        "title": "MAC Address",
-        "type": "string",
-        "pattern": "^([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}$",
-        "required": true,
-        "description": "The MAC address of your console or gateway"
-      },
-      "port": {
-        "title": "Port",
-        "type": "integer",
-        "required": true,
-        "default": 8080,
-        "description": "Port number on which to listen for data reports"
-      },
-      "path": {
-        "title": "Path",
-        "type": "string",
-        "required": true,
-        "default": "/data/report",
-        "description": "Host path which will receive data reports"
-      },
-      "unregister": {
-        "title": "Unregister",
-        "type": "boolean",
-        "required": true,
-        "default": false,
-        "description": "Removes existing accessories and reregisters with defaults (only enable when you're sure this is what you want)"
-      },
-      "ws": {
+      "baseStation": {
         "type": "object",
+        "additionalProperties": true,
         "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "uv": {
-            "type": "object",
-            "properties": {
-              "hide": {
-                "title": "Hide",
-                "type": "boolean",
-                "default": false
-              },
-              "threshold": {
-                "title": "Threshold",
-                "type": "integer",
-                "default": 6,
-                "description": "<p class='help-block'><br/><b><u>UV Levels</u></b><br/>0-2: Low<br/>3-5: Moderate<br/>6-7: High<br/>8-10: Very High<br/>11+: Extreme</p>"
-              }
-            }
-          },
-          "solarradiation": {
-            "type": "object",
-            "properties": {
-              "hide": {
-                "title": "Hide",
-                "type": "boolean",
-                "default": false
-              },
-              "luxFactor": {
-                "title": "W/m² to lux conversion factor",
-                "type": "number",
-                "default": 126.7
-              }
-            }
-          },
-          "wind": {
-            "type": "object",
-            "properties": {
-              "units": {
-                "title": "Units",
-                "type": "string",
-                "default": "mph",
-                "oneOf": [
-                  {
-                    "title": "Miles per hour",
-                    "enum": ["mph"]
-                  },
-                  {
-                    "title": "Knots",
-                    "enum": ["kts"]
-                  },
-                  {
-                    "title": "Kilometers per hour",
-                    "enum": ["kmh"]
-                  },
-                  {
-                    "title": "Meters per second",
-                    "enum": ["mps"]
-                  }
-                ],
-                "required": true
-              },
-              "hide": {
-                "title": "Hide",
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "title": "Indicator",
-                  "type": "string",
-                  "enum": ["Direction", "Speed", "Gust", "MaxDailyGust"]
-                }
-              },
-              "speedThreshold": {
-                "title": "Wind speed threshold",
-                "type": "integer",
-                "minimum": 0
-              },
-              "gustThreshold": {
-                "title": "Wind gusts threshold",
-                "type": "integer",
-                "minimum": 0
-              },
-              "maxDailyGustThreshold": {
-                "title": "Max daily gust threshold",
-                "type": "integer",
-                "minimum": 0,
-                "description": "Blank threshold = no detection trigger"
-              }
-            }
-          },
-          "rain": {
-            "type": "object",
-            "properties": {
-              "units": {
-                "title": "Units",
-                "type": "string",
-                "default": "in",
-                "oneOf": [
-                  {
-                    "title": "Millimeters",
-                    "enum": ["mm"]
-                  },
-                  {
-                    "title": "Inches",
-                    "enum": ["in"]
-                  }
-                ],
-                "required": true
-              },
-              "hide": {
-                "title": "Hide",
-                "type": "array",
-                "uniqueItems": true,
-                "items": {
-                  "title": "Indicator",
-                  "type": "string",
-                  "enum": [
-                    "Rate",
-                    "Event",
-                    "Hourly",
-                    "Daily",
-                    "Weekly",
-                    "Monthly",
-                    "Yearly"
-                  ]
-                }
-              },
-              "rateThreshold": {
-                "title": "Rate threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "eventThreshold": {
-                "title": "Event threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "hourlyThreshold": {
-                "title": "Hourly threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "dailyThreshold": {
-                "title": "Daily threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "weeklyThreshold": {
-                "title": "Weekly threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "monthlyThreshold": {
-                "title": "Monthly threshold",
-                "minimum": 0,
-                "type": "number"
-              },
-              "yearlyThreshold": {
-                "title": "Yearly threshold",
-                "minimum": 0,
-                "type": "number",
-                "description": "Blank threshold = no detection trigger"
-              }
-            }
-          }
-        }
-      },
-      "thbin": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          }
-        }
-      },
-      "th": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "name1": {
-            "title": "Channel 1",
-            "type": "string"
-          },
-          "name2": {
-            "title": "Channel 2",
-            "type": "string"
-          },
-          "name3": {
-            "title": "Channel 3",
-            "type": "string"
-          },
-          "name4": {
-            "title": "Channel 4",
-            "type": "string"
-          },
-          "name5": {
-            "title": "Channel 5",
-            "type": "string"
-          },
-          "name6": {
-            "title": "Channel 6",
-            "type": "string"
-          },
-          "name7": {
-            "title": "Channel 7",
-            "type": "string"
-          },
-          "name8": {
-            "title": "Channel 8",
-            "type": "string"
-          }
-        }
-      },
-      "tf": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "name1": {
-            "title": "Channel 1",
-            "type": "string"
-          },
-          "name2": {
-            "title": "Channel 2",
-            "type": "string"
-          },
-          "name3": {
-            "title": "Channel 3",
-            "type": "string"
-          },
-          "name4": {
-            "title": "Channel 4",
-            "type": "string"
-          },
-          "name5": {
-            "title": "Channel 5",
-            "type": "string"
-          },
-          "name6": {
-            "title": "Channel 6",
-            "type": "string"
-          },
-          "name7": {
-            "title": "Channel 7",
-            "type": "string"
-          },
-          "name8": {
-            "title": "Channel 8",
-            "type": "string"
-          }
-        }
-      },
-      "soil": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "name1": {
-            "title": "Channel 1",
-            "type": "string"
-          },
-          "name2": {
-            "title": "Channel 2",
-            "type": "string"
-          },
-          "name3": {
-            "title": "Channel 3",
-            "type": "string"
-          },
-          "name4": {
-            "title": "Channel 4",
-            "type": "string"
-          },
-          "name5": {
-            "title": "Channel 5",
-            "type": "string"
-          },
-          "name6": {
-            "title": "Channel 6",
-            "type": "string"
-          },
-          "name7": {
-            "title": "Channel 7",
-            "type": "string"
-          },
-          "name8": {
-            "title": "Channel 8",
-            "type": "string"
-          }
-        }
-      },
-      "leak": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "name1": {
-            "title": "Channel 1",
-            "type": "string"
-          },
-          "name2": {
-            "title": "Channel 2",
-            "type": "string"
-          },
-          "name3": {
-            "title": "Channel 3",
-            "type": "string"
-          },
-          "name4": {
-            "title": "Channel 4",
-            "type": "string"
-          }
-        }
-      },
-      "pm25": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "name1": {
-            "title": "Channel 1",
-            "type": "string"
-          },
-          "name2": {
-            "title": "Channel 2",
-            "type": "string"
-          },
-          "name3": {
-            "title": "Channel 3",
-            "type": "string"
-          },
-          "name4": {
-            "title": "Channel 4",
-            "type": "string"
-          }
-        }
-      },
-      "lightning": {
-        "type": "object",
-        "properties": {
-          "hide": {
-            "title": "Hide",
-            "type": "boolean",
-            "default": false
-          },
-          "units": {
-            "title": "Distance Units",
+          "mac": {
+            "title": "MAC Address",
             "type": "string",
-            "default": "mi",
+            "pattern": "^([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}$",
+            "required": true,
+            "placeholder": "e.g. 30:C9:22:3E:DD:2B",
+            "description": "The MAC address of the console or gateway"
+          },
+          "port": {
+            "title": "Port",
+            "type": "integer",
+            "default": 8080,
+            "minimum": 1024,
+            "description": "Port number to listen for data reports"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string",
+            "pattern": "^/[A-Za-z/]+[A-Za-z]$",
+            "required": true,
+            "default": "/data/report",
+            "description": "Host path to receive data reports"
+          }
+        }
+      },
+      "nameOverrides": {
+        "type": "array",
+        "items": {
+          "title": "Name Override",
+          "type": "object",
+          "notitle": true,
+          "properties": {
+            "key": {
+              "title": "Sensor ID",
+              "type": "string",
+              "placeholder": "e.g. WS85:rainRate, WH51CH1:waterLeak"
+            },
+            "value": {
+              "title": "Name Override",
+              "type": "string",
+              "placeholder": "e.g. Current Precip, Utility Room"
+            }
+          }
+        }
+      },
+      "additional": {
+        "type": "object",
+        "properties": {
+          "staticNames": {
+            "title": "Static Names",
+            "type": "string",
+            "required": true,
+            "default": false,
+            "description": "Enable or disable weather metric values <br> in the service names",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
+          },
+          "validateMac": {
+            "title": "MAC Address Validation",
+            "type": "string",
+            "required": true,
+            "default": true,
+            "description": "Verify the MAC address in each received <br> data report",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
+          },
+          "luxFactor": {
+            "title": "Lux Conversion Factor",
+            "type": "number",
+            "required": true,
+            "default": 126.7,
+            "description": "Factor to convert irradiance (W/m²) <br> to illuminance (lux)"
+          },
+          "acceptAnyPath": {
+            "title": "Accept Any Path",
+            "type": "string",
+            "required": true,
+            "default": false,
+            "description": "Process any data report regardless <br> of URL path received on",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
+          },
+          "validateTimestamp": {
+            "title": "Timestamp Validation",
+            "type": "string",
+            "required": true,
+            "default": true,
+            "description": "Verify the timestamp in each received <br> data report",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
+          }
+        }
+      },
+      "thresholds": {
+        "type": "object",
+        "properties": {
+          "windSpeed": {
+            "title": "Wind Speed",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "windGustSpeed": {
+            "title": "Wind Gust Speed",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "windMaxDailySpeed": {
+            "title": "Wind Max Daily Speed",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainRate": {
+            "title": "Rain Rate",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainEventTotal": {
+            "title": "Rain Event Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainHourlyTotal": {
+            "title": "Rain Hourly Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainDailyTotal": {
+            "title": "Rain Daily Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainWeeklyTotal": {
+            "title": "Rain Weekly Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainMonthlyTotal": {
+            "title": "Rain Monthly Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "rainYearlyTotal": {
+            "title": "Rain Monthly Total",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "uvIndex": {
+            "title": "UV Index",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          }
+        }
+      },
+      "hidden": {
+        "type": "object",
+        "properties": {
+          "windDirection": {
+            "title": "Wind Direction",
+            "type": "boolean",
+            "required": false
+          },
+          "windSpeed": {
+            "title": "Wind Speed",
+            "type": "boolean",
+            "required": false
+          },
+          "windGustSpeed": {
+            "title": "Wind Gust Speed",
+            "type": "boolean",
+            "required": false
+          },
+          "windMaxDailySpeed": {
+            "title": "Wind Max Daily Speed",
+            "type": "boolean",
+            "required": false
+          },
+          "rainRate": {
+            "title": "Rain Rate",
+            "type": "boolean",
+            "required": false
+          },
+          "rainEventTotal": {
+            "title": "Rain Event Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainHourlyTotal": {
+            "title": "Rain Hourly Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainDailyTotal": {
+            "title": "Rain Daily Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainWeeklyTotal": {
+            "title": "Rain Weekly Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainMonthlyTotal": {
+            "title": "Rain Monthly Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainYearlyTotal": {
+            "title": "Rain Yearly Total",
+            "type": "boolean",
+            "required": false
+          },
+          "solarRadiation": {
+            "title": "Solar Radiation",
+            "type": "boolean",
+            "required": false
+          },
+          "uvIndex": {
+            "title": "UV Index",
+            "type": "boolean",
+            "required": false
+          },
+          "dewPoint": {
+            "title": "Dew Point",
+            "type": "boolean",
+            "required": false
+          },
+          "indoorTemperature": {
+            "title": "Indoor Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "temperature": {
+            "title": "Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "indoorHumidity": {
+            "title": "Indoor Humidity",
+            "type": "boolean",
+            "required": false
+          },
+          "humidity": {
+            "title": "Humidity",
+            "type": "boolean",
+            "required": false
+          },
+          "soilMoisture": {
+            "title": "Soil Moisture",
+            "type": "boolean",
+            "required": false
+          },
+          "waterLeak": {
+            "title": "Water Leak",
+            "type": "boolean",
+            "required": false
+          },
+          "GW1000": {
+            "title": "GW1000",
+            "type": "boolean",
+            "required": false
+          },
+          "GW2000": {
+            "title": "GW2000",
+            "type": "boolean",
+            "required": false
+          },
+          "HP2560": {
+            "title": "HP2560",
+            "type": "boolean",
+            "required": false
+          },
+          "WH25": {
+            "title": "WH25",
+            "type": "boolean",
+            "required": false
+          },
+          "WH31": {
+            "title": "WH31",
+            "type": "boolean",
+            "required": false
+          },
+          "WH34": {
+            "title": "WH34",
+            "type": "boolean",
+            "required": false
+          },
+          "WH40": {
+            "title": "WH40",
+            "type": "boolean",
+            "required": false
+          },
+          "WH51": {
+            "title": "WH51",
+            "type": "boolean",
+            "required": false
+          },
+          "WH55": {
+            "title": "WH55",
+            "type": "boolean",
+            "required": false
+          },
+          "WS85": {
+            "title": "WS85",
+            "type": "boolean",
+            "required": false
+          }
+        }
+      },
+      "units": {
+        "type": "object",
+        "properties": {
+          "wind": {
+            "title": "Wind Speed",
+            "type": "string",
+            "default": "mph",
+            "required": true,
             "oneOf": [
               {
-                "title": "Kilometres",
-                "enum": ["km"]
+                "title": "Miles / Hour",
+                "enum": [
+                  "mph"
+                ]
+              },
+              {
+                "title": "Knots",
+                "enum": [
+                  "kts"
+                ]
+              },
+              {
+                "title": "Kilometers / Hour",
+                "enum": [
+                  "kph"
+                ]
+              },
+              {
+                "title": "Meters / Second",
+                "enum": [
+                  "mps"
+                ]
+              }
+            ]
+          },
+          "rain": {
+            "title": "Rain Fall",
+            "type": "string",
+            "default": "in",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Millimeters",
+                "enum": [
+                  "mm"
+                ]
+              },
+              {
+                "title": "Inches",
+                "enum": [
+                  "in"
+                ]
+              }
+            ]
+          },
+          "distance": {
+            "title": "Distance",
+            "type": "string",
+            "default": "mi",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Kilometers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                "enum": [
+                  "km"
+                ]
               },
               {
                 "title": "Miles",
-                "enum": ["mi"]
+                "enum": [
+                  "mi"
+                ]
               }
-            ],
-            "required": true
+            ]
+          },
+          "temperature": {
+            "title": "Temperature",
+            "type": "string",
+            "default": "fh",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Fahrenheit",
+                "enum": [
+                  "fh"
+                ]
+              },
+              {
+                "title": "Celcius",
+                "enum": [
+                  "ce"
+                ]
+              }
+            ]
           }
         }
       }
@@ -426,14 +435,30 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": true,
-      "title": "Base Station (Required)",
+      "title": "Data Report",
       "items": [
         {
-          "type": "section",
-          "expandable": true,
-          "expanded": true,
-          "title": "Data Report Service",
-          "items": ["mac", "port", "path"]
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive weather data.</p>"
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "6 6",
+          "notitle": true,
+          "items": [
+            "baseStation.mac"
+          ]
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "3 3",
+          "notitle": true,
+          "items": [
+            "baseStation.port",
+            "baseStation.path"
+          ]
         }
       ]
     },
@@ -441,148 +466,118 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Outdoor Weather Sensors",
+      "title": "Units",
+      "displayFlex": true,
       "items": [
-        "ws.hide",
         {
-          "type": "fieldset",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.ws.hide;"
-          },
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Select the units for the weather data.</p>"
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "3 3",
+          "items": [
+            "units.wind",
+            "units.distance"
+          ]
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "3 3",
+          "items": [
+            "units.temperature",
+            "units.rain"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "fieldset",
+      "expandable": true,
+      "expanded": false,
+      "title": "Hide Values",
+      "displayFlex": true,
+      "items": [
+        {
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Select the weather data that should not be displayed."
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "2 2",
           "items": [
             {
-              "type": "section",
-              "expandable": true,
-              "expanded": false,
-              "title": "Wind",
+              "type": "flex",
               "items": [
-                "ws.wind.units",
-                "ws.wind.hide",
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.wind.hide.includes('Speed')"
-                  },
-                  "items": ["ws.wind.speedThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.wind.hide.includes('Gust')"
-                  },
-                  "items": ["ws.wind.gustThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.wind.hide.includes('MaxDailyGust')"
-                  },
-                  "items": ["ws.wind.maxDailyGustThreshold"]
-                }
+                "hidden.windDirection",
+                "hidden.windSpeed",
+                "hidden.windGustSpeed",
+                "hidden.windMaxDailySpeed",
+                "hidden.rainRate",
+                "hidden.rainEventTotal",
+                "hidden.rainHourlyTotal"
               ]
             },
             {
-              "type": "section",
-              "expandable": true,
-              "expanded": false,
-              "title": "Rain",
+              "type": "flex",
               "items": [
-                "ws.rain.units",
-                "ws.rain.hide",
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Rate')"
-                  },
-                  "items": ["ws.rain.rateThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Event')"
-                  },
-                  "items": ["ws.rain.EventThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Hourly')"
-                  },
-                  "items": ["ws.rain.hourlyThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Daily')"
-                  },
-                  "items": ["ws.rain.dailyThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Weekly')"
-                  },
-                  "items": ["ws.rain.weeklyThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Monthly')"
-                  },
-                  "items": ["ws.rain.monthlyThreshold"]
-                },
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.rain.hide.includes('Yearly')"
-                  },
-                  "items": ["ws.rain.yearlyThreshold"]
-                }
+                "hidden.rainDailyTotal",
+                "hidden.rainWeeklyTotal",
+                "hidden.rainMonthlyTotal",
+                "hidden.rainYearlyTotal",
+                "hidden.solarRadiation",
+                "hidden.uvIndex",
+                "hidden.dewPoint"
               ]
             },
             {
-              "type": "section",
-              "expandable": true,
-              "expanded": false,
-              "title": "UV",
+              "type": "flex",
               "items": [
-                "ws.uv.hide",
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.uv.hide;"
-                  },
-                  "items": ["ws.uv.threshold"]
-                }
+                "hidden.indoorTemperature",
+                "hidden.temperature",
+                "hidden.indoorHumidity",
+                "hidden.humidity",
+                "hidden.soilMoisture",
+                "hidden.waterLeak"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Select the devices that should not be displayed."
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "2 2",
+          "items": [
+            {
+              "type": "flex",
+              "items": [
+                "hidden.GW1000",
+                "hidden.GW2000",
+                "hidden.HP2560",
+                "hidden.WH25"
               ]
             },
             {
-              "type": "section",
-              "expandable": true,
-              "expanded": false,
-              "title": "Solar Radiation",
+              "type": "flex",
               "items": [
-                "ws.solarradiation.hide",
-                {
-                  "type": "fieldset",
-                  "notitle": true,
-                  "condition": {
-                    "functionBody": "return !model.ws.solarradiation.hide;"
-                  },
-                  "items": ["ws.solarradiation.luxFactor"]
-                }
+                "hidden.WH31",
+                "hidden.WH34",
+                "hidden.WH40"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
+                "hidden.WH51",
+                "hidden.WH55",
+                "hidden.WS85"
               ]
             }
           ]
@@ -593,31 +588,225 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Indoor Thermometer/Hygrometer/Barometer Sensor",
-      "items": ["thbin.hide"]
-    },
-    {
-      "type": "fieldset",
-      "expandable": true,
-      "expanded": false,
-      "title": "Multi-Channel Thermometer/Hygrometer Sensors",
+      "title": "Trigger Thresholds",
+      "displayFlex": true,
       "items": [
-        "th.hide",
         {
-          "type": "fieldset",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.th.hide;"
-          },
+          "type": "help",
+          "helpvalue": "<div class=\"help-block\">Configure the thresholds to trigger the sensor. Select units first and leave empty for no trigger.</div>"
+        },
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "3 3",
           "items": [
-            "th.name1",
-            "th.name2",
-            "th.name3",
-            "th.name4",
-            "th.name5",
-            "th.name6",
-            "th.name7",
-            "th.name8"
+            {
+              "type": "flex",
+              "items": [
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Speed (mph)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Speed (kts)<strong>&nbsp;&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kts';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Speed (kph)<strong>&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Speed (mps)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mps';"
+                  }
+                },
+                "thresholds.windSpeed",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Gust Speed (mph)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Gust Speed (kts)<strong>&nbsp;&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kts';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Gust Speed (kph)<strong>&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Gust Speed (mps)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mps';"
+                  }
+                },
+                "thresholds.windGustSpeed",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Max Daily Speed (mph)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Max Daily Speed (kts)<strong>&nbsp;&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kts';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Max Daily Speed (kph)<strong>&nbsp;",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'kph';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Wind Max Daily Speed (mps)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.wind === 'mps';"
+                  }
+                },
+                "thresholds.windMaxDailySpeed",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Rate (in/h)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Rate (mm/h)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainRate",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Event Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Event Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainEventTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Hourly Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Hourly Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainHourlyTotal"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Daily Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Daily Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainDailyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Weekly Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Weekly Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainWeeklyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Monthly Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Monthly Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainMonthlyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Yearly Total (in)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Yearly Total (mm)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainYearlyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>UV Index<strong>"
+                },
+                "thresholds.uvIndex"
+              ]
+            }
           ]
         }
       ]
@@ -626,24 +815,28 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Multi-Channel Thermometer Sensors",
+      "title": "Name Overrides",
+      "displayFlex": true,
       "items": [
-        "tf.hide",
         {
-          "type": "fieldset",
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor."
+        },
+        {
+          "key": "nameOverrides",
+          "add": "Add Another Override",
           "notitle": true,
-          "condition": {
-            "functionBody": "return !model.tf.hide;"
-          },
+          "type": "flex",
           "items": [
-            "tf.name1",
-            "tf.name2",
-            "tf.name3",
-            "tf.name4",
-            "tf.name5",
-            "tf.name6",
-            "tf.name7",
-            "tf.name8"
+            {
+              "type": "flex",
+              "flex-flow": "row wrap",
+              "flex": "3 3",
+              "items": [
+                "nameOverrides[].key",
+                "nameOverrides[].value"
+              ]
+            }
           ]
         }
       ]
@@ -652,76 +845,34 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Lightning Detection Sensor",
+      "title": "Advanced Options",
+      "displayFlex": true,
       "items": [
-        "lightning.hide",
         {
-          "type": "fieldset",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.lightning.hide;"
-          },
-          "items": ["lightning.units"]
-        }
-      ]
-    },
-    {
-      "type": "fieldset",
-      "expandable": true,
-      "expanded": false,
-      "title": "Soil Moisture Sensors",
-      "items": [
-        "soil.hide",
+          "type": "help",
+          "helpvalue": "<p class=\"help-block\">Configure internal plugin behavior."
+        },
         {
-          "type": "fieldset",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.soil.hide;"
-          },
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "flex": "3 3",
           "items": [
-            "soil.name1",
-            "soil.name2",
-            "soil.name3",
-            "soil.name4",
-            "soil.name5",
-            "soil.name6",
-            "soil.name7",
-            "soil.name8"
+            {
+              "type": "flex",
+              "items": [
+                "additional.staticNames",
+                "additional.validateMac",
+                "additional.validateTimestamp"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
+                "additional.luxFactor",
+                "additional.acceptAnyPath"
+              ]
+            }
           ]
-        }
-      ]
-    },
-    {
-      "type": "fieldset",
-      "expandable": true,
-      "expanded": false,
-      "title": "Leak Detection Sensors",
-      "items": [
-        "leak.hide",
-        {
-          "type": "section",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.leak.hide;"
-          },
-          "items": ["leak.name1", "leak.name2", "leak.name3", "leak.name4"]
-        }
-      ]
-    },
-    {
-      "type": "fieldset",
-      "expandable": true,
-      "expanded": false,
-      "title": "PM2.5 Air Quality Sensors",
-      "items": [
-        "pm25.hide",
-        {
-          "type": "fieldset",
-          "notitle": true,
-          "condition": {
-            "functionBody": "return !model.pm25.hide;"
-          },
-          "items": ["pm25.name1", "pm25.name2", "pm25.name3", "pm25.name4"]
         }
       ]
     }
