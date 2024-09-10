@@ -28,6 +28,14 @@ assignees: ''
 Show the Homebridge logs here, remove any sensitive information.
 ```
 
+**Data Report:**
+
+```
+Please include the Ecowitt data report here.
+Refer to https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report 
+for further instructions on obtaining the data report.
+```
+
 **Plugin Config:**
 
 ```json
