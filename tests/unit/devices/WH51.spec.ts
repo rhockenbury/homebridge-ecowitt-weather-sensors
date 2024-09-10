@@ -42,7 +42,7 @@ configs.forEach(config => {
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
       expect(device.battery.characteristics[3].value).to.equal(75); // batt percentage
-      expect(device.soilMoisture.service.characteristics[0].value).to.equal("Soil Moisture 49%")
+      expect(device.soilMoisture.service.characteristics[0].value).to.equal("Soil Moisture 49 %")
       done();
     });
 

@@ -21,7 +21,7 @@ export class WH40 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH40', 'Rainfall Sensor (WH40)');
+    super(platform, accessory, 'WH40', 'Rainfall Sensor WH40');
 
     this.requiredData = [
       'rainbatt', 'rainratein', 'eventrainin', 'hourlyrainin', 'dailyrainin',

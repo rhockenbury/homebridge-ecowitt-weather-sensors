@@ -40,8 +40,8 @@ configs.forEach(config => {
     it('Update is called successfully', (done) => {
       device.update(dataReport);
 
-      expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49%")
-      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.8°F")
+      expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
+      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.78°F")
       done();
     });
 

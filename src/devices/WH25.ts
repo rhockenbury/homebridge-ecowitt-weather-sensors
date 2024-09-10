@@ -18,7 +18,7 @@ export class WH25 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH25', 'Indoor Thermo Hygro Baro Sensor (WH25)');
+    super(platform, accessory, 'WH25', 'Indoor Thermo Hygro Baro Sensor WH25');
 
     this.requiredData = ['wh25batt', 'tempinf', 'humidityin'];
     this.optionalData = ['baromrelin', 'baromabsin'];

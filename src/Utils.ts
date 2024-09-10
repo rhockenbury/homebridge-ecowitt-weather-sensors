@@ -6,7 +6,7 @@ const merge = require('deepmerge');
 export const BUG_REPORT_LINK = 'https://bit.ly/3yklrWZ';
 export const FEATURE_REQ_LINK = 'https://bit.ly/4fzeAtj';
 export const GATEWAY_SETUP_LINK = 'https://bit.ly/3YGnYVU';
-export const MIGRATION_GUIDE_LINK = 'https://bit.ly/4g6X7bX';
+export const MIGRATION_GUIDE_LINK = 'https://bit.ly/4d4K8oh';
 
 //------------------------------------------------------------------------------
 
@@ -555,6 +555,7 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   v2Config.additional.validateMac = 'true';
   v2Config.additional.acceptAnyPath = 'false';
   v2Config.additional.validateTimestamp = 'true';
+  v2Config.additional.removeStaleDevices = 'true';
 
   // ensure nameOverrides is array so v1 v2 merge concats overrides
   if (!Array.isArray(v1Config?.nameOverrides)) {

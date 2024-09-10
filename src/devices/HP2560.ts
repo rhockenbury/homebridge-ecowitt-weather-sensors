@@ -18,7 +18,7 @@ export class HP2560 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected readonly modelName: string,
   ) {
-    super(platform, accessory, `${modelName}`, `Ecowitt Gateway (${modelName})`);
+    super(platform, accessory, `${modelName}`, `Ecowitt Gateway ${modelName}`);
 
     this.requiredData = ['tempinf', 'humidityin'];
     this.optionalData = ['baromrelin', 'baromabsin'];

@@ -26,18 +26,18 @@ describe('Humdity Sensor Service should be configured for Humidity', () => {
 
   it('Characteristics are updated', (done) => {
     sensor.update(50, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Humidity 50%");
+    expect(sensor.service.characteristics[0].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[1].value).to.equal(50)
-    expect(sensor.service.characteristics[2].value).to.equal("Humidity 50%");
+    expect(sensor.service.characteristics[2].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     done();
   });
 
   it('Characteristics are not updated on bad humidity value', (done) => {
     sensor.update(undefined, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Humidity 50%");
+    expect(sensor.service.characteristics[0].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[1].value).to.equal(50)
-    expect(sensor.service.characteristics[2].value).to.equal("Humidity 50%");
+    expect(sensor.service.characteristics[2].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     done();
   });

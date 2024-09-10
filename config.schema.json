@@ -102,6 +102,15 @@
             "description": "Verify the timestamp in each received <br> data report",
             "enum": [true, false],
             "enumNames": ["Enabled", "Disabled"]
+          },
+          "removeStaleDevices": {
+            "title": "Stale Device Removal",
+            "type": "string",
+            "required": true,
+            "default": true,
+            "description": "Remove an accessory if it is no longer <br> discovered from a data report",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
           }
         }
       },
@@ -869,7 +878,8 @@
               "type": "flex",
               "items": [
                 "additional.luxFactor",
-                "additional.acceptAnyPath"
+                "additional.acceptAnyPath",
+                "additional.removeStaleDevices"
               ]
             }
           ]

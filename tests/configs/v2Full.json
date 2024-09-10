@@ -140,7 +140,8 @@
         "staticNames": "false",
         "validateMac": "true",
         "acceptAnyPath": "false",
-        "validateTimestamp": "true"
+        "validateTimestamp": "true",
+        "removeStaleDevices": "true"
     },
     "thresholds": {
         "uvIndex": 6,
