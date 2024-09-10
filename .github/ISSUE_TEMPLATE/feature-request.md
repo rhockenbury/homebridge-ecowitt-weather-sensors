@@ -20,6 +20,14 @@ assignees: ''
 
 <!-- A clear and concise description of any alternative solutions or features you've considered. -->
 
+**Data Report:**
+
+```
+Please include the Ecowitt data report here.
+Refer to https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report
+for further instructions on obtaining the data report.
+```
+
 **Additional context:**
 
 <!-- Add any other context or screenshots about the feature request here. -->
