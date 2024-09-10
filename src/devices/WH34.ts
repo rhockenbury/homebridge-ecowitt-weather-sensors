@@ -17,7 +17,7 @@ export class WH34 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH34', 'Thermo Sensor (WH34)', channel);
+    super(platform, accessory, 'WH34', 'Thermo Sensor WH34', channel);
 
     this.requiredData = [`tf_batt${this.channel}`, `tf_ch${this.channel}`];
 

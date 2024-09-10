@@ -169,18 +169,21 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 | additional.luxFactor | `126.7` | Factor to multiple the Solar Radiation data (in W/m<sup>2</sup>) to convert to Lux. |
 | additional.acceptAnyPath | `false` | Process data reports that are submitted to the plugin on paths other than the path specified in `baseStation.path`. |
 | additional.validateTimestamp | `true` | Check the recency of the data report with the `dateutc` weather data property, and do not process the data report if its determined to be old. |
+| additional.removeStaleDevices | `true` | Remove the accessory from Homebridge if it does not appear in the current data report during device discovery. |
 
 ## Frequently Asked Questions
 
 ### How do I migrate to this plugin from other Homebridge Ecowitt plugins?
 
-> This plugin includes most prior version of Homebridge Ecowitt plugin forks including v1.0 and v1.1 from [spatialdude](https://github.com/spatialdude), v1.2 and v1.3 from [ochong](https://github.com/ochong) and v1.4 from [pavelserbajlo](https://github.com/pavelserbajlo). If you are currently using any of these mentioned versions, you can switch to the equivalent version of this plugin and get the exact same functionality.
+> This plugin includes most prior version of Homebridge Ecowitt plugin forks including v1.0 and v1.1 from [spatialdude](https://github.com/spatialdude), v1.2 and v1.3 from [ochong](https://github.com/ochong) and v1.4 from [pavelserbajlo](https://github.com/pavelserbajlo). If you are currently using any of these mentioned versions, you can switch to the same version of <em>this</em> plugin and get the same functionality.
 
-> I would also recommend updating to the latest version of this plugin to take advantage of the new features.  To migrate from any v1.x version to v2.x version (or higher), you should clear the Homebridge accessory cache for all Ecowitt accessories, install the latest plugin version, and then restart Homebridge. You may also want to check out the [v2 migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide).
+> I would also recommend updating to the latest version of this plugin to take advantage of the new features. Check out the [v2 migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide) for more info on updating.
 
 ### Does this plugin support devices produced by other manufacturers?
 
-> There are a number of weather station distributors that re-package and re-brand the hardware sensors from [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/). Along with Ecowitt, other notable distributors include Aercus, Ambient Weather, and Frogger.  These brands typically also use similar firmware / software within their ecosystem, and many provide the ability to publish weather data reports to a custom endpoint.  If the weather station brand you are using relies on [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/) hardware, and can publish custom/local weather reports, please [file a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=) to let me know what devices you need support for.
+> There are a number of weather station distributors that re-package and re-brand the hardware sensors from [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/). Along with Ecowitt, other notable distributors include Aercus, Ambient Weather, and Frogger.  These brands typically also use similar firmware / software within their ecosystem, and many provide the ability to publish weather data reports to a custom endpoint.
+
+> If the weather station equipment you are using supports a custom weather service endpoint, please [file a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=) to let me know what devices you would like support for. Please make sure to [include the data report](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report) in the feature request.
 
 ### I use an Ecowitt sensor that's not currently supported.  What can I do to get it supported?
 

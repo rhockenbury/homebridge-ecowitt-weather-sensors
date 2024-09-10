@@ -37,12 +37,12 @@ export class TemperatureSensor extends Sensor {
 
     switch (this.platform.config?.units?.temp) {
       case 'ce':
-        tempStr = `${utils.toCelcius(tempf).toFixed(1)}°C`;
+        tempStr = `${utils.toCelcius(tempf).toFixed(2)}°C`;
         break;
 
       default:
       case 'fa':
-        tempStr = `${tempf.toFixed(1)}°F`;
+        tempStr = `${tempf.toFixed(2)}°F`;
         break;
     }
 

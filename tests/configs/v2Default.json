@@ -10,7 +10,8 @@
         "validateMac": "true",
         "luxFactor": 126.7,
         "acceptAnyPath": "false",
-        "validateTimestamp": "true"
+        "validateTimestamp": "true",
+        "removeStaleDevices": "true"
     },
     "units": {
         "wind": "mph",

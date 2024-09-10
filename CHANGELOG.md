@@ -1,3 +1,15 @@
+### 2.1.0-beta
+
+* Update device names to not include parentheses so default names can be saved in Homekit
+* Update log messages around adding and removing accessories to include accessory UUID
+* Correct migration guide link embedded in log messages
+* Add links to collecting/submitting the Ecowitt data report for Github issues
+* Implement removeStaleDevices setting to auto-remove devices that do not appear in data report
+* Adjusted temperature and humidity service names to mirror Homekit formatting
+* Implement rudimentary data report simulator to support manual plugin testing
+* Fix issue with timestamp validation and timezone offset
+* Add warning if data report interval is set to lower than 10 seconds
+
 ### 2.0.0-beta
 
 * New plugin UI for plugin configuration with expanded capabilities

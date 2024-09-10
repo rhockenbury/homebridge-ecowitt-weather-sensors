@@ -34,11 +34,11 @@ export class HumiditySensor extends Sensor {
       return;
     }
 
-    const humidityStr = `${humidity.toFixed(0)}%`;
+    const humidityStr = `${humidity.toFixed(0)} %`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
     this.updateName(staticNames ? this.name : `${this.name} ${humidityStr}`);
-    this.updateHumidity(humidity);
+    this.updateHumidity(+humidity.toFixed(0));
     this.updateStatusActive(true);
     this.updateTime(time);
   }

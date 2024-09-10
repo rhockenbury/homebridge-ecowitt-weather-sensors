@@ -436,7 +436,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       if (existingAccessory) {
         // the accessory already exists
-        this.log.info(`Restoring existing accessory from cache ${existingAccessory.displayName}`);
+        this.log.info(`Restoring existing accessory from cache - type: ${existingAccessory.displayName}, uuid: ${existingAccessory.UUID}`);
         this.createAccessory(sensor, existingAccessory);
       } else {
         // create a new sensor accessory
@@ -444,9 +444,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         this.createAccessory(sensor, accessory);
 
         if (typeof sensor.channel !== 'undefined') {
-          this.log.info(`Adding new accessory type: ${sensor.type} channel: ${sensor.channel}`);
+          this.log.info(`Adding new accessory - type: ${sensor.type}, channel: ${sensor.channel}, uuid: ${sensor.uuid}`);
         } else {
-          this.log.info(`Adding new accessory type: ${sensor.type}`);
+          this.log.info(`Adding new accessory - type: ${sensor.type}, uuid: ${sensor.uuid}`);
         }
 
         // link the sensor accessory to the platform
@@ -461,19 +461,28 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
+    // remove any accessory that was previously cached but is no longer present in data report
     const sensorUuids = this.baseStationInfo.sensors.map(s => s.uuid);
     const accessoryUuids = this.accessories.map(acc => acc.UUID);
 
     const accessoriesToRemove = accessoryUuids.filter(x => !sensorUuids.includes(x));
     for (const accessoryUuid of accessoriesToRemove) {
       const accessory = this.accessories.find(acc => acc.UUID === accessoryUuid);
-      if (accessory) {
+      if (typeof accessory === 'undefined') {
+        continue;
+      }
+
+      if (utils.truthy(this.config.additional?.removeStaleDevices)) {
         this.api.unregisterPlatformAccessories(
           PLUGIN_NAME,
           PLATFORM_NAME,
           [accessory],
         );
-        this.log.info(`Removing existing accessory from cache ${accessory.displayName}`);
+        this.log.info(`Removing existing accessory from cache - type: ${accessory.displayName}, uuid: ${accessory.UUID}`);
+      } else {
+        this.log.warn(`Existing accessory was detected as stale but was not removed - type: ${accessory.displayName}, ` +
+          `uuid: ${accessory.UUID}. Remove manually through Homebridge, or enable Stale Device Removal in ` +
+          'advanced settings to auto-remove');
       }
     }
 
@@ -483,9 +492,19 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     unconsumed = unconsumed.filter(x => !this.ignoreableReportData.includes(x));
 
     if (unconsumed.length > 0 && Object.keys(this.config?.hidden || {}).length === 0) {
-      this.log.info(`Unused data from data report ${unconsumed}. Unused data may indicate that a sensor was not successfully discovered`);
+      this.log.info(`There was unused data from data report ${unconsumed}. This indicates that a sensor may not ` +
+        'have been successfully discovered. Try restarting Homebridge so that the plugin re-registers ' +
+        'devices from the data report');
     } else {
-      this.log.debug('All data from data report was consummed');
+      this.log.debug('All data from data report was used');
+    }
+
+    // validate data report interval
+    if (typeof dataReport?.interval !== 'undefined') {
+      if (parseInt(dataReport.interval) < 10) {
+        this.log.warn('The lowest recommended data report interval is 10s, please reconfigure your Ecowitt base ' +
+          'station to publish data reports no more than once every 10 seconds');
+      }
     }
   }
 
@@ -558,6 +577,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   updateAccessories(dataReport) {
     const dataDate = new Date(dataReport.dateutc);
+    dataDate.setMinutes(dataDate.getMinutes() - dataDate.getTimezoneOffset()); // timezone correction
     const dateDiff = Math.abs(new Date().getTime() - dataDate.getTime());
 
     let threshold = dataReport?.interval || 30;
@@ -578,9 +598,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     for (const sensor of this.baseStationInfo.sensors) {
       if (typeof sensor.channel !== 'undefined') {
-        this.log.debug(`Updating sensor: ${sensor.type} channel: ${sensor.channel}`);
+        this.log.debug(`Updating sensor - type: ${sensor.type} channel: ${sensor.channel}`);
       } else {
-        this.log.debug(`Updating sensor: ${sensor.type}`);
+        this.log.debug(`Updating sensor - type: ${sensor.type}`);
       }
 
       try {
