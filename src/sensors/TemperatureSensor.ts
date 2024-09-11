@@ -36,20 +36,23 @@ export class TemperatureSensor extends Sensor {
 
     let tempStr: string;
 
+    // homekit will round °C to the nearest 0.5 degrees, and then convert to °F
+    // we mirror this behavior so that temperature in the service name is the same as
+    // reported by homekit
     switch (this.platform.config?.units?.temp) {
       case 'ce':
-        tempStr = `${utils.toCelcius(tempf).toFixed(2)}°C`;
+        tempStr = `${(Math.round(utils.toCelcius(tempf) * 2) / 2).toFixed(2)}°C`;
         break;
 
       default:
       case 'fa':
-        tempStr = `${tempf.toFixed(2)}°F`;
+        tempStr = `${(utils.toFahrenheit(Math.round(utils.toCelcius(tempf) * 2) / 2)).toFixed(2)}°F`;
         break;
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
-    this.updateTemperature(utils.toCelcius(tempf));
+    this.updateTemperature(Math.round(utils.toCelcius(tempf) * 2) / 2);
     this.updateName(staticNames ? this.name : `${this.name} ${tempStr}`);
     this.updateStatusActive(true);
     this.updateTime(time);
