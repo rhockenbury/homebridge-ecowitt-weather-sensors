@@ -99,6 +99,12 @@ export function toCelcius(fahrenheit): number {
 
 //------------------------------------------------------------------------------
 
+export function toFahrenheit(celcius): number {
+  return ((9.0 / 5.0) * parseFloat(celcius)) + 32.0;
+}
+
+//------------------------------------------------------------------------------
+
 export function tohPa(inHg): number {
   return parseFloat(inHg) * 33.8638;
 }
