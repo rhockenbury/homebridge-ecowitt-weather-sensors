@@ -17,7 +17,7 @@ export class WH34 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH34', 'Thermo Sensor WH34', channel);
+    super(platform, accessory, 'WH34', 'Thermo Sensor', channel);
 
     this.requiredData = [`tf_batt${this.channel}`, `tf_ch${this.channel}`];
 
@@ -48,7 +48,7 @@ export class WH34 extends EcowittAccessory {
 
     const batt = parseFloat(dataReport[`tf_batt${this.channel}`]);
     const batteryLevel = batt / 1.6;
-    const lowBattery = batt <= 1.1;
+    const lowBattery = batt <= 1.2;
 
     this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
     this.updateStatusLowBattery(this.battery, lowBattery);

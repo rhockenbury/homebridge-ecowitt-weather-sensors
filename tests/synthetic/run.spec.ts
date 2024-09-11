@@ -81,6 +81,16 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  it('gw1200_wh46 sensors are created', (done) => {
+    testData = require('./data/gw1200_wh46.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(2);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1200");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH46");
+    done();
+  });
+
   it('gw2000_wh51multi sensors are created', (done) => {
     testData = require('./data/gw2000_wh51multi.json');
     platform = createPlatform("synthetic");
@@ -115,12 +125,12 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
-  // NOTE: WS90, WH65, WH57, WH45, WN34, WH26 not supported
-  it('gw2000_ws90_wh65_wh57_wh55multi_wh45_wn35_wh34_wh31multi_wh26 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws90_wh65_wh57_wh55multi_wh45_wn35_wh34_wh31multi_wh26.json');
+  // NOTE: WS90, WH65, WH57, WN35, WH26 not supported
+  it('gw2000_ws90_wh65_wh57_wh55multi_wh45_wh41_wn35_wh34_wh31multi_wh26 sensors are created', (done) => {
+    testData = require('./data/gw2000_ws90_wh65_wh57_wh55multi_wh45_wh41_wn35_wh34_wh31multi_wh26.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(17);
+    expect(platform.baseStationInfo.sensors.length).to.equal(19);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW2000");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH31");
@@ -130,14 +140,16 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[6].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[7].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[8].type).to.equal("WH31");
-    expect(platform.baseStationInfo.sensors[9].type).to.equal("WH51");
-    expect(platform.baseStationInfo.sensors[10].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[9].type).to.equal("WH41");
+    expect(platform.baseStationInfo.sensors[10].type).to.equal("WH45");
     expect(platform.baseStationInfo.sensors[11].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[12].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[13].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[14].type).to.equal("WH51");
-    expect(platform.baseStationInfo.sensors[15].type).to.equal("WH34");
-    expect(platform.baseStationInfo.sensors[16].type).to.equal("WH34");
+    expect(platform.baseStationInfo.sensors[15].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[16].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[17].type).to.equal("WH34");
+    expect(platform.baseStationInfo.sensors[18].type).to.equal("WH34");
     done();
   });
 
@@ -156,13 +168,14 @@ describe('Platform should be configured with accessories', () => {
     testData = require('./data/hp2550_wh65_wh51multi_wh41_wh31multi_wh25.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(6);
+    expect(platform.baseStationInfo.sensors.length).to.equal(7);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WH25");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH31");
-    expect(platform.baseStationInfo.sensors[4].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[4].type).to.equal("WH41");
     expect(platform.baseStationInfo.sensors[5].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[6].type).to.equal("WH51");
     done();
   });
 
@@ -208,12 +221,12 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
-  // NOTE: WS3800, WH80, WH65, WH57, WH45, WN35, WH26 not supported
-  it('ws3800_wh80_ws85_wh65_wh57_wh55_wh51_wh45_wn35_wh34multi_wh31multi_wh26_wh25 sensors are created', (done) => {
-    testData = require('./data/ws3800_wh80_ws85_wh65_wh57_wh55_wh51_wh45_wn35_wh34multi_wh31multi_wh26_wh25.json');
+  // NOTE: WS3800, WH80, WH65, WH57, WN35, WH26 not supported
+  it('ws3800_wh80_ws85_wh65_wh57_wh55_wh51_wh45_wh41multi_wn35_wh34multi_wh31multi_wh26_wh25 sensors are created', (done) => {
+    testData = require('./data/ws3800_wh80_ws85_wh65_wh57_wh55_wh51_wh45_wh41multi_wn35_wh34multi_wh31multi_wh26_wh25.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(18);
+    expect(platform.baseStationInfo.sensors.length).to.equal(21);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WS85");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH25");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH31");
@@ -223,15 +236,18 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[6].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[7].type).to.equal("WH31");
     expect(platform.baseStationInfo.sensors[8].type).to.equal("WH31");
-    expect(platform.baseStationInfo.sensors[9].type).to.equal("WH51");
-    expect(platform.baseStationInfo.sensors[10].type).to.equal("WH51");
-    expect(platform.baseStationInfo.sensors[11].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[9].type).to.equal("WH41");
+    expect(platform.baseStationInfo.sensors[10].type).to.equal("WH41");
+    expect(platform.baseStationInfo.sensors[11].type).to.equal("WH45");
     expect(platform.baseStationInfo.sensors[12].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[13].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[14].type).to.equal("WH51");
-    expect(platform.baseStationInfo.sensors[15].type).to.equal("WH55");
-    expect(platform.baseStationInfo.sensors[16].type).to.equal("WH34");
-    expect(platform.baseStationInfo.sensors[17].type).to.equal("WH34");
+    expect(platform.baseStationInfo.sensors[15].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[16].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[17].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[18].type).to.equal("WH55");
+    expect(platform.baseStationInfo.sensors[19].type).to.equal("WH34");
+    expect(platform.baseStationInfo.sensors[20].type).to.equal("WH34");
     done();
   });
 });

@@ -5,7 +5,7 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class TemperatureSensor extends Sensor {
+export class CarbonDioxideSensor extends Sensor {
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -13,11 +13,12 @@ export class TemperatureSensor extends Sensor {
     protected readonly id: string,
     protected readonly name: string,
   ) {
+
     super(platform,
       accessory,
       accessory.services.filter(s => s.subtype === platform.serviceUuid(id))[0]
       || accessory.addService(
-        platform.Service.TemperatureSensor,
+        platform.Service.CarbonDioxideSensor,
         name,
         platform.serviceUuid(id)));
 
@@ -27,40 +28,40 @@ export class TemperatureSensor extends Sensor {
 
   //---------------------------------------------------------------------------
 
-  public update(tempf: number, time: string) {
-    if (!Number.isFinite(tempf)) {
-      this.platform.log.warn(`Cannot update ${this.name}, temperature ${tempf} is NaN`);
+  public update(co2: number, time: string) {
+    if (!Number.isFinite(co2)) {
+      this.platform.log.warn(`Cannot update ${this.name}, CO₂ ${co2} is NaN`);
       this.updateStatusActive(false);
       return;
     }
 
-    let tempStr: string;
-
-    switch (this.platform.config?.units?.temp) {
-      case 'ce':
-        tempStr = `${utils.toCelcius(tempf).toFixed(2)}°C`;
-        break;
-
-      default:
-      case 'fa':
-        tempStr = `${tempf.toFixed(2)}°F`;
-        break;
-    }
-
+    const co2Str = `${co2.toFixed(0)}ppm`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
-    this.updateTemperature(utils.toCelcius(tempf));
-    this.updateName(staticNames ? this.name : `${this.name} ${tempStr}`);
+    this.updateName(staticNames ? this.name : `${this.name} ${co2Str}`);
+    this.updateLevel(+co2.toFixed(0));
+    this.updateDetected(co2 >= 1000); // 1000 ppm is generally accepted the safe limit
     this.updateStatusActive(true);
     this.updateTime(time);
   }
 
   //---------------------------------------------------------------------------
 
-  private updateTemperature(tempc: number) {
+  private updateDetected(detected: boolean) {
     this.service.updateCharacteristic(
-      this.platform.Characteristic.CurrentTemperature,
-      tempc,
+      this.platform.Characteristic.CarbonDioxideDetected,
+      detected
+        ? this.platform.Characteristic.CarbonDioxideDetected.CO2_LEVELS_ABNORMAL
+        : this.platform.Characteristic.CarbonDioxideDetected.CO2_LEVELS_NORMAL,
+    );
+  }
+
+  //---------------------------------------------------------------------------
+
+  private updateLevel(co2: number) {
+    this.service.updateCharacteristic(
+      this.platform.Characteristic.CarbonDioxideLevel,
+      co2,
     );
   }
 

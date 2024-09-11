@@ -288,6 +288,36 @@
             "type": "boolean",
             "required": false
           },
+          "airQualityPM25": {
+            "title": "PM2.5 Air Quality",
+            "type": "boolean",
+            "required": false
+          },
+          "airQualityPM25Avg": {
+            "title": "PM2.5 Air Quality Avg",
+            "type": "boolean",
+            "required": false
+          },
+          "airQualityPM10": {
+            "title": "PM10 Air Quality",
+            "type": "boolean",
+            "required": false
+          },
+          "airQualityPM10Avg": {
+            "title": "PM10 Air Quality Avg",
+            "type": "boolean",
+            "required": false
+          },
+          "carbonDioxide": {
+            "title": "CO₂ Level",
+            "type": "boolean",
+            "required": false
+          },
+          "carbonDioxideAvg": {
+            "title": "CO₂ Level Avg",
+            "type": "boolean",
+            "required": false
+          },
           "GW1000": {
             "title": "GW1000",
             "type": "boolean",
@@ -320,6 +350,21 @@
           },
           "WH40": {
             "title": "WH40",
+            "type": "boolean",
+            "required": false
+          },
+          "WH41": {
+            "title": "WH41",
+            "type": "boolean",
+            "required": false
+          },
+          "WH45": {
+            "title": "WH45",
+            "type": "boolean",
+            "required": false
+          },
+          "WH46": {
+            "title": "WH46",
             "type": "boolean",
             "required": false
           },
@@ -527,30 +572,36 @@
                 "hidden.windMaxDailySpeed",
                 "hidden.rainRate",
                 "hidden.rainEventTotal",
-                "hidden.rainHourlyTotal"
+                "hidden.rainHourlyTotal",
+                "hidden.rainDailyTotal",
+                "hidden.rainWeeklyTotal"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.rainDailyTotal",
-                "hidden.rainWeeklyTotal",
                 "hidden.rainMonthlyTotal",
                 "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
                 "hidden.uvIndex",
-                "hidden.dewPoint"
+                "hidden.dewPoint",
+                "hidden.indoorTemperature",
+                "hidden.temperature",
+                "hidden.indoorHumidity",
+                "hidden.humidity"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.indoorTemperature",
-                "hidden.temperature",
-                "hidden.indoorHumidity",
-                "hidden.humidity",
                 "hidden.soilMoisture",
-                "hidden.waterLeak"
+                "hidden.waterLeak",
+                "hidden.airQualityPM10",
+                "hidden.airQualityPM10Avg",
+                "hidden.airQualityPM25",
+                "hidden.airQualityPM25Avg",
+                "hidden.carbonDioxide",
+                "hidden.carbonDioxideAvg"
               ]
             }
           ]
@@ -570,20 +621,23 @@
                 "hidden.GW1000",
                 "hidden.GW2000",
                 "hidden.HP2560",
-                "hidden.WH25"
+                "hidden.WH25",
+                "hidden.WH31"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH31",
                 "hidden.WH34",
-                "hidden.WH40"
+                "hidden.WH40",
+                "hidden.WH41",
+                "hidden.WH45"
               ]
             },
             {
               "type": "flex",
               "items": [
+                "hidden.WH46",
                 "hidden.WH51",
                 "hidden.WH55",
                 "hidden.WS85"

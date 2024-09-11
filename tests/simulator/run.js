@@ -71,7 +71,7 @@ function modifyData(dataReport) {
 }
 
 
-const interval = 5; // how often to post data
+const interval = 10; // how often to post data
 const iterations = 300; // number of times to post data
 
 let dataReport = simTrack;
