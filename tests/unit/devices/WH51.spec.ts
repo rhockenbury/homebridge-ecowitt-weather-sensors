@@ -11,7 +11,7 @@ let sensor = null;
 const dataReport = {
   "dateutc": "2024-07-24 19:04:22",
   "soilmoisture1": "49",
-  "soilbatt1": "1.2"
+  "soilbatt1": "1.3"
 };
 
 const configs = ["v1Default", "v1Full", "v2Default", "v2Full"];
@@ -41,7 +41,7 @@ configs.forEach(config => {
       device.update(dataReport);
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(75); // batt percentage
+      expect(device.battery.characteristics[3].value).to.equal(81); // batt percentage
       expect(device.soilMoisture.service.characteristics[0].value).to.equal("Soil Moisture 49 %")
       done();
     });

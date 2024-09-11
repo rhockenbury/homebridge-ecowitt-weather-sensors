@@ -16,11 +16,12 @@ describe('Humdity Sensor Service should be configured for Humidity', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(4);
+    expect(sensor.service.characteristics.length).to.equal(5);
     expect(sensor.service.characteristics[0].value).to.equal("Humidity");
     expect(sensor.service.characteristics[1].value).to.equal(0);
     expect(sensor.service.characteristics[2].value).to.equal("Humidity");
     expect(sensor.service.characteristics[3].value).to.equal(null);
+    expect(sensor.service.characteristics[4].value).to.equal(false);
     done();
   });
 
@@ -30,6 +31,7 @@ describe('Humdity Sensor Service should be configured for Humidity', () => {
     expect(sensor.service.characteristics[1].value).to.equal(50)
     expect(sensor.service.characteristics[2].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
+    expect(sensor.service.characteristics[4].value).to.equal(true);
     done();
   });
 
@@ -39,6 +41,7 @@ describe('Humdity Sensor Service should be configured for Humidity', () => {
     expect(sensor.service.characteristics[1].value).to.equal(50)
     expect(sensor.service.characteristics[2].value).to.equal("Humidity 50 %");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
+    expect(sensor.service.characteristics[4].value).to.equal(false);
     done();
   });
 });

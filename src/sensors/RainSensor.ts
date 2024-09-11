@@ -26,6 +26,7 @@ export class RainSensor extends MotionSensor {
     }
 
     this.setName(name);
+    this.setStatusActive(false);
   }
 
   //----------------------------------------------------------------------------

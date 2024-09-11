@@ -16,13 +16,14 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(6);
+    expect(sensor.service.characteristics.length).to.equal(7);
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Rate");
     expect(sensor.service.characteristics[3].value).to.equal(null);
     expect(sensor.service.characteristics[4].value).to.equal(null);
     expect(sensor.service.characteristics[5].value).to.equal(null);
+    expect(sensor.service.characteristics[6].value).to.equal(false);
     done();
   });
 
@@ -35,6 +36,7 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in/hour");
     expect(sensor.service.characteristics[5].value).to.equal("Violent");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -53,6 +55,7 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("5.0 in/hour");
     expect(sensor.service.characteristics[5].value).to.equal("Violent");
+    expect(sensor.service.characteristics[6].value).to.equal(false);
     done();
   });
 
@@ -64,6 +67,7 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in/hour");
     expect(sensor.service.characteristics[5].value).to.equal("Violent");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -76,6 +80,7 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("25.4 mm/hour");
     expect(sensor.service.characteristics[5].value).to.equal("Heavy");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -97,12 +102,13 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(5);
+    expect(sensor.service.characteristics.length).to.equal(6);
     expect(sensor.service.characteristics[0].value).to.equal("Rain Total");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total");
     expect(sensor.service.characteristics[3].value).to.equal(null);
     expect(sensor.service.characteristics[4].value).to.equal(null);
+    expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 
@@ -114,6 +120,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in");
+    expect(sensor.service.characteristics[5].value).to.equal(true);
     done();
   });
 
@@ -131,6 +138,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 5.0 in");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("5.0 in");
+    expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 
@@ -141,6 +149,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in");
+    expect(sensor.service.characteristics[5].value).to.equal(true);
     done();
   });
 
@@ -152,6 +161,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 25.4 mm");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("25.4 mm");
+    expect(sensor.service.characteristics[5].value).to.equal(true);
     done();
   });
 

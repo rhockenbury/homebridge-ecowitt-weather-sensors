@@ -16,7 +16,9 @@ import { HP2560} from './devices/HP2560';
 import { WH25 } from './devices/WH25';
 import { WH31 } from './devices/WH31';
 import { WH40 } from './devices/WH40';
-//import { WH41 } from './devices/WH41';
+import { WH41 } from './devices/WH41';
+import { WH45 } from './devices/WH45';
+import { WH46 } from './devices/WH46';
 import { WH51 } from './devices/WH51';
 import { WH55 } from './devices/WH55';
 //import { WH57 } from './devices/WH57';
@@ -365,17 +367,25 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
     }
 
-    // if (!utils.includesAll(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties))) {
-    //   for (let channel = 1; channel <= 4; channel++) {
-    //     if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
-    //       this.addSensorType(
-    //         dataReport[`pm25batt${channel}`] !== undefined,
-    //         'WH41',
-    //         channel,
-    //       );
-    //     }
-    //   }
-    // }
+    if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
+      for (let channel = 1; channel <= 4; channel++) {
+        if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`pm25batt${channel}`] !== undefined,
+            'WH41',
+            channel,
+          );
+        }
+      }
+    }
+
+    if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
+      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
+    }
+
+    if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
+      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
+    }
 
     if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
@@ -455,6 +465,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         ]);
       }
 
+      if (typeof sensor.accessory !== 'undefined' && sensor.accessory.optionalData.length > 0) {
+        this.log.info(`Please note that accessory ${sensor.type} does not currently support the following ` +
+          `data: ${sensor.accessory.optionalData}`);
+      }
+
       if (typeof sensor.accessory !== 'undefined') {
         this.consumedReportData.push(...sensor.accessory.requiredData);
         this.consumedReportData.push(...sensor.accessory.optionalData);
@@ -496,7 +511,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         'have been successfully discovered. Try restarting Homebridge so that the plugin re-registers ' +
         'devices from the data report');
     } else {
-      this.log.debug('All data from data report was used');
+      this.log.debug('All data from data report was consummable');
     }
 
     // validate data report interval
@@ -538,9 +553,17 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         sensor.accessory = new WH40(this, accessory);
         break;
 
-        // case 'WH41':
-        //   sensor.accessory = new WH41(this, accessory, sensor.channel);
-        //   break;
+      case 'WH41':
+        sensor.accessory = new WH41(this, accessory, sensor.channel);
+        break;
+
+      case 'WH45':
+        sensor.accessory = new WH45(this, accessory);
+        break;
+
+      case 'WH46':
+        sensor.accessory = new WH46(this, accessory);
+        break;
 
       case 'WH51':
         sensor.accessory = new WH51(this, accessory, sensor.channel);

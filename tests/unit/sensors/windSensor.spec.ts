@@ -16,12 +16,13 @@ describe('Wind Sensor Service should be configured for Wind Direction', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(5);
+    expect(sensor.service.characteristics.length).to.equal(6);
     expect(sensor.service.characteristics[0].value).to.equal("Wind Direction");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Wind Direction");
     expect(sensor.service.characteristics[3].value).to.equal(null);
     expect(sensor.service.characteristics[4].value).to.equal(null);
+    expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 
@@ -32,6 +33,7 @@ describe('Wind Sensor Service should be configured for Wind Direction', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Wind Direction 30° (NNE)");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("30° (NNE)");
+    expect(sensor.service.characteristics[5].value).to.equal(true);
     done();
   });
 
@@ -42,6 +44,7 @@ describe('Wind Sensor Service should be configured for Wind Direction', () => {
     expect(sensor.service.characteristics[2].value).to.equal("Wind Direction 30° (NNE)");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("30° (NNE)");
+    expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 });
@@ -56,13 +59,14 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(6);
+    expect(sensor.service.characteristics.length).to.equal(7);
     expect(sensor.service.characteristics[0].value).to.equal("Wind Speed");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Wind Speed");
     expect(sensor.service.characteristics[3].value).to.equal(null);
     expect(sensor.service.characteristics[4].value).to.equal(null);
     expect(sensor.service.characteristics[5].value).to.equal(null);
+    expect(sensor.service.characteristics[6].value).to.equal(false);
     done();
   });
 
@@ -75,6 +79,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("18.0 mph");
     expect(sensor.service.characteristics[5].value).to.equal("Moderate Breeze");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -93,6 +98,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("25.0 mph");
     expect(sensor.service.characteristics[5].value).to.equal("Strong Breeze");
+    expect(sensor.service.characteristics[6].value).to.equal(false);
     done();
   });
 
@@ -104,6 +110,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("25.0 mph");
     expect(sensor.service.characteristics[5].value).to.equal("Strong Breeze");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -116,6 +123,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("0.9 kts");
     expect(sensor.service.characteristics[5].value).to.equal("Calm");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -136,6 +144,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("1.6 kmh");
     expect(sensor.service.characteristics[5].value).to.equal("Calm");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
@@ -156,6 +165,7 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("0.4 mps");
     expect(sensor.service.characteristics[5].value).to.equal("Calm");
+    expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
