@@ -66,7 +66,7 @@ configs.forEach(config => {
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
       expect(device.battery.characteristics[3].value).to.equal(100); // batt percentage
-      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 70.52°F");
+      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 70.70°F");
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 65 %");
       expect(device.airQualityPM25.service.characteristics[0].value).to.equal("PM2.5 Air Quality 2 mcg/m³");
       expect(device.airQualityPM25Avg.service.characteristics[0].value).to.equal("PM2.5 Air Quality 24h Avg 2 mcg/m³");

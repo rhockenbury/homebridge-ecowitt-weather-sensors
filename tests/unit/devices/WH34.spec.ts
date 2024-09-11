@@ -42,7 +42,7 @@ configs.forEach(config => {
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
       expect(device.battery.characteristics[3].value).to.equal(81); // batt percentage
-      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.78°F")
+      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
       done();
     });
 

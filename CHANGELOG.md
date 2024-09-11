@@ -4,6 +4,7 @@
 * Implement Air Quality and Carbon Dioxide sensors
 * Minor adjustments to thresholds for low battery indication
 * Add notice to indicate what weather data properties are not supported for each device
+* Fix minor issue with temperature rounding in dynamic service names
 
 ### 2.1.0-beta
 
