@@ -11,7 +11,7 @@ let sensor = null;
 const dataReport = {
   "dateutc": "2024-07-24 19:04:22",
   "tf_ch1": "80.78",
-  "tf_batt1": "1.2"
+  "tf_batt1": "1.3"
 };
 
 const configs = ["v1Default", "v1Full", "v2Default", "v2Full"];
@@ -41,7 +41,7 @@ configs.forEach(config => {
       device.update(dataReport);
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(75); // batt percentage
+      expect(device.battery.characteristics[3].value).to.equal(81); // batt percentage
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.78°F")
       done();
     });

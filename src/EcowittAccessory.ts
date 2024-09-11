@@ -110,4 +110,15 @@ export class EcowittAccessory {
   }
 
   //---------------------------------------------------------------------------
+
+  updateChargingState(service: Service, charging = false) {
+    service.updateCharacteristic(
+      this.platform.Characteristic.ChargingState,
+      charging
+        ? this.platform.Characteristic.ChargingState.CHARGING
+        : this.platform.Characteristic.ChargingState.NOT_CHARGING,
+    );
+  }
+
+  //---------------------------------------------------------------------------
 }

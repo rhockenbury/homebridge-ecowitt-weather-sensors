@@ -94,7 +94,7 @@ export function includesAny(arr, values): boolean {
 //------------------------------------------------------------------------------
 
 export function toCelcius(fahrenheit): number {
-  return ((parseFloat(fahrenheit) - 32) * 5) / 9;
+  return ((parseFloat(fahrenheit) - 32.0) * 5.0) / 9.0;
 }
 
 //------------------------------------------------------------------------------
@@ -126,7 +126,7 @@ const kWindSectors = [
 
 //------------------------------------------------------------------------------
 
-interface Beaufort {
+interface BeaufortType {
   force: number;
   description: string;
   kts: number;
@@ -263,9 +263,7 @@ export function toMps(mph): number {
 
 //------------------------------------------------------------------------------
 
-export function toBeafort(mph): Beaufort {
-  mph = parseFloat(mph);
-
+export function toBeafort(mph: number): BeaufortType {
   let beaufort = kBeaufortScale.find((scale) => mph <= scale.mph);
 
   if (!beaufort) {
@@ -307,6 +305,61 @@ export function toRainIntensity(ratemm: number): string {
   } else {
     return 'Violent';
   }
+}
+
+//------------------------------------------------------------------------------
+
+interface AirQualityScaleType {
+  scale: number;
+  description: string;
+  pm10: number;
+  pm25: number;
+}
+
+// european air quality index - https://ecmwf-projects.github.io/copernicus-training-cams/proc-aq-index.html
+const airQualityScale = [
+  {
+    scale: 1,
+    description: 'Excellent',
+    pm10: 20,
+    pm25: 10,
+  },
+  {
+    scale: 2,
+    description: 'Good',
+    pm10: 40,
+    pm25: 20,
+  },
+  {
+    scale: 3,
+    description: 'Fair',
+    pm10: 50,
+    pm25: 25,
+  },
+  {
+    scale: 4,
+    description: 'Inferior',
+    pm10: 100,
+    pm25: 50,
+  },
+  {
+    scale: 5,
+    description: 'Poor',
+    pm10: Number.POSITIVE_INFINITY,
+    pm25: Number.POSITIVE_INFINITY,
+  },
+];
+
+//------------------------------------------------------------------------------
+
+export function toAirQuality(pm: number, pmType: string): AirQualityScaleType {
+  let airQuality = airQualityScale.find((scale) => pm <= scale[pmType]);
+
+  if (!airQuality) {
+    airQuality = airQualityScale[airQualityScale.length - 1];
+  }
+
+  return airQuality;
 }
 
 //------------------------------------------------------------------------------
@@ -529,8 +582,8 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
 
   for (let channel = 1; channel <= 4; channel++) {
     if (v1Config?.pm25?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQuality`, 'value': v1Config?.pm25?.[`name${channel}`]});
-      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQuality24h`, 'value': v1Config?.pm25?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQualityPM25`, 'value': v1Config?.pm25?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WH41CH${channel}:airQualityPM25Avg`, 'value': v1Config?.pm25?.[`name${channel}`]});
     }
   }
 

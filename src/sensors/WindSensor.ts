@@ -26,6 +26,7 @@ export class WindSensor extends MotionSensor {
     }
 
     this.setName(name);
+    this.setStatusActive(false);
   }
 
   //----------------------------------------------------------------------------

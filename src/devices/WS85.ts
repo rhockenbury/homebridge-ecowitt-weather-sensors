@@ -29,7 +29,7 @@ export class WS85 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WS85', 'Weather Station WS85');
+    super(platform, accessory, 'WS85', 'Weather Station');
 
     this.requiredData = [
       'wh85batt', 'winddir', 'windspeedmph', 'windgustmph', 'maxdailygust',

@@ -23,6 +23,7 @@ export class LeakSensor extends Sensor {
         platform.serviceUuid(id)));
 
     this.setName(name);
+    this.setStatusActive(false);
   }
 
   //---------------------------------------------------------------------------
@@ -38,19 +39,20 @@ export class LeakSensor extends Sensor {
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
     this.updateName(staticNames ? this.name : `${this.name} ${leakStr}`);
-    this.updateLeak(utils.truthy(leak));
+    this.updateDetected(utils.truthy(leak));
     this.updateStatusActive(true);
     this.updateTime(time);
   }
 
   //---------------------------------------------------------------------------
 
-  private updateLeak(detected: boolean) {
+  private updateDetected(detected: boolean) {
     this.service.updateCharacteristic(
       this.platform.Characteristic.LeakDetected,
       detected
         ? this.platform.Characteristic.LeakDetected.LEAK_DETECTED
-        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED);
+        : this.platform.Characteristic.LeakDetected.LEAK_NOT_DETECTED,
+    );
   }
 
   //---------------------------------------------------------------------------

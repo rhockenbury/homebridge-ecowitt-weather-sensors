@@ -23,6 +23,7 @@ export class HumiditySensor extends Sensor {
         platform.serviceUuid(id)));
 
     this.setName(name);
+    this.setStatusActive(false);
   }
 
   //---------------------------------------------------------------------------
