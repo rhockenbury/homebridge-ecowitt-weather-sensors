@@ -1,3 +1,10 @@
+### 2.2.0-beta
+
+* Add support for WH41, WH43, WH45 and WH46
+* Implement Air Quality and Carbon Dioxide sensors
+* Minor adjustments to thresholds for low battery indication
+* Add notice to indicate what weather data properties are not supported for each device
+
 ### 2.1.0-beta
 
 * Update device names to not include parentheses so default names can be saved in Homekit
