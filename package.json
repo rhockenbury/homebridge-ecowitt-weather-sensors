@@ -48,6 +48,7 @@
     "hap-nodejs": "^1.1.0",
     "homebridge": "^1.8.4",
     "mocha": "^10.7.3",
+    "mockdate": "^3.0.5",
     "nodemon": "^3.1.4",
     "remark-cli": "^12.0.1",
     "remark-lint-no-dead-urls": "^1.1.0",

@@ -1,12 +1,15 @@
 import { expect } from 'chai';
 import { WH57 } from './../../../src/devices/WH57';
 import { createPlatform, api } from './../../driver';
+import MockDate from "mockdate";
 
 //------------------------------------------------------------------------------
 
 let platform = null;
 let accessory = null;
 let sensor = null;
+
+MockDate.set("2024-09-02");
 
 const dataReport = {
   "dateutc": "2024-07-24 19:04:22",
