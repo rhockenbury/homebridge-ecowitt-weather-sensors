@@ -95,6 +95,6 @@
     },
     "lightning": {
         "hide": false,
-        "units": "km"
+        "units": "mi"
     }
 }

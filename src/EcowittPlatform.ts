@@ -21,7 +21,7 @@ import { WH45 } from './devices/WH45';
 import { WH46 } from './devices/WH46';
 import { WH51 } from './devices/WH51';
 import { WH55 } from './devices/WH55';
-//import { WH57 } from './devices/WH57';
+import { WH57 } from './devices/WH57';
 //import { WH65 } from './devices/WH65';
 import { WH34 } from './devices/WH34';
 import { WS85 } from './devices/WS85';
@@ -70,6 +70,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public dataReportServer: express.Application;
 
   public lastDataReport = null;
+  public registeredProperties: string[] = [];
   public consumedReportData: string[] = [];
   public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
   public ignoreableReportData: string[] = ['runtime', 'heap', 'interval'];
@@ -251,8 +252,15 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     if (!this.lastDataReport) { // on first data report after startup
       this.log.info('Registering accessories from data report');
       this.lastDataReport = dataReport;
+      this.registeredProperties = Object.keys(dataReport);
       this.registerAccessories(dataReport);
     } else {
+      const intersection = this.registeredProperties.filter(x => Object.keys(dataReport).includes(x));
+      if (intersection.length !== this.registeredProperties.length) {
+        this.log.warn('The weather data properties from the current data report are different ' +
+          'from the properties of the data report used to register your accessories. Try restarting ' +
+          'Homebridge so that the plugin re-registers devices from the data report');
+      }
       this.lastDataReport = dataReport;
     }
 
@@ -411,9 +419,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    // if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
-    //   this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
-    // }
+    if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
+      this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
+    }
 
     if (!utils.includesAny(hidden, ['WH34']) && !utils.includesAll(hidden, WH34.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
@@ -466,7 +474,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
 
       if (typeof sensor.accessory !== 'undefined' && sensor.accessory.optionalData.length > 0) {
-        this.log.info(`Please note that accessory ${sensor.type} does not currently support the following ` +
+        this.log.info(`Note that accessory ${sensor.type} does not currently display the following ` +
           `data: ${sensor.accessory.optionalData}`);
       }
 
@@ -573,9 +581,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         sensor.accessory = new WH55(this, accessory, sensor.channel);
         break;
 
-        // case 'WH57':
-        //   sensor.accessory = new WH57(this, accessory);
-        //   break;
+      case 'WH57':
+        sensor.accessory = new WH57(this, accessory);
+        break;
 
         // case 'WH65':
         //   sensor.accessory = new WH65(this, accessory);
