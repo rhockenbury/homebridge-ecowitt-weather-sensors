@@ -1,10 +1,12 @@
 ### 2.2.0-beta
 
-* Add support for WH41, WH43, WH45 and WH46
-* Implement Air Quality and Carbon Dioxide sensors
+* Add support for WH41, WH43, WH45, WH46, and WH57
+* Implement Air Quality, Carbon Dioxide, and Lightning sensors
 * Minor adjustments to thresholds for low battery indication
-* Add notice to indicate what weather data properties are not supported for each device
+* Add log notice to indicate what weather data properties are not supported for each device
 * Fix minor issue with temperature rounding in dynamic service names
+* Add log warning to re-register if weather data properties change on data report
+* Add short contributing guide
 
 ### 2.1.0-beta
 

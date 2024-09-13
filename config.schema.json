@@ -182,6 +182,24 @@
             "type": "number",
             "notitle": true,
             "required": false
+          },
+          "lightningEvents": {
+            "title": "Lightning Events",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "lightningDistance": {
+            "title": "Lightning Distance",
+            "type": "number",
+            "notitle": true,
+            "required": false
+          },
+          "lightningTime": {
+            "title": "Lightning Time",
+            "type": "number",
+            "notitle": true,
+            "required": false
           }
         }
       },
@@ -318,6 +336,21 @@
             "type": "boolean",
             "required": false
           },
+          "lightningEvents": {
+            "title": "Lightning Events",
+            "type": "boolean",
+            "required": false
+          },
+          "lightningDistance": {
+            "title": "Lightning Distance",
+            "type": "boolean",
+            "required": false
+          },
+          "lightningTime": {
+            "title": "Lightning Time",
+            "type": "boolean",
+            "required": false
+          },
           "GW1000": {
             "title": "GW1000",
             "type": "boolean",
@@ -375,6 +408,11 @@
           },
           "WH55": {
             "title": "WH55",
+            "type": "boolean",
+            "required": false
+          },
+          "WH57": {
+            "title": "WH57",
             "type": "boolean",
             "required": false
           },
@@ -574,13 +612,13 @@
                 "hidden.rainEventTotal",
                 "hidden.rainHourlyTotal",
                 "hidden.rainDailyTotal",
-                "hidden.rainWeeklyTotal"
+                "hidden.rainWeeklyTotal",
+                "hidden.rainMonthlyTotal"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.rainMonthlyTotal",
                 "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
                 "hidden.uvIndex",
@@ -588,20 +626,23 @@
                 "hidden.indoorTemperature",
                 "hidden.temperature",
                 "hidden.indoorHumidity",
-                "hidden.humidity"
+                "hidden.humidity",
+                "hidden.soilMoisture",
+                "hidden.waterLeak"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.soilMoisture",
-                "hidden.waterLeak",
                 "hidden.airQualityPM10",
                 "hidden.airQualityPM10Avg",
                 "hidden.airQualityPM25",
                 "hidden.airQualityPM25Avg",
                 "hidden.carbonDioxide",
-                "hidden.carbonDioxideAvg"
+                "hidden.carbonDioxideAvg",
+                "hidden.lightningEvents",
+                "hidden.lightningDistance",
+                "hidden.lightningTime"
               ]
             }
           ]
@@ -631,15 +672,16 @@
                 "hidden.WH34",
                 "hidden.WH40",
                 "hidden.WH41",
-                "hidden.WH45"
+                "hidden.WH45",
+                "hidden.WH46"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH46",
                 "hidden.WH51",
                 "hidden.WH55",
+                "hidden.WH57",
                 "hidden.WS85"
               ]
             }
@@ -797,12 +839,7 @@
                     "functionBody": "return model.units.rain === 'mm';"
                   }
                 },
-                "thresholds.rainHourlyTotal"
-              ]
-            },
-            {
-              "type": "flex",
-              "items": [
+                "thresholds.rainHourlyTotal",
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Daily Total (in)<strong>",
@@ -817,7 +854,12 @@
                     "functionBody": "return model.units.rain === 'mm';"
                   }
                 },
-                "thresholds.rainDailyTotal",
+                "thresholds.rainDailyTotal"
+              ]
+            },
+            {
+              "type": "flex",
+              "items": [
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Weekly Total (in)<strong>",
@@ -867,7 +909,32 @@
                   "type": "help",
                   "helpvalue": "<strong>UV Index<strong>"
                 },
-                "thresholds.uvIndex"
+                "thresholds.uvIndex",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Lightning Events<strong>"
+                },
+                "thresholds.lightningEvents",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Lightning Distance (mi)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.distance === 'mi';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Lightning Distance (km)<strong>",
+                  "condition": {
+                    "functionBody": "return model.units.distance === 'km';"
+                  }
+                },
+                "thresholds.lightningDistance",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Lightning Time (secs)<strong>"
+                },
+                "thresholds.lightningTime"
               ]
             }
           ]
