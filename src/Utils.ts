@@ -111,6 +111,12 @@ export function tohPa(inHg): number {
 
 //------------------------------------------------------------------------------
 
+export function toMile(km): number {
+  return parseFloat(km) * 0.6214;
+}
+
+//------------------------------------------------------------------------------
+
 const kWindSectors = [
   'N',
   'NNE',

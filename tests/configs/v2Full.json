@@ -170,7 +170,7 @@
     "units": {
         "wind": "mph",
         "rain": "in",
-        "distance": "km",
+        "distance": "mi",
         "temperature": "fh"
     }
 }
