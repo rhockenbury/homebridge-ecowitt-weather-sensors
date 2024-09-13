@@ -38,6 +38,9 @@ jobs:
       - name: Lint the project
         run: npm run lint
 
+      - name: Validate project links
+        run: npm run remark
+
       - name: Build the project
         run: npm run build
 
