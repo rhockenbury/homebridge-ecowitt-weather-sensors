@@ -6,11 +6,16 @@
   "footerDisplay": "All config changes take effect <em><strong>when a new data report is received</strong></em> after the next Homebridge restart.</p>",
   "schema": {
     "type": "object",
-    "additionalProperties": true,
     "properties": {
+      "name": {
+        "title": "Name",
+        "description": "Plugin name as displayed in the Homebridge log",
+        "type": "string",
+        "required": true,
+        "default": "Ecowitt"
+      },
       "baseStation": {
         "type": "object",
-        "additionalProperties": true,
         "properties": {
           "mac": {
             "title": "MAC Address",
