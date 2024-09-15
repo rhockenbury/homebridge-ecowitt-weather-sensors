@@ -28,7 +28,7 @@ export class WH45 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH45', '5-in-1 Air Quality Sensor');
+    super(platform, accessory, 'WH45', 'WH45 5-in-1 Air Quality Sensor');
 
     this.requiredData = ['co2_batt', 'tf_co2', 'humi_co2', 'pm25_co2', 'pm25_24h_co2',
       'pm10_co2', 'pm10_24h_co2', 'co2', 'co2_24h'];

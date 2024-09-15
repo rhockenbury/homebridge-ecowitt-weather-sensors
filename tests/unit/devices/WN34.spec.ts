@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { WH31 } from './../../../src/devices/WH31';
+import { WN34 } from './../../../src/devices/WN34';
 import { createPlatform, api } from './../../driver';
 
 //------------------------------------------------------------------------------
@@ -10,19 +10,18 @@ let sensor = null;
 
 const dataReport = {
   "dateutc": "2024-07-24 19:04:22",
-  "temp1f": "80.78",
-  "humidity1": "49",
-  "batt1": "1"
+  "tf_ch1": "80.78",
+  "tf_batt1": "1.3"
 };
 
 const configs = ["v1Default", "v1Full", "v2Default", "v2Full"];
 
 configs.forEach(config => {
-  describe(`WH31 device should be configured ${config}`, () => {
+  describe(`WN34 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
       accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
-      device = new WH31(platform, accessory, 1);
+      device = new WN34(platform, accessory, 1);
     });
 
     beforeEach('Reset config', () => {
@@ -33,54 +32,45 @@ configs.forEach(config => {
     it('Services are created', (done) => {
       expect(device.battery).to.not.be.undefined;
       expect(device.temperature).to.not.be.undefined;
-      expect(device.humidity).to.not.be.undefined;
       expect(device.battery.displayName).to.equal('');
       expect(device.temperature.service.displayName).to.equal("Temperature");
-      expect(device.humidity.service.displayName).to.equal("Humidity");
       done();
     });
 
     it('Update is called successfully', (done) => {
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(1); // low batt
-      expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
+      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
+      expect(device.battery.characteristics[3].value).to.equal(81); // batt percentage
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
       done();
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {"key": "WH31CH1:temperature", "value": "Test Temperature Name"};
-      platform.config.nameOverrides[1] = {"key": "WH31CH1:humidity", "value": "Test Humidity Name"};
+      platform.config.nameOverrides[0] = {"key": "WN34CH1:temperature", "value": "Test Temperature Name"};
 
-      device = new WH31(platform, accessory, 1);
+      device = new WN34(platform, accessory, 1);
 
       expect(device.temperature).to.not.be.undefined;
-      expect(device.humidity).to.not.be.undefined;
       expect(device.temperature.service.characteristics[0].value).to.equal("Test Temperature Name");
-      expect(device.humidity.service.characteristics[0].value).to.equal("Test Humidity Name");
       done();
     });
 
     it('Services are not created when hidden with general override', (done) => {
       platform.config.hidden["temperature"] = true;
-      platform.config.hidden["humidity"] = true;
 
-      device = new WH31(platform, accessory, 1);
+      device = new WN34(platform, accessory, 1);
 
       expect(device.temperature).to.be.undefined;
-      expect(device.humidity).to.be.undefined;
       done();
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden["WH31CH1:temperature"] = true;
-      platform.config.hidden["WH31CH1:humidity"] = true;
+      platform.config.hidden["WN34CH1:temperature"] = true;
 
-      device = new WH31(platform, accessory, 1);
+      device = new WN34(platform, accessory, 1);
 
       expect(device.temperature).to.be.undefined;
-      expect(device.humidity).to.be.undefined;
       done();
     });
   });

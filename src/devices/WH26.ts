@@ -7,7 +7,7 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class WH31 extends EcowittAccessory {
+export class WH26 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature', 'humidity'];
 
   protected battery: Service;
@@ -17,11 +17,10 @@ export class WH31 extends EcowittAccessory {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
-    protected channel: number,
   ) {
-    super(platform, accessory, 'WH31', 'Thermo Hygro Sensor', channel);
+    super(platform, accessory, 'WH26', 'WH26 Outdoor Thermo Hygro Sensor');
 
-    this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
+    this.requiredData = ['wh26batt', 'tempf', 'humidity'];
 
     this.battery = this.addBattery('', false);
 
@@ -56,16 +55,16 @@ export class WH31 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const lowBattery = dataReport[`batt${this.channel}`] === '1';
+    const lowBattery = dataReport['wh26batt'] === '1';
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     this.temperature?.update(
-      parseFloat(dataReport[`temp${this.channel}f`]),
+      parseFloat(dataReport['tempf']),
       dataReport.dateutc,
     );
 
     this.humidity?.update(
-      parseFloat(dataReport[`humidity${this.channel}`]),
+      parseFloat(dataReport['humidity']),
       dataReport.dateutc,
     );
   }

@@ -371,13 +371,23 @@
             "type": "boolean",
             "required": false
           },
-          "WH31": {
-            "title": "WH31",
+          "WH26": {
+            "title": "WH26",
             "type": "boolean",
             "required": false
           },
-          "WH34": {
-            "title": "WH34",
+          "WN30": {
+            "title": "WN30",
+            "type": "boolean",
+            "required": false
+          },
+          "WN31": {
+            "title": "WN31",
+            "type": "boolean",
+            "required": false
+          },
+          "WN34": {
+            "title": "WN34",
             "type": "boolean",
             "required": false
           },
@@ -663,22 +673,24 @@
                 "hidden.GW2000",
                 "hidden.HP2560",
                 "hidden.WH25",
-                "hidden.WH31"
+                "hidden.WH26",
+                "hidden.WN30"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH34",
+                "hidden.WN31",
+                "hidden.WN34",
                 "hidden.WH40",
                 "hidden.WH41",
-                "hidden.WH45",
-                "hidden.WH46"
+                "hidden.WH45"
               ]
             },
             {
               "type": "flex",
               "items": [
+                "hidden.WH46",
                 "hidden.WH51",
                 "hidden.WH55",
                 "hidden.WH57",

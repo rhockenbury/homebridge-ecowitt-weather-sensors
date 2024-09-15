@@ -16,7 +16,7 @@ export class WH57 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH57', 'Lightning Sensor');
+    super(platform, accessory, 'WH57', 'WH57 Lightning Sensor');
 
     this.requiredData = ['wh57batt', 'lightning', 'lightning_num', 'lightning_time'];
 

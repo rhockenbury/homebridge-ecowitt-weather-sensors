@@ -29,15 +29,15 @@ export class WS85 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WS85', 'Weather Station');
+    super(platform, accessory, 'WS85', 'WS85 3-in-1 Solar Weather Sensor');
 
     this.requiredData = [
       'wh85batt', 'winddir', 'windspeedmph', 'windgustmph', 'maxdailygust',
       'rrain_piezo', 'erain_piezo', 'hrain_piezo', 'drain_piezo', 'wrain_piezo',
       'mrain_piezo', 'yrain_piezo',
     ];
-
-    this.optionalData = ['ws85cap_volt', 'ws85_ver'];
+    this.optionalData = ['ws85cap_volt'];
+    this.unusedData = ['ws85_ver'];
 
     this.battery = this.addBattery('', false);
 
