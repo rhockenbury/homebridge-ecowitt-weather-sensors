@@ -7,8 +7,8 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class WH25 extends EcowittAccessory {
-  static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
+export class WN31 extends EcowittAccessory {
+  static readonly properties: string[] = ['temperature', 'humidity'];
 
   protected battery: Service;
   protected temperature: TemperatureSensor | undefined;
@@ -17,33 +17,31 @@ export class WH25 extends EcowittAccessory {
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
+    protected channel: number,
   ) {
-    super(platform, accessory, 'WH25', 'WH25 Indoor Thermo Hygro Baro Sensor');
+    super(platform, accessory, 'WN31', 'WN31 Thermo Hygro Sensor', channel);
 
-    this.requiredData = ['wh25batt', 'tempinf', 'humidityin'];
-    this.unusedData = ['baromrelin', 'baromabsin'];
+    this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
 
     this.battery = this.addBattery('', false);
 
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
-      this.temperature = new TemperatureSensor(platform, accessory,
-        `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
+    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
     } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, 'Temperature');
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
       this.temperature.removeService();
       this.temperature = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
-      this.humidity = new HumiditySensor(platform, accessory,
-        `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
+    if (!utils.includesAny(hidden, ['humidity', `${this.shortServiceId}:humidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:humidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
     } else {
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
       this.humidity.removeService();
       this.humidity = undefined;
     }
@@ -58,16 +56,16 @@ export class WH25 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const lowBattery = dataReport.wh25batt === '1';
+    const lowBattery = dataReport[`batt${this.channel}`] === '1';
     this.updateStatusLowBattery(this.battery, lowBattery);
 
     this.temperature?.update(
-      parseFloat(dataReport.tempinf),
+      parseFloat(dataReport[`temp${this.channel}f`]),
       dataReport.dateutc,
     );
 
     this.humidity?.update(
-      parseFloat(dataReport.humidityin),
+      parseFloat(dataReport[`humidity${this.channel}`]),
       dataReport.dateutc,
     );
   }

@@ -29,11 +29,11 @@ export class WH46 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH46', '7-in-1 Air Quality Sensor');
+    super(platform, accessory, 'WH46', 'WH46 7-in-1 Air Quality Sensor');
 
     this.requiredData = ['co2_batt', 'tf_co2', 'humi_co2', 'pm25_co2', 'pm25_24h_co2',
       'pm10_co2', 'pm10_24h_co2', 'co2', 'co2_24h'];
-    this.optionalData = ['pm1_co2', 'pm1_24h_co2', 'pm4_co2', 'pm4_24h_co2'];
+    this.unusedData = ['pm1_co2', 'pm1_24h_co2', 'pm4_co2', 'pm4_24h_co2'];
 
     this.battery = this.addBattery('', true);
 

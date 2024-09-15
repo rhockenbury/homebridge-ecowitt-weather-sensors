@@ -5,8 +5,10 @@ import * as utils from './Utils';
 //------------------------------------------------------------------------------
 
 export class EcowittAccessory {
-  public requiredData: string[] = [];
-  public optionalData: string[] = [];
+  public requiredData: string[] = []; // fields that must be provided
+  public optionalData: string[] = []; // fields that are used if available
+  public unusedData: string[] = [];   // fields that are not used / displayed
+
   protected readonly accessoryId: string;
   protected readonly shortServiceId: string;
 

@@ -14,7 +14,9 @@ import { GW1000 } from './devices/GW1000';
 import { GW2000 } from './devices/GW2000';
 import { HP2560} from './devices/HP2560';
 import { WH25 } from './devices/WH25';
-import { WH31 } from './devices/WH31';
+import { WH26 } from './devices/WH26';
+import { WN30 } from './devices/WN30';
+import { WN31 } from './devices/WN31';
 import { WH40 } from './devices/WH40';
 import { WH41 } from './devices/WH41';
 import { WH45 } from './devices/WH45';
@@ -23,7 +25,7 @@ import { WH51 } from './devices/WH51';
 import { WH55 } from './devices/WH55';
 import { WH57 } from './devices/WH57';
 //import { WH65 } from './devices/WH65';
-import { WH34 } from './devices/WH34';
+import { WN34 } from './devices/WN34';
 import { WS85 } from './devices/WS85';
 
 import * as utils from './Utils';
@@ -129,19 +131,27 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.dataReportServer.use(bodyParser.json());
     this.dataReportServer.use(bodyParser.urlencoded({ extended: true }));
 
-    this.dataReportServer.post(encodedPath, (req: Request, res: Response) => {
+    this.dataReportServer.post(encodedPath, (req: Request, res: Response, next: Next) => {
       this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
-      this.onDataReport(req.body);
+      try {
+        this.onDataReport(req.body);
+      } catch (err) {
+        next(err);
+      }
       res.send();
     });
 
-    this.dataReportServer.all('*', (req: Request, res: Response) => {
+    this.dataReportServer.all('*', (req: Request, res: Response, next: Next) => {
       if (utils.falsy(this.config?.additional?.acceptAnyPath)) {
         this.log.warn(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}. `
           + `Configure the Ecowitt base station to send data reports to POST ${encodedPath}`);
       } else {
         this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
-        this.onDataReport(req.body);
+        try {
+          this.onDataReport(req.body);
+        } catch (err) {
+          next(err);
+        }
       }
       res.send();
     });
@@ -343,9 +353,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
     }
 
-    // if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
-    //   this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
-    // }
 
     if (!utils.includesAny(hidden, ['WS85']) && !utils.includesAll(hidden, WS85.properties)) {
       // NOTE: Typo in WS-85 as it responds with wh85batt instead of expected ws85batt.
@@ -355,56 +362,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       );
     }
 
-    if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
-      this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
-    }
+    // if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
+    //   this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
+    // }
 
-    if (!utils.includesAny(hidden, ['WH31']) && !utils.includesAll(hidden, WH31.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WH31CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`batt${channel}`] !== undefined,
-            'WH31',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WH40']) && !utils.includesAll(hidden, WH40.properties)) {
-      this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
-    }
-
-    if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
-      for (let channel = 1; channel <= 4; channel++) {
-        if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`pm25batt${channel}`] !== undefined,
-            'WH41',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
-      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
-    }
-
-    if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
-      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
-    }
-
-    if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`soilbatt${channel}`] !== undefined,
-            'WH51',
-            channel,
-          );
-        }
-      }
+    if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
+      this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
     }
 
     if (!utils.includesAny(hidden, ['WH55']) && !utils.includesAll(hidden, WH55.properties)) {
@@ -419,20 +382,90 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
-      this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
-    }
-
-    if (!utils.includesAny(hidden, ['WH34']) && !utils.includesAll(hidden, WH34.properties)) {
+    if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WH34CH${channel}`])) {
+        if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
           this.addSensorType(
-            dataReport[`tf_batt${channel}`] !== undefined,
-            'WH34',
+            dataReport[`soilbatt${channel}`] !== undefined,
+            'WH51',
             channel,
           );
         }
       }
+    }
+
+    //
+    // WH45 and WH46 are the same, except WH45 does not have PM1.0 and PM4.0
+    //
+    if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
+      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
+    }
+
+    if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
+      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
+    }
+
+    if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
+      for (let channel = 1; channel <= 4; channel++) {
+        if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`pm25batt${channel}`] !== undefined,
+            'WH41',
+            channel,
+          );
+        }
+      }
+    }
+
+    if (!utils.includesAny(hidden, ['WH40']) && !utils.includesAll(hidden, WH40.properties)) {
+      this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
+    }
+
+    if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
+      for (let channel = 1; channel <= 8; channel++) {
+        if (!utils.includesAny(hidden, [`WN34CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`tf_batt${channel}`] !== undefined,
+            'WN34',
+            channel,
+          );
+        }
+      }
+    }
+
+    //
+    // WN31 and WN30 are the same, except WN30 does not have humidity
+    //
+    if (!utils.includesAny(hidden, ['WN31']) && !utils.includesAll(hidden, WN31.properties)) {
+      for (let channel = 1; channel <= 8; channel++) {
+        if (!utils.includesAny(hidden, [`WN31CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] !== undefined,
+            'WN31',
+            channel,
+          );
+        }
+      }
+    }
+
+    if (!utils.includesAny(hidden, ['WN30']) && !utils.includesAll(hidden, WN30.properties)) {
+      for (let channel = 1; channel <= 8; channel++) {
+        if (!utils.includesAny(hidden, [`WN30CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] === undefined,
+            'WN30',
+            channel,
+          );
+        }
+      }
+    }
+
+    if (!utils.includesAny(hidden, ['WH26']) && !utils.includesAll(hidden, WH26.properties)) {
+      this.addSensorType(dataReport.wh26batt !== undefined, 'WH26');
+    }
+
+    if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
+      this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
     }
 
     if (this.baseStationInfo.sensors.length === 0) {
@@ -473,9 +506,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         ]);
       }
 
-      if (typeof sensor.accessory !== 'undefined' && sensor.accessory.optionalData.length > 0) {
+      if (typeof sensor.accessory !== 'undefined' && sensor.accessory.unusedData.length > 0) {
         this.log.info(`Note that accessory ${sensor.type} does not currently display the following ` +
-          `data: ${sensor.accessory.optionalData}`);
+          `data: ${sensor.accessory.unusedData}`);
       }
 
       if (typeof sensor.accessory !== 'undefined') {
@@ -553,8 +586,20 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         sensor.accessory = new WH25(this, accessory);
         break;
 
-      case 'WH31':
-        sensor.accessory = new WH31(this, accessory, sensor.channel);
+      case 'WH26':
+        sensor.accessory = new WH26(this, accessory);
+        break;
+
+      case 'WN30':
+        sensor.accessory = new WN30(this, accessory, sensor.channel);
+        break;
+
+      case 'WN31':
+        sensor.accessory = new WN31(this, accessory, sensor.channel);
+        break;
+
+      case 'WN34':
+        sensor.accessory = new WN34(this, accessory, sensor.channel);
         break;
 
       case 'WH40':
@@ -588,10 +633,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         // case 'WH65':
         //   sensor.accessory = new WH65(this, accessory);
         //   break;
-
-      case 'WH34':
-        sensor.accessory = new WH34(this, accessory, sensor.channel);
-        break;
 
       case 'WS85':
         sensor.accessory = new WS85(this, accessory);

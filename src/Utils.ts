@@ -440,11 +440,11 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   }
 
   if (truthy(v1Config?.th?.hide)) {
-    v2Config.hidden['WH31'] = true;
+    v2Config.hidden['WN31'] = true;
   }
 
   if (truthy(v1Config?.tf?.hide)) {
-    v2Config.hidden['WH34'] = true;
+    v2Config.hidden['WN34'] = true;
   }
 
   if (truthy(v1Config?.soil?.hide)) {
@@ -581,14 +581,14 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   // name overrides
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.th?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `WH31CH${channel}:temperature`, 'value': v1Config?.th?.[`name${channel}`]});
-      v2Config.nameOverrides.push({'key': `WH31CH${channel}:humidity`, 'value': v1Config?.th?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WN31CH${channel}:temperature`, 'value': v1Config?.th?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WN31CH${channel}:humidity`, 'value': v1Config?.th?.[`name${channel}`]});
     }
   }
 
   for (let channel = 1; channel <= 8; channel++) {
     if (v1Config?.tf?.[`name${channel}`]) {
-      v2Config.nameOverrides.push({'key': `WH34CH${channel}:temperature`, 'value': v1Config?.tf?.[`name${channel}`]});
+      v2Config.nameOverrides.push({'key': `WN34CH${channel}:temperature`, 'value': v1Config?.tf?.[`name${channel}`]});
     }
   }
 

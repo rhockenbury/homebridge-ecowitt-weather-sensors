@@ -18,10 +18,10 @@ export class GW2000 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected readonly modelName: string,
   ) {
-    super(platform, accessory, `${modelName}`, `Ecowitt Gateway ${modelName}`);
+    super(platform, accessory, `${modelName}`, `${modelName} Gateway`);
 
     this.requiredData = ['tempinf', 'humidityin'];
-    this.optionalData = ['baromrelin', 'baromabsin'];
+    this.unusedData = ['baromrelin', 'baromabsin'];
 
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);

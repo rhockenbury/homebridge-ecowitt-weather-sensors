@@ -17,10 +17,10 @@ export class WH51 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH51', 'Soil Moisture Sensor', channel);
+    super(platform, accessory, 'WH51', 'WH51 Soil Moisture Sensor', channel);
 
     this.requiredData = [`soilbatt${this.channel}`, `soilmoisture${this.channel}`];
-    this.optionalData = [`soilad${this.channel}`];
+    this.unusedData = [`soilad${this.channel}`];
 
     this.battery = this.addBattery('', false);
 

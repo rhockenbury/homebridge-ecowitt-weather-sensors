@@ -6,7 +6,7 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class WH34 extends EcowittAccessory {
+export class WN34 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature'];
 
   protected battery: Service;
@@ -17,7 +17,7 @@ export class WH34 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH34', 'Thermo Sensor', channel);
+    super(platform, accessory, 'WN34', 'WN34 Thermo Sensor', channel);
 
     this.requiredData = [`tf_batt${this.channel}`, `tf_ch${this.channel}`];
 
