@@ -1,5 +1,11 @@
 ### 2.2.0-beta
 
+* Add support for WH26 and WN30
+* Renamed WH31 and WH34 to WN31 and WN34 respectively
+
+
+### 2.2.0-beta
+
 * Add support for WH41, WH43, WH45, WH46, and WH57
 * Implement Air Quality, Carbon Dioxide, and Lightning sensors
 * Minor adjustments to thresholds for low battery indication

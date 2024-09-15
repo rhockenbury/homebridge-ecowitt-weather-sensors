@@ -1,0 +1,18 @@
+{
+  "PASSKEY": "528C8E6CD4A3C6598999A0E9DF15AD32",
+  "stationtype": "GW1100B_V2.3.4",
+  "runtime": "5524430",
+  "heap": "25748",
+  "dateutc": "2024-09-13 23:47:04",
+  "tempinf": "77.90",
+  "humidityin": "40",
+  "baromrelin": "29.577",
+  "baromabsin": "29.577",
+  "temp1f": "37.58",
+  "temp2f": "-2.56",
+  "batt1": "0",
+  "batt2": "0",
+  "freq": "915M",
+  "model": "GW1100B",
+  "interval": "20"
+}
