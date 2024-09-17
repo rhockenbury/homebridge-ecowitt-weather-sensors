@@ -17,6 +17,8 @@ import { WH25 } from './devices/WH25';
 import { WH26 } from './devices/WH26';
 import { WN30 } from './devices/WN30';
 import { WN31 } from './devices/WN31';
+import { WN34 } from './devices/WN34';
+import { WN35 } from './devices/WN35';
 import { WH40 } from './devices/WH40';
 import { WH41 } from './devices/WH41';
 import { WH45 } from './devices/WH45';
@@ -24,9 +26,12 @@ import { WH46 } from './devices/WH46';
 import { WH51 } from './devices/WH51';
 import { WH55 } from './devices/WH55';
 import { WH57 } from './devices/WH57';
-//import { WH65 } from './devices/WH65';
-import { WN34 } from './devices/WN34';
+import { WH65 } from './devices/WH65';
+import { WS68 } from './devices/WS68';
+import { WS80 } from './devices/WS80';
 import { WS85 } from './devices/WS85';
+import { WS90 } from './devices/WS90';
+
 
 import * as utils from './Utils';
 import * as bodyParser from 'body-parser';
@@ -74,6 +79,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public lastDataReport = null;
   public registeredProperties: string[] = [];
   public consumedReportData: string[] = [];
+  public unconsumedReportData: string[] = [];
   public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
   public ignoreableReportData: string[] = ['runtime', 'heap', 'interval'];
 
@@ -353,18 +359,25 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
     }
 
-
-    if (!utils.includesAny(hidden, ['WS85']) && !utils.includesAll(hidden, WS85.properties)) {
-      // NOTE: Typo in WS-85 as it responds with wh85batt instead of expected ws85batt.
-      this.addSensorType(
-        dataReport.wh85batt !== undefined || dataReport.ws85batt !== undefined,
-        'WS85',
-      );
+    if (!utils.includesAny(hidden, ['WS90']) && !utils.includesAll(hidden, WS90.properties)) {
+      this.addSensorType(dataReport.wh90batt !== undefined, 'WS90');
     }
 
-    // if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
-    //   this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
-    // }
+    if (!utils.includesAny(hidden, ['WS85']) && !utils.includesAll(hidden, WS85.properties)) {
+      this.addSensorType(dataReport.wh85batt !== undefined, 'WS85');
+    }
+
+    if (!utils.includesAny(hidden, ['WS80']) && !utils.includesAll(hidden, WS80.properties)) {
+      this.addSensorType(dataReport.wh80batt !== undefined, 'WS80');
+    }
+
+    if (!utils.includesAny(hidden, ['WS68']) && !utils.includesAll(hidden, WS68.properties)) {
+      this.addSensorType(dataReport.wh68batt !== undefined, 'WS68');
+    }
+
+    if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
+      this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
+    }
 
     if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
       this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
@@ -394,9 +407,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    //
-    // WH45 and WH46 are the same, except WH45 does not have PM1.0 and PM4.0
-    //
+    // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
     if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
       this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
     }
@@ -421,6 +432,18 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
     }
 
+    if (!utils.includesAny(hidden, ['WN35']) && !utils.includesAll(hidden, WN35.properties)) {
+      for (let channel = 1; channel <= 8; channel++) {
+        if (!utils.includesAny(hidden, [`WN35CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`leaf_batt${channel}`] !== undefined,
+            'WN35',
+            channel,
+          );
+        }
+      }
+    }
+
     if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN34CH${channel}`])) {
@@ -433,9 +456,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    //
-    // WN31 and WN30 are the same, except WN30 does not have humidity
-    //
+    // WN31 and WN30 are the same sensor type, except WN30 does not have humidity
     if (!utils.includesAny(hidden, ['WN31']) && !utils.includesAll(hidden, WN31.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN31CH${channel}`])) {
@@ -514,6 +535,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       if (typeof sensor.accessory !== 'undefined') {
         this.consumedReportData.push(...sensor.accessory.requiredData);
         this.consumedReportData.push(...sensor.accessory.optionalData);
+        this.consumedReportData.push(...sensor.accessory.unusedData);
       }
     }
 
@@ -546,6 +568,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     let unconsumed = Object.keys(dataReport).filter(x => !this.consumedReportData.includes(x));
     unconsumed = unconsumed.filter(x => !this.requiredReportData.includes(x));
     unconsumed = unconsumed.filter(x => !this.ignoreableReportData.includes(x));
+    this.unconsumedReportData = unconsumed;
 
     if (unconsumed.length > 0 && Object.keys(this.config?.hidden || {}).length === 0) {
       this.log.info(`There was unused data from data report ${unconsumed}. This indicates that a sensor may not ` +
@@ -602,6 +625,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         sensor.accessory = new WN34(this, accessory, sensor.channel);
         break;
 
+      case 'WN35':
+        sensor.accessory = new WN35(this, accessory, sensor.channel);
+        break;
+
       case 'WH40':
         sensor.accessory = new WH40(this, accessory);
         break;
@@ -630,12 +657,24 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         sensor.accessory = new WH57(this, accessory);
         break;
 
-        // case 'WH65':
-        //   sensor.accessory = new WH65(this, accessory);
-        //   break;
+      case 'WH65':
+        sensor.accessory = new WH65(this, accessory);
+        break;
+
+      case 'WS68':
+        sensor.accessory = new WS68(this, accessory);
+        break;
+
+      case 'WS80':
+        sensor.accessory = new WS80(this, accessory);
+        break;
 
       case 'WS85':
         sensor.accessory = new WS85(this, accessory);
+        break;
+
+      case 'WS90':
+        sensor.accessory = new WS90(this, accessory);
         break;
 
       default:
