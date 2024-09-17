@@ -1,18 +1,27 @@
 import { Service, PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
+import { LightSensor } from './../sensors/LightSensor';
+import { UltravioletSensor } from './../sensors/UltravioletSensor';
+import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { HumiditySensor } from './../sensors/HumiditySensor';
 import { WindSensor } from './../sensors/WindSensor';
 import { RainSensor } from './../sensors/RainSensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class WS85 extends EcowittAccessory {
-  static readonly properties: string[] = ['windDirection', 'windSpeed', 'windGustSpeed',
-    'windMaxDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal',
-    'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
+export class WS90 extends EcowittAccessory {
+  static readonly properties: string[] = ['temperature', 'humidity', 'solarRadiation',
+    'uvIndex', 'windDirection', 'windSpeed', 'windGustSpeed', 'windMaxDailySpeed', 'rainRate',
+    'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal',
+    'rainYearlyTotal'];
 
   protected battery: Service;
+  protected temperature: TemperatureSensor | undefined;
+  protected humidity: HumiditySensor | undefined;
+  protected solarRadiation: LightSensor | undefined;
+  protected uvIndex: UltravioletSensor | undefined;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
@@ -29,14 +38,13 @@ export class WS85 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WS85', 'WS85 3-in-1 Solar Weather Sensor');
+    super(platform, accessory, 'WS90', 'WS90 7-in-1 Solar Weather Sensor');
 
     this.requiredData = [
-      'wh85batt', 'winddir', 'windspeedmph', 'windgustmph', 'maxdailygust',
-      'rrain_piezo', 'erain_piezo', 'hrain_piezo', 'drain_piezo', 'wrain_piezo',
-      'mrain_piezo', 'yrain_piezo',
-    ];
-    this.unusedData = ['ws85cap_volt', 'ws85_ver'];
+      'wh90batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+      'windgustmph', 'maxdailygust', 'rrain_piezo', 'erain_piezo', 'hrain_piezo',
+      'drain_piezo', 'wrain_piezo', 'mrain_piezo', 'yrain_piezo'];
+    this.unusedData = ['ws90cap_volt', 'ws90_ver'];
 
     this.battery = this.addBattery('', false);
 
@@ -44,6 +52,42 @@ export class WS85 extends EcowittAccessory {
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     let nameOverride: string | undefined;
+
+    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, nameOverride || 'Temperature');
+    } else {
+      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
+      this.temperature.removeService();
+      this.temperature = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['humidity', `${this.shortServiceId}:humidity`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:humidity`);
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, nameOverride || 'Humidity');
+    } else {
+      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
+      this.humidity.removeService();
+      this.humidity = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['solarRadiation', `${this.shortServiceId}:solarRadiation`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:solarRadiation`);
+      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, nameOverride || 'Solar Radiation');
+    } else {
+      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, 'Solar Radiation');
+      this.solarRadiation.removeService();
+      this.solarRadiation = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['uvIndex', `${this.shortServiceId}:uvIndex`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:uvIndex`);
+      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, nameOverride || 'UV Index');
+    } else {
+      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, 'UV Index');
+      this.uvIndex.removeService();
+      this.uvIndex = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['winddirection', `${this.shortServiceId}:winddirection`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:winddirection`);
@@ -155,12 +199,33 @@ export class WS85 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const batt = parseFloat(dataReport['wh85batt']);
+    const batt = parseFloat(dataReport['wh90batt']);
     const batteryLevel = batt / 3.3;
     const lowBattery = batt <= 2.3;
 
     this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
     this.updateStatusLowBattery(this.battery, lowBattery);
+
+    this.temperature?.update(
+      parseFloat(dataReport['tempf']),
+      dataReport.dateutc,
+    );
+
+    this.humidity?.update(
+      parseFloat(dataReport['humidity']),
+      dataReport.dateutc,
+    );
+
+    this.solarRadiation?.update(
+      parseFloat(dataReport['solarradiation']),
+      dataReport.dateutc,
+    );
+
+    this.uvIndex?.update(
+      parseFloat(dataReport['uv']),
+      utils.lookup(this.platform.config?.thresholds, 'uvIndex'),
+      dataReport.dateutc,
+    );
 
     this.windDirection?.updateDirection(
       parseFloat(dataReport.winddir),

@@ -186,6 +186,8 @@
             "title": "UV Index",
             "type": "number",
             "notitle": true,
+            "minimum": 1,
+            "maximum": 15,
             "required": false
           },
           "lightningEvents": {
@@ -276,11 +278,6 @@
             "type": "boolean",
             "required": false
           },
-          "dewPoint": {
-            "title": "Dew Point",
-            "type": "boolean",
-            "required": false
-          },
           "indoorTemperature": {
             "title": "Indoor Temperature",
             "type": "boolean",
@@ -308,6 +305,11 @@
           },
           "waterLeak": {
             "title": "Water Leak",
+            "type": "boolean",
+            "required": false
+          },
+          "leafWetness": {
+            "title": "Leaf Wetness",
             "type": "boolean",
             "required": false
           },
@@ -396,6 +398,11 @@
             "type": "boolean",
             "required": false
           },
+          "WN35": {
+            "title": "WN35",
+            "type": "boolean",
+            "required": false
+          },
           "WH40": {
             "title": "WH40",
             "type": "boolean",
@@ -431,8 +438,28 @@
             "type": "boolean",
             "required": false
           },
+          "WH65": {
+            "title": "WH65",
+            "type": "boolean",
+            "required": false
+          },
+          "WS68": {
+            "title": "WS68",
+            "type": "boolean",
+            "required": false
+          },
+          "WS80": {
+            "title": "WS80",
+            "type": "boolean",
+            "required": false
+          },
           "WS85": {
             "title": "WS85",
+            "type": "boolean",
+            "required": false
+          },
+          "WS90": {
+            "title": "WS90",
             "type": "boolean",
             "required": false
           }
@@ -637,13 +664,13 @@
                 "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
                 "hidden.uvIndex",
-                "hidden.dewPoint",
                 "hidden.indoorTemperature",
                 "hidden.temperature",
                 "hidden.indoorHumidity",
                 "hidden.humidity",
                 "hidden.soilMoisture",
-                "hidden.waterLeak"
+                "hidden.waterLeak",
+                "hidden.leafWetness"
               ]
             },
             {
@@ -679,27 +706,32 @@
                 "hidden.HP2560",
                 "hidden.WH25",
                 "hidden.WH26",
-                "hidden.WN30"
+                "hidden.WN30",
+                "hidden.WN31"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WN31",
                 "hidden.WN34",
+                "hidden.WN35",
                 "hidden.WH40",
                 "hidden.WH41",
-                "hidden.WH45"
+                "hidden.WH45",
+                "hidden.WH46",
+                "hidden.WH51"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH46",
-                "hidden.WH51",
                 "hidden.WH55",
                 "hidden.WH57",
-                "hidden.WS85"
+                "hidden.WH65",
+                "hidden.WS68",
+                "hidden.WS80",
+                "hidden.WS85",
+                "hidden.WS90"
               ]
             }
           ]

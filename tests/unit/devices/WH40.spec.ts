@@ -82,7 +82,6 @@ configs.forEach(config => {
 
       device = new WH40(platform, accessory);
 
-      expect(device.rainRate).to.not.be.undefined;
       expect(device.rainRate.service.characteristics[0].value).to.equal("Test Rain Rate Name");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Test Rain Event Total Name");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Test Rain Hourly Total Name");

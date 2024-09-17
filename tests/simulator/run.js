@@ -1,9 +1,31 @@
 const request = require('superagent');
+const fs = require('fs');
+const path = require('path')
 //const definitions = require('./definitions');
 
 // load the simulation track
-const simTrackName = process.argv[2] || 'gw2000_ws85_wh51';
-const simTrack = require(`../synthetic/data/${simTrackName}.json`);
+let simTracks = {};
+const trackFiles = fs.readdirSync('tests/synthetic/data/').filter(file => path.extname(file) === '.json');
+trackFiles.forEach(file => {
+  const fileData = fs.readFileSync(path.join('tests/synthetic/data/', file));
+  simTracks[file.split('.')[0]] = JSON.parse(fileData.toString());
+});
+
+const simTrackName = process.argv[2] || '';
+const simTrackCandidates = Object.keys(simTracks).filter(t => t.includes(simTrackName));
+
+// select a sim track
+let simTrack = {};
+if (simTrackCandidates.length > 0) {
+  const index = Math.floor(Math.random() * (simTrackCandidates.length + 1));
+  simTrack = simTracks[simTrackCandidates[index]];
+  console.log(`Selected Track ${simTrackCandidates[index]}`);
+} else {
+  console.log("No Track Candidates Found");
+  process.exit();
+}
+
+// console.log(simTrackCandidates);
 
 const SKIP_FIELDS = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq', 'runtime', 'heap', 'interval'];
 

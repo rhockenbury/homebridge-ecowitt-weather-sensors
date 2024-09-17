@@ -292,7 +292,7 @@ export function toWindSector(degrees): string {
     return 'NaN';
   }
 
-  const index = Math.round((degrees % 360) / 22.5);
+  const index = Math.round((degrees % 360) / 24.0);
 
   let sectorName = kWindSectors[index];
   if (!sectorName) {
@@ -372,6 +372,49 @@ export function toAirQuality(pm: number, pmType: string): AirQualityScaleType {
   }
 
   return airQuality;
+}
+
+//------------------------------------------------------------------------------
+
+interface UVIndexScaleType {
+  level: number;
+  risk: string;
+}
+
+// https://en.wikipedia.org/wiki/Ultraviolet_index
+const uvIndexScale = [
+  {
+    level: 2,
+    risk: 'Low',
+  },
+  {
+    level: 5,
+    risk: 'Moderate',
+  },
+  {
+    level: 7,
+    risk: 'High',
+  },
+  {
+    level: 10,
+    risk: 'Very High',
+  },
+  {
+    level: Number.POSITIVE_INFINITY,
+    risk: 'Extreme',
+  },
+];
+
+//------------------------------------------------------------------------------
+
+export function toUVRiskLevel(index: number): UVIndexScaleType {
+  let uvRating = uvIndexScale.find((scale) => index <= scale.level);
+
+  if (!uvRating) {
+    uvRating = uvIndexScale[uvIndexScale.length - 1];
+  }
+
+  return uvRating;
 }
 
 //------------------------------------------------------------------------------
