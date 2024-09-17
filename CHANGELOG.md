@@ -1,5 +1,13 @@
+### 2.4.0-beta
+
+* Add support for WH65, WS68, WS80, and WS90
+* Implement Light and Ultraviolet sensor types
+* Fix issue with mapping wind direction to a sector
+* Add paypal funding link to `package.json` and donation section to `README.md`
+* Add Github action to close issues with no activity
 
 ### 2.3.1-beta
+
 * Add `homepage` field in `package.json` for plugin verification
 * Add `name` property in `config.schema.json` for plugin verification
 

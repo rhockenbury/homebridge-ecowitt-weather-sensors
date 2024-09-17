@@ -2,11 +2,15 @@
   "private": false,
   "displayName": "Homebridge Ecowitt Weather Sensors",
   "name": "homebridge-ecowitt-weather-sensors",
-  "version": "2.3.1-beta",
+  "version": "2.4.0-beta",
   "description": "Complete HomeKit support for Ecowitt Weather Sensors through Homebrige",
   "license": "Apache-2.0",
   "homepage": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors#readme",
   "icon": "https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo.png",
+  "funding": {
+    "type": "paypal",
+    "url": "https://www.paypal.com/donate/?business=4G6G3V4CYG2CY"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/rhockenbury/homebridge-ecowitt-weather-sensors.git"
