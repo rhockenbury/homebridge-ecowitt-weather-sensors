@@ -5,6 +5,8 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class Sensor {
+  protected cacheBreaker = true;
+
   constructor(
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
@@ -35,6 +37,15 @@ export class Sensor {
   }
 
   public updateName(name: string) {
+    // controller for homekit app might be caching some UI elements and not re-rendering
+    // this "cachebreaker" is intended to force the service names to update
+    if (this.cacheBreaker) {
+      name = `\u200B${name}\u200B`;
+      this.cacheBreaker = false;
+    } else {
+      this.cacheBreaker = true;
+    }
+
     this.service.updateCharacteristic(
       this.platform.Characteristic.ConfiguredName,
       name,
