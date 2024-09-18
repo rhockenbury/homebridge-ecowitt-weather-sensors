@@ -1,3 +1,8 @@
+### 2.4.1
+* Promote v2 to GA
+* Improve data report simulator with parameters set in definitions file
+* Improve error handling for missing required parameters on a sensor
+
 ### 2.4.0-beta
 
 * Add support for WH65, WS68, WS80, and WS90

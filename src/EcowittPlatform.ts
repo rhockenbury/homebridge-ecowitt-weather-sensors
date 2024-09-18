@@ -528,7 +528,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
 
       if (typeof sensor.accessory !== 'undefined' && sensor.accessory.unusedData.length > 0) {
-        this.log.info(`Note that accessory ${sensor.type} does not currently display the following ` +
+        this.log.info(`Note that accessory ${sensor.type} does not currently use and/or display the following ` +
           `data: ${sensor.accessory.unusedData}`);
       }
 
@@ -723,14 +723,23 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         }
       } catch(err) {
         let stack: string | undefined = undefined;
+        let message: string | undefined = undefined;
+
         if (err instanceof Error) {
           stack = err.stack;
+          message = err.message;
         } else {
           stack = String(err);
+          message = String(err);
         }
 
-        this.log.warn(`An issue occured while updating sensor values for ${sensor.type}. Review the error message below `
-          + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
+        if (message.includes('Update on') && message.includes('requires data')) {
+          this.log.warn(`An issue occured while updating sensor values for ${sensor.type}. ${message}. ` +
+            `Please file a bug report if needed at ${utils.BUG_REPORT_LINK}`);
+        } else {
+          this.log.warn(`An issue occured while updating sensor values for ${sensor.type}. Review the error message below `
+            + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
+        }
       }
     }
   }

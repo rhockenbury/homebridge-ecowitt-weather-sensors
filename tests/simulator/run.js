@@ -1,7 +1,7 @@
 const request = require('superagent');
 const fs = require('fs');
 const path = require('path')
-//const definitions = require('./definitions');
+const definitions = require('./definitions');
 
 // load the simulation track
 let simTracks = {};
@@ -11,21 +11,19 @@ trackFiles.forEach(file => {
   simTracks[file.split('.')[0]] = JSON.parse(fileData.toString());
 });
 
-const simTrackName = process.argv[2] || '';
+const simTrackName = process.argv[2] || 'gw2000';
 const simTrackCandidates = Object.keys(simTracks).filter(t => t.includes(simTrackName));
 
-// select a sim track
+// select a sim track at random from candidates
 let simTrack = {};
 if (simTrackCandidates.length > 0) {
-  const index = Math.floor(Math.random() * (simTrackCandidates.length + 1));
+  const index = Math.floor(Math.random() * simTrackCandidates.length);
   simTrack = simTracks[simTrackCandidates[index]];
   console.log(`Selected Track ${simTrackCandidates[index]}`);
 } else {
   console.log("No Track Candidates Found");
   process.exit();
 }
-
-// console.log(simTrackCandidates);
 
 const SKIP_FIELDS = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq', 'runtime', 'heap', 'interval'];
 
@@ -48,42 +46,51 @@ function modifyData(dataReport) {
       continue;
     }
 
-    //console.log(`old ${value}`);
+    if (key.includes("batt")) { // skip updating battery fields
+      continue;
+    }
 
-    // lower bound
-    const lowerIncrement = parseFloat(value) * 0.05;
-    const upperIncrement = parseFloat(value) * 0.20;
+    let minimum = undefined;
+    let maximum = undefined;
+    let lowerIncrement = parseFloat(value) * 0.05;
+    let upperIncrement = parseFloat(value) * 0.20;
 
-    const decrease = Math.random() < 0.5;
+    for (const [defKey, defValue] of Object.entries(definitions)) {
+      if (key.includes(defKey)) {
+        lowerIncrement = defValue.minIncrement;
+        upperIncrement = defValue.maxIncrement;
+        minimum = defValue.min;
+        maximum = defValue.max;
+        break;
+      }
+    }
+
+    if (minimum === undefined || maximum === undefined) {
+      console.log(`No definition for ${key}`);''
+    }
 
     let change = Math.random() * (upperIncrement - lowerIncrement) + lowerIncrement;
 
-    if (decrease) {
+    // decide if change should be increase or decrease
+    if (Math.random() < 0.5) {
       change = change * -1.0;
     }
 
-    //console.log(`change ${change}`)
-
     let newValue = parseFloat(value) + change;
+
+    // check bounds
+    if (minimum !== undefined && newValue < minimum) {
+      newValue = minimum;
+    }
+
+    if (maximum !== undefined && newValue > maximum) {
+      newValue = maximum;
+    }
+
     newValue = +newValue.toFixed(2);
-
-    //console.log(`new ${newValue}`);
-
     dataReport[key] = String(newValue);
 
-    // if (definitions[key]) {
-    //   // decide whether to increase or decrease
-    //
-    //   // decide the amount of change
-    //
-    //
-    // } else {
-    //   // definition not defined for key
-    //
-    //
-    // }
-
-    //console.log(`${key}: ${value}`);
+    //console.log(`${key}: ${value} -> ${key}: ${newValue}`);
   }
 
   const dateUTC = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')
@@ -104,10 +111,13 @@ async function runSim() {
   for (let i = 1; i <= iterations; i++) {
     dataReport = modifyData(dataReport);
     dataReport.interval = String(interval);
+
     postData(dataReport);
+
     console.log(i);
     console.log(dataReport);
-    await timer(interval*1000); // then the created Promise can be awaited
+
+    await timer(interval*1000);
   }
 }
 
