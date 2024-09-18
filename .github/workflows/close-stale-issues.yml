@@ -1,4 +1,4 @@
-name: Close inactive issues
+name: Close Inactive Issues
 
 on:
   schedule:
@@ -22,5 +22,5 @@ jobs:
           close-issue-message: "This issue was closed because it has been inactive for 14 days since being marked as stale."
           days-before-pr-stale: -1
           days-before-pr-close: -1
-          any-of-labels: ["AWAITING TEST", "AWAITING RESPONSE"]
+          any-of-labels: "awaiting-test,awaiting-response"
           repo-token: ${{ secrets.GITHUB_TOKEN }}
