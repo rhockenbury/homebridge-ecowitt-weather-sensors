@@ -3,7 +3,6 @@
 * Implement support for WN32 and WN32P
 * Add Homebridge verified badge
 
-
 ### 2.4.1
 
 * Promote v2 to GA
