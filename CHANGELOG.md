@@ -1,6 +1,8 @@
 ### 2.5.0
 
-* Add support for WN32 and WN32P
+* Implement support for WN32 and WN32P
+* Add Homebridge verified badge
+
 
 ### 2.4.1
 
