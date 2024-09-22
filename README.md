@@ -7,7 +7,7 @@
 
 <!-- badges -->
 
-[![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![NPM Downloads](https://img.shields.io/npm/d18m/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) [![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![NPM Downloads](https://img.shields.io/npm/d18m/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml)
 
 :fast\_forward: :fast\_forward: :fast\_forward: **[Getting Started](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started) | [Supported Devices](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#supported-devices) | [Configuration](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#configuration) | [FAQs](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#frequently-asked-questions) | [Contributing](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/blob/master/docs/CONTRIBUTING.md)** :rewind: :rewind: :rewind:
 
@@ -202,6 +202,10 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 ### I use an Ecowitt sensor that's not currently supported.  What can I do to get it supported?
 
 > Please [open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=) on the Github project to let me know what devices you are interested in getting support for.
+
+### I've added an Ecowitt device to my gateway or console, and can see it on the WS View App, but the accessory is not showing up in Homebridge or Homekit?
+
+> The plugin only does device discovery on the first data report after the plugin starts. If you add a device, please restart Homebridge to trigger the discovery and the plugin should pick up the new device. In the Homebridge logs, you can look for logs like `Adding new accessory` to confirm it was added.
 
 ## Contributing
 
