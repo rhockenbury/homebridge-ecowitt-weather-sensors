@@ -28,7 +28,8 @@
     "remark": "remark --frail --use remark-validate-links --use remark-lint-no-dead-urls . --quiet --frail --output",
     "build": "rimraf ./dist && tsc && npm link",
     "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",
-    "prepublishOnly": "npm run lint && npm run remark && npm run build && npm run test"
+    "all": "npm run lint && npm run remark && npm run build && npm run test",
+    "prepublishOnly": "npm run all"
   },
   "keywords": [
     "homebridge-plugin",
@@ -41,7 +42,7 @@
     "body-parser": "^1.20.2",
     "date-fns": "^3.6.0",
     "deepmerge": "^4.3.1",
-    "express": "^4.19.2"
+    "express": "^4.21.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.12",
