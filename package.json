@@ -2,7 +2,7 @@
   "private": false,
   "displayName": "Homebridge Ecowitt Weather Sensors",
   "name": "homebridge-ecowitt-weather-sensors",
-  "version": "2.4.1",
+  "version": "2.5.0",
   "description": "Complete HomeKit support for Ecowitt Weather Sensors through Homebrige",
   "license": "Apache-2.0",
   "homepage": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors#readme",
