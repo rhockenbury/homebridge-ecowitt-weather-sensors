@@ -138,15 +138,16 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
-  it('gw2000_ws85_wh51 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws85_wh51.json');
+  it('gw2000_ws85_wh51_wn32 sensors are created', (done) => {
+    testData = require('./data/gw2000_ws85_wh51_wn32.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(3);
+    expect(platform.baseStationInfo.sensors.length).to.equal(4);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW2000");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WS85");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
-    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.baseStationInfo.sensors[3].type).to.equal("WH26");
+    expect(platform.unconsumedReportData.length).to.equal(1); // srain_piezo
     done();
   });
 

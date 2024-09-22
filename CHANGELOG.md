@@ -1,4 +1,9 @@
+### 2.5.0
+
+* Add support for WN32 and WN32P
+
 ### 2.4.1
+
 * Promote v2 to GA
 * Improve data report simulator with parameters set in definitions file
 * Improve error handling for missing required parameters on a sensor
