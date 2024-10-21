@@ -1,3 +1,8 @@
+### 2.5.1
+
+* Update dependencies
+* Fix bug with WN30 and WN35 where name override without metric was not respected
+
 ### 2.5.0
 
 * Implement support for WN32 and WN32P

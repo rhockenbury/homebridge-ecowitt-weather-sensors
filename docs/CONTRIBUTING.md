@@ -27,7 +27,7 @@ Before opening a PR, please ensure that all tests and linting succeeds, and that
 #### Dev Resources
 
 * [TypeScript Documentation](https://www.typescriptlang.org/docs/)
-* [Homebridge Developer Docs](https://developers.homebridge.io/#/)
+* [Homebridge Developer Docs](https://developers.homebridge.io)
 * [Homekit Developer Docs](https://developer.apple.com/documentation/homekit/)
 * [Local Homebridge Environment Setup](https://github.com/homebridge/homebridge?tab=readme-ov-file#plugin-development)
 * [Ecowitt Devices Battery Info](https://github.com/gjr80/weewx-gw1000/wiki/Sensor-battery-states)
