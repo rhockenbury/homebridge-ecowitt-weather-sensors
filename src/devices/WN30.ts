@@ -27,13 +27,20 @@ export class WN30 extends EcowittAccessory {
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`) ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
     } else {
       this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
       this.temperature.removeService();
       this.temperature = undefined;
     }
+  }
+
+  //----------------------------------------------------------------------------
+
+  public static requiredData(channel) {
+    return [`batt${channel}`, `temp${channel}f`];
   }
 
   //----------------------------------------------------------------------------

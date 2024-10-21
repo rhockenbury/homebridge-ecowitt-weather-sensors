@@ -40,12 +40,6 @@ export class WS90 extends EcowittAccessory {
   ) {
     super(platform, accessory, 'WS90', 'WS90 7-in-1 Solar Weather Sensor');
 
-    this.requiredData = [
-      'wh90batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
-      'windgustmph', 'maxdailygust', 'rrain_piezo', 'erain_piezo', 'hrain_piezo',
-      'drain_piezo', 'wrain_piezo', 'mrain_piezo', 'yrain_piezo'];
-    this.unusedData = ['ws90cap_volt', 'ws90_ver'];
-
     this.battery = this.addBattery('', false);
 
     const hideConfig = this.platform.config?.hidden || {};
@@ -192,19 +186,51 @@ export class WS90 extends EcowittAccessory {
 
   //----------------------------------------------------------------------------
 
+  public static requiredData() {
+    return [
+      'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+      'windgustmph', 'maxdailygust', 'rrain_piezo', 'erain_piezo', 'hrain_piezo',
+      'drain_piezo', 'wrain_piezo', 'mrain_piezo', 'yrain_piezo',
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+
+  public static optionalData() {
+    return [
+      'wh90batt', 'battout',
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+
+  public static unusedData() {
+    return [
+      'ws90cap_volt', 'ws90_ver'
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+
   public update(dataReport) {
-    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
-      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    if (!utils.includesAll(Object.keys(dataReport), WS90.requiredData())) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${WS90.requiredData()}`);
     } else {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const batt = parseFloat(dataReport['wh90batt']);
-    const batteryLevel = batt / 3.3;
-    const lowBattery = batt <= 2.3;
+    if (dataReport['wh90batt'] !== undefined) {
+      const batt = parseFloat(dataReport['wh90batt']);
+      const batteryLevel = batt / 3.3;
+      const lowBattery = batt <= 2.3;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+      this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
+      this.updateStatusLowBattery(this.battery, lowBattery);
+    } else if (dataReport['battout'] !== undefined) {
+      const lowBattery = dataReport['battout'] === '1';
+
+      this.updateStatusLowBattery(this.battery, lowBattery);
+    }
 
     this.temperature?.update(
       parseFloat(dataReport['tempf']),
@@ -236,7 +262,6 @@ export class WS90 extends EcowittAccessory {
       parseFloat(dataReport.windspeedmph),
       utils.lookup(this.platform.config?.thresholds, 'windSpeed'),
       dataReport.dateutc,
-
     );
 
     this.windGust?.updateSpeed(

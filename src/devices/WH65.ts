@@ -40,13 +40,6 @@ export class WH65 extends EcowittAccessory {
   ) {
     super(platform, accessory, 'WH65', 'WH65 7-in-1 Solar Weather Sensor');
 
-    this.requiredData = [
-      'wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
-      'windgustmph', 'maxdailygust', 'rainratein', 'eventrainin', 'hourlyrainin',
-      'dailyrainin', 'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
-    this.optionalData = [];
-    this.unusedData = ['totalrainin'];
-
     this.battery = this.addBattery('', false);
 
     const hideConfig = this.platform.config?.hidden || {};
@@ -193,9 +186,27 @@ export class WH65 extends EcowittAccessory {
 
   //----------------------------------------------------------------------------
 
+  public static requiredData() {
+    return [
+      'wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+      'windgustmph', 'maxdailygust', 'rainratein', 'eventrainin', 'hourlyrainin',
+      'dailyrainin', 'weeklyrainin', 'monthlyrainin', 'yearlyrainin',
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+
+  public static unusedData() {
+    return [
+      'totalrainin'
+    ];
+  }
+
+  //----------------------------------------------------------------------------
+
   public update(dataReport) {
-    if (!utils.includesAll(Object.keys(dataReport), this.requiredData)) {
-      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData}`);
+    if (!utils.includesAll(Object.keys(dataReport), this.requiredData())) {
+      throw new Error(`Update on ${this.accessoryId} requires data ${this.requiredData()}`);
     } else {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }

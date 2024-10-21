@@ -27,7 +27,8 @@ export class WN35 extends EcowittAccessory {
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     if (!utils.includesAny(hidden, ['leafWetness', `${this.shortServiceId}:leafWetness`])) {
-      const leafWetnessName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:leafWetness`);
+      const leafWetnessName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:leafWetness`) ||
+          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
       this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, leafWetnessName || 'Leaf Wetness');
     } else {
       this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, 'Leaf Wetness');

@@ -36,6 +36,8 @@
     "homebridge",
     "homekit",
     "ecowitt",
+    "fine-offset",
+    "ambient-weather",
     "weather"
   ],
   "dependencies": {

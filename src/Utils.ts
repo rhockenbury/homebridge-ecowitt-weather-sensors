@@ -427,6 +427,19 @@ export function v1ConfigTest(v1Config: object): boolean {
   return false;
 }
 
+
+export function fieldTranslator(fieldName: string, vendor: string): string {
+  if (vendor === 'ecowitt') {
+    return fieldName;
+  }
+
+  const map = {
+    'wh90batt': 'battout',
+  };
+
+  return map[fieldName];
+}
+
 //------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

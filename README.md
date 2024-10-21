@@ -213,7 +213,7 @@ Contributions are welcomed! Please report bugs, suggest improvements, and open p
 
 ## Supporting
 
-This plugin requires my time and energy to develop and maintain, as well as the occasional Ecowitt device purchase. If you feel you have gotten value from this plugin, please consider [making a donation](https://www.paypal.com/donate/?business=4G6G3V4CYG2CY).
+This plugin requires my time and energy to develop and maintain, as well as the occasional purchase of an Ecowitt sensor. If you feel you have gotten value from this plugin, please consider [making a donation](https://www.paypal.com/donate/?business=4G6G3V4CYG2CY). Github Stars are appreciated too!
 
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">

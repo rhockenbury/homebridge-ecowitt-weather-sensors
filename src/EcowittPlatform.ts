@@ -37,9 +37,18 @@ import * as utils from './Utils';
 import * as bodyParser from 'body-parser';
 import * as crypto from 'crypto';
 
+// eslint-disable-next-line  @typescript-eslint/no-var-requires
+const merge = require('deepmerge');
+const querystring = require('querystring');
+
 import { EcowittAccessory } from './EcowittAccessory';
 
 import express, { Request, Response, Next } from 'express';
+
+// interface devices {
+//   GW1000: GW1000,
+//   GW2000: GW2000,
+// }
 
 interface SensorType {
   type: string;
@@ -51,12 +60,13 @@ interface SensorType {
 
 interface BaseStationInfoType {
   model: string;
+  vendor: string;
   deviceName: string;
   serialNumber: string;
   shortSerial: string;
   hardwareRevision: string;
   softwareRevision: string;
-  firmwareRevision: string;
+  //firmwareRevision: string;
   frequency: string;
   PASSKEY: string;
   sensors: SensorType[];
@@ -78,12 +88,17 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   public lastDataReport = null;
   public registeredProperties: string[] = [];
+
   public consumedReportData: string[] = [];
   public unconsumedReportData: string[] = [];
-  public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
-  public ignoreableReportData: string[] = ['runtime', 'heap', 'interval'];
+
+  public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc'];
+  public optionalReportData: string[] = ['runtime', 'heap', 'interval', 'model', 'freq'];
+
+  public protocolCheckFields: string[] = ['ID', 'PASSWORD'];
 
   public baseStationInfo: BaseStationInfoType = {
+    vendor: '',
     model: '',
     deviceName: '',
     serialNumber: '',
@@ -137,34 +152,52 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.dataReportServer.use(bodyParser.json());
     this.dataReportServer.use(bodyParser.urlencoded({ extended: true }));
 
-    this.dataReportServer.post(encodedPath, (req: Request, res: Response, next: Next) => {
-      this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
+    // depending on the vendor/protocol, the request can be POST or GET and data properties
+    // can be sent as query params or as JSON body
+    // additionally, users frequently forget to add the query prefix character (?) to the path option
+    // when configuring the custom server upload, so that case is handled here
+    this.dataReportServer.all('*', (req: Request, res: Response, next: Next) => {
+      const parsedPath = req.path.split(/[?#&]/)[0];
+      this.log.debug(`Received request ${req.method} ${parsedPath} from ${req.socket.remoteAddress}`);
+
+      if (parsedPath !== encodedPath && utils.falsy(this.config?.additional?.acceptAnyPath)) {
+        this.log.debug(req.path);
+        this.log.warn(`Received request for ${req.method} ${parsedPath} from ${req.socket.remoteAddress}. `
+          + `Configure the base station to send data reports to ${encodedPath} or enable accept any path in advanced settings`);
+        res.send();
+        return;
+      }
+
+      let dataReport = {};
+
+      if (req.originalUrl.includes('?')) { // query params should be well-formatted and parseable
+        dataReport = merge(req.body, req.query);
+      } else if (req.path.includes('&')) { // query params not formed correctly
+        const params = req.path.substring(req.path.indexOf('&') + 1);
+        dataReport = merge(req.body, querystring.parse(params));
+      } else {
+        dataReport = req.body;
+      }
+
+      if (utils.includesAny(dataReport, protocolCheckFields)) {
+        this.log.warn('Data report appears to use the Wunderground protocol. Please ensure ' +
+          'that either the Ecowitt or AmbientWeather protocol is used when sending data reports to this plugin').
+        res.send();
+        return;
+      }
+
       try {
-        this.onDataReport(req.body);
+        this.onDataReport(dataReport);
       } catch (err) {
         next(err);
       }
-      res.send();
-    });
 
-    this.dataReportServer.all('*', (req: Request, res: Response, next: Next) => {
-      if (utils.falsy(this.config?.additional?.acceptAnyPath)) {
-        this.log.warn(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}. `
-          + `Configure the Ecowitt base station to send data reports to POST ${encodedPath}`);
-      } else {
-        this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
-        try {
-          this.onDataReport(req.body);
-        } catch (err) {
-          next(err);
-        }
-      }
       res.send();
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.dataReportServer.use((err, req: Request, res: Response, next: Next) => {
-      this.log.warn('An issue occured while processing a data report. '
+      this.log.warn('An issue occured while processing the data report. '
         + `Review the error message below and file a bug report at ${utils.BUG_REPORT_LINK} \n ${err.stack}`);
       res.status(500).send('Error processing data report');
     });
@@ -285,209 +318,256 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   //----------------------------------------------------------------------------
 
-  addSensorType(add: boolean, type: string, channel: number | undefined = undefined) {
-    if (add) {
-      this.baseStationInfo.sensors.push({
-        type: type,
-        channel: channel,
-        accessory: undefined,
-        id: undefined,
-        uuid: undefined,
-      });
-
-      if (typeof channel !== 'undefined') {
-        this.log.debug(`Adding ${type} channel ${channel}`);
-      } else {
-        this.log.debug(`Adding ${type}`);
-      }
-    }
-  }
+  // addSensorType(add: boolean, type: string, channel: number | undefined = undefined) {
+  //   if (add) {
+  //     this.baseStationInfo.sensors.push({
+  //       type: type,
+  //       channel: channel,
+  //       accessory: undefined,
+  //       id: undefined,
+  //       uuid: undefined,
+  //     });
+  //
+  //     if (typeof channel !== 'undefined') {
+  //       this.log.debug(`Adding ${type} channel ${channel}`);
+  //     } else {
+  //       this.log.debug(`Adding ${type}`);
+  //     }
+  //   }
+  // }
 
   //----------------------------------------------------------------------------
 
   registerAccessories(dataReport) {
-    const stationTypeInfo = dataReport?.stationtype.match(
-      /(EasyWeather|GW[12][012]00(?:[ABC]?))_?(.*)/,
-    );
-    const modelInfo = dataReport?.model.match(
-      /(HP[23]5[056][014]|GW[12][012]00)[ABC]?_?(.*)/,
-    );
 
-    this.baseStationInfo.model = dataReport.model;
-    this.baseStationInfo.frequency = dataReport.freq;
+    // get hardweare version
+    // software version
+    // this.baseStationInfo.deviceName
+
+    // TODO - set somewhere?
+    // this.baseStationInfo.model = dataReport.model;
+    // this.baseStationInfo.frequency = dataReport.freq;
+
+    // ecowitt console
+    if (dataReport.stationType.trim().startsWith('EasyWeather')) {
+      stationTypeInfo = dataReport.stationType.trim().match(/(EasyWeather|EasyWeatherPro)_?(.*)/);
+      modelInfo = dataReport.model.trim().match(/(HP[0-9]{4})[ABCDE]?_?(?:Pro)?_?(.*)/)
+
+      this.baseStationInfo.hardwareRevision = modelInfo[1];
+      this.baseStationInfo.softwareRevision = stationTypeInfo[1];
+      this.baseStationInfo.deviceName = modelInfo[0];
+      this.baseStationInfo.vendor = 'ecowitt';
+
+      // only 256X reports indoor data
+    }
+
+    // ecowitt gateway
+    if (dataReport.stationType.trim().startsWith('GW')) {
+      stationTypeInfo = dataReport.stationType.trim().match(/(GW[12][0-9]{3})[ABC]?_?(.*)/);
+
+      this.baseStationInfo.softwareRevision = stationTypeInfo[1];
+      this.baseStationInfo.deviceName = stationTypeInfo[0];
+      this.baseStationInfo.vendor = 'ecowitt';
+
+      if (this.baseStationInfo.deviceName.startsWith('GW1') &&
+        !utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
+        // fieldsValidate = utils.includesAll(this.registeredProperties, GW1000.requiredData());
+        // this.createAccessory(fieldsValidate, this.baseStationInfo.deviceName);
+      }
+    }
+
+    // ambient console
+    if (dataReport.stationType.trim().startsWith('WS')) {
+      stationTypeInfo = dataReport.stationType.trim().match(/(WS[0-9]{4})[ABC]?_?(.*)/);
+
+      this.baseStationInfo.softwareRevision = stationTypeInfo[1];
+      this.baseStation.deviceName = stationTypeInfo[0];
+      this.baseStation.vendor = 'ambient';
+    }
 
     const hideConfig = this.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (Array.isArray(modelInfo) && modelInfo.length === 3) {
-      this.baseStationInfo.deviceName = modelInfo[1];
+    // if (this.baseStation.deviceName === undefined) {
+    //   this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
+    // } else {
+    //   switch (this.baseStation.deviceName) {
+    //     case 'GW1000':
+    //     case 'GW1100':
+    //     case 'GW1200':
+    //     case 'GW2000':
+    //       if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
+    //         this.addSensorType(true, this.baseStation.deviceName);
+    //       }
+    //       break;
+    //
+    //     case 'HP2560':
+    //     case 'HP2561':
+    //     case 'HP2564':
+    //     //case 'WS1965':
+    //       if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
+    //         this.addSensorType(true, this.baseStation.deviceName);
+    //       }
+    //       break;
+    //
+    //     case 'HP2550':
+    //     case 'HP2551':
+    //     case 'HP3500':
+    //       this.log.info('Base station does not have weather data to display, no accessory will be created');
+    //       break;
+    //
+    //     default:
+    //       this.log.warn('Base station was not detected from data report. Please file a feature request to add support for '
+    //         + `device ${modelInfo[1]} at ${utils.FEATURE_REQ_LINK}`);
+    //   }
+    // }
 
-      switch (modelInfo[1]) {
-        case 'GW1000':
-        case 'GW1100':
-        case 'GW1200':
-        case 'GW2000':
-          this.baseStationInfo.hardwareRevision = stationTypeInfo[0];
-          this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
-          if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
-            this.addSensorType(true, modelInfo[1]);
-          }
-          break;
-
-        case 'HP2560':
-        case 'HP2561':
-        case 'HP2564':
-          this.baseStationInfo.softwareRevision = dataReport.stationtype;
-          this.baseStationInfo.firmwareRevision = modelInfo[2];
-          if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
-            this.addSensorType(true, modelInfo[1]);
-          }
-          break;
-
-        case 'HP2550':
-        case 'HP2551':
-        case 'HP3500':
-          this.baseStationInfo.softwareRevision = dataReport.stationtype;
-          this.baseStationInfo.firmwareRevision = modelInfo[2];
-          break;
-
-        default:
-          this.log.warn('Base station was not detected from data report. Please file a feature request to add support for '
-            + `device ${modelInfo[1]} at ${utils.FEATURE_REQ_LINK}`);
-      }
-    } else {
-      this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
-    }
+    let batteryValidate = false;
+    let fieldsValidate = false;
 
     if (!utils.includesAny(hidden, ['WS90']) && !utils.includesAll(hidden, WS90.properties)) {
-      this.addSensorType(dataReport.wh90batt !== undefined, 'WS90');
+      batteryValidate = dataReport.wh90batt !== undefined || dataReport.battout !== undefined;
+      fieldsValidate = utils.includesAll(this.unconsumedReportData, WS90.requiredData());
+      this.createAccessory(batteryValidate && fieldsValidate, 'WS90');
     }
+
+    // if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
+    //   batteryValidate = dataReport.wh65batt !== undefined || dataReport.battout !== undefined;
+    //   fieldsValidate = utils.includesAll(this.unconsumedReportData, WH65.requiredData());
+    //   this.createAccessory(batteryValidate && fieldsValidate, 'WH65');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WS80']) && !utils.includesAll(hidden, WS80.properties)) {
+    //   batteryValidate = dataReport.wh80batt !== undefined || dataReport.battout !== undefined;
+    //   //batteryValidate = dataReport[utils.fieldTranslate('wh80batt', this.baseStationInfo.vendor)] !== undefined;
+    //   fieldsValidate = utils.includesAll(this.unconsumedReportData, WS80.requiredData());
+    //   this.createAccessory(batteryValidate && fieldsValidate, 'WS80');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WS68']) && !utils.includesAll(hidden, WS68.properties)) {
+    //   batteryValidate = dataReport.wh68batt !== undefined || dataReport.battout !== undefined;
+    //   fieldsValidate = utils.includesAll(this.unconsumedReportData, WS68.requiredData());
+    //   this.createAccessory(batteryValidate && fieldsValidate, 'WS68');
+    // }
 
     if (!utils.includesAny(hidden, ['WS85']) && !utils.includesAll(hidden, WS85.properties)) {
-      this.addSensorType(dataReport.wh85batt !== undefined, 'WS85');
+      batteryValidate = dataReport.wh85batt !== undefined || dataReport.battout !== undefined;
+      fieldsValidate = utils.includesAll(this.unconsumedReportData, WS85.requiredData());
+      this.createAccessory(batteryValidate && fieldsValidate, 'WS85');
     }
 
-    if (!utils.includesAny(hidden, ['WS80']) && !utils.includesAll(hidden, WS80.properties)) {
-      this.addSensorType(dataReport.wh80batt !== undefined, 'WS80');
-    }
 
-    if (!utils.includesAny(hidden, ['WS68']) && !utils.includesAll(hidden, WS68.properties)) {
-      this.addSensorType(dataReport.wh68batt !== undefined, 'WS68');
-    }
-
-    if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
-      this.addSensorType(dataReport.wh65batt !== undefined, 'WH65');
-    }
-
-    if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
-      this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
-    }
-
-    if (!utils.includesAny(hidden, ['WH55']) && !utils.includesAll(hidden, WH55.properties)) {
-      for (let channel = 1; channel <= 4; channel++) {
-        if (!utils.includesAny(hidden, [`WH55CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`leakbatt${channel}`] !== undefined,
-            'WH55',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`soilbatt${channel}`] !== undefined,
-            'WH51',
-            channel,
-          );
-        }
-      }
-    }
-
-    // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
-    if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
-      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
-    }
-
-    if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
-      this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
-    }
-
-    if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
-      for (let channel = 1; channel <= 4; channel++) {
-        if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`pm25batt${channel}`] !== undefined,
-            'WH41',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WH40']) && !utils.includesAll(hidden, WH40.properties)) {
-      this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
-    }
-
-    if (!utils.includesAny(hidden, ['WN35']) && !utils.includesAll(hidden, WN35.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WN35CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`leaf_batt${channel}`] !== undefined,
-            'WN35',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WN34CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`tf_batt${channel}`] !== undefined,
-            'WN34',
-            channel,
-          );
-        }
-      }
-    }
-
-    // WN31 and WN30 are the same sensor type, except WN30 does not have humidity
-    if (!utils.includesAny(hidden, ['WN31']) && !utils.includesAll(hidden, WN31.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WN31CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] !== undefined,
-            'WN31',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WN30']) && !utils.includesAll(hidden, WN30.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
-        if (!utils.includesAny(hidden, [`WN30CH${channel}`])) {
-          this.addSensorType(
-            dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] === undefined,
-            'WN30',
-            channel,
-          );
-        }
-      }
-    }
-
-    if (!utils.includesAny(hidden, ['WH26']) && !utils.includesAll(hidden, WH26.properties)) {
-      this.addSensorType(dataReport.wh26batt !== undefined, 'WH26');
-    }
-
-    if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
-      this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
-    }
+    //
+    //
+    // if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
+    //   this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH55']) && !utils.includesAll(hidden, WH55.properties)) {
+    //   for (let channel = 1; channel <= 4; channel++) {
+    //     if (!utils.includesAny(hidden, [`WH55CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`leakbatt${channel}`] !== undefined,
+    //         'WH55',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
+    //   for (let channel = 1; channel <= 8; channel++) {
+    //     if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`soilbatt${channel}`] !== undefined,
+    //         'WH51',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
+    // if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
+    //   this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
+    //   this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
+    //   for (let channel = 1; channel <= 4; channel++) {
+    //     if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`pm25batt${channel}`] !== undefined,
+    //         'WH41',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH40']) && !utils.includesAll(hidden, WH40.properties)) {
+    //   this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WN35']) && !utils.includesAll(hidden, WN35.properties)) {
+    //   for (let channel = 1; channel <= 8; channel++) {
+    //     if (!utils.includesAny(hidden, [`WN35CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`leaf_batt${channel}`] !== undefined,
+    //         'WN35',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
+    //   for (let channel = 1; channel <= 8; channel++) {
+    //     if (!utils.includesAny(hidden, [`WN34CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`tf_batt${channel}`] !== undefined,
+    //         'WN34',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // // WN31 and WN30 are the same sensor type, except WN30 does not have humidity
+    // if (!utils.includesAny(hidden, ['WN31']) && !utils.includesAll(hidden, WN31.properties)) {
+    //   for (let channel = 1; channel <= 8; channel++) {
+    //     if (!utils.includesAny(hidden, [`WN31CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] !== undefined,
+    //         'WN31',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WN30']) && !utils.includesAll(hidden, WN30.properties)) {
+    //   for (let channel = 1; channel <= 8; channel++) {
+    //     if (!utils.includesAny(hidden, [`WN30CH${channel}`])) {
+    //       this.addSensorType(
+    //         dataReport[`batt${channel}`] !== undefined && dataReport[`humidity${channel}`] === undefined,
+    //         'WN30',
+    //         channel,
+    //       );
+    //     }
+    //   }
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH26']) && !utils.includesAll(hidden, WH26.properties)) {
+    //   this.addSensorType(dataReport.wh26batt !== undefined, 'WH26');
+    // }
+    //
+    // if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
+    //   this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
+    // }
 
     if (this.baseStationInfo.sensors.length === 0) {
       this.log.warn('No devices discovered from data report. Verify plugin configuration with docs '
@@ -497,47 +577,47 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     this.log.debug(`StationInfo: ${JSON.stringify(this.baseStationInfo, undefined, 2)}`);
 
-    for (const sensor of this.baseStationInfo.sensors) {
-      const accessoryId = this.serviceId(sensor.type, sensor.channel);
-      const accessoryUuid = this.serviceUuid(accessoryId);
-
-      sensor.id = accessoryId;
-      sensor.uuid = accessoryUuid;
-
-      const existingAccessory = this.accessories.find(acc => acc.UUID === accessoryUuid);
-
-      if (existingAccessory) {
-        // the accessory already exists
-        this.log.info(`Restoring existing accessory from cache - type: ${existingAccessory.displayName}, uuid: ${existingAccessory.UUID}`);
-        this.createAccessory(sensor, existingAccessory);
-      } else {
-        // create a new sensor accessory
-        const accessory = new this.api.platformAccessory(sensor.type, accessoryUuid);
-        this.createAccessory(sensor, accessory);
-
-        if (typeof sensor.channel !== 'undefined') {
-          this.log.info(`Adding new accessory - type: ${sensor.type}, channel: ${sensor.channel}, uuid: ${sensor.uuid}`);
-        } else {
-          this.log.info(`Adding new accessory - type: ${sensor.type}, uuid: ${sensor.uuid}`);
-        }
-
-        // link the sensor accessory to the platform
-        this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
-          accessory,
-        ]);
-      }
-
-      if (typeof sensor.accessory !== 'undefined' && sensor.accessory.unusedData.length > 0) {
-        this.log.info(`Note that accessory ${sensor.type} does not currently use and/or display the following ` +
-          `data: ${sensor.accessory.unusedData}`);
-      }
-
-      if (typeof sensor.accessory !== 'undefined') {
-        this.consumedReportData.push(...sensor.accessory.requiredData);
-        this.consumedReportData.push(...sensor.accessory.optionalData);
-        this.consumedReportData.push(...sensor.accessory.unusedData);
-      }
-    }
+    // for (const sensor of this.baseStationInfo.sensors) {
+    //   const accessoryId = this.serviceId(sensor.type, sensor.channel);
+    //   const accessoryUuid = this.serviceUuid(accessoryId);
+    //
+    //   sensor.id = accessoryId;
+    //   sensor.uuid = accessoryUuid;
+    //
+    //   const existingAccessory = this.accessories.find(acc => acc.UUID === accessoryUuid);
+    //
+    //   if (existingAccessory) {
+    //     // the accessory already exists
+    //     this.log.info(`Restoring existing accessory from cache - type: ${existingAccessory.displayName}, uuid: ${existingAccessory.UUID}`);
+    //     this.createAccessory(sensor, existingAccessory);
+    //   } else {
+    //     // create a new sensor accessory
+    //     const accessory = new this.api.platformAccessory(sensor.type, accessoryUuid);
+    //     this.createAccessory(sensor, accessory);
+    //
+    //     if (typeof sensor.channel !== 'undefined') {
+    //       this.log.info(`Adding new accessory - type: ${sensor.type}, channel: ${sensor.channel}, uuid: ${sensor.uuid}`);
+    //     } else {
+    //       this.log.info(`Adding new accessory - type: ${sensor.type}, uuid: ${sensor.uuid}`);
+    //     }
+    //
+    //     // link the sensor accessory to the platform
+    //     this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+    //       accessory,
+    //     ]);
+    //   }
+    //
+    //   if (typeof sensor.accessory !== 'undefined' && sensor.accessory.unusedData.length > 0) {
+    //     this.log.info(`Note that accessory ${sensor.type} does not currently use and/or display the following ` +
+    //       `data: ${sensor.accessory.unusedData}`);
+    //   }
+    //
+    //   if (typeof sensor.accessory !== 'undefined') {
+    //     this.consumedReportData.push(...sensor.accessory.requiredData);
+    //     this.consumedReportData.push(...sensor.accessory.optionalData);
+    //     this.consumedReportData.push(...sensor.accessory.unusedData);
+    //   }
+    // }
 
     // remove any accessory that was previously cached but is no longer present in data report
     const sensorUuids = this.baseStationInfo.sensors.map(s => s.uuid);
@@ -587,101 +667,72 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
   }
 
-  createAccessory(sensor, accessory) {
-    switch (sensor.type) {
-      case 'GW1000':
-      case 'GW1100':
-      case 'GW1200':
-        sensor.accessory = new GW1000(this, accessory, sensor.type);
-        break;
-
-      case 'GW2000':
-        sensor.accessory = new GW2000(this, accessory, sensor.type);
-        break;
-
-      case 'HP2560':
-      case 'HP2561':
-      case 'HP2564':
-        sensor.accessory = new HP2560(this, accessory, sensor.type);
-        break;
-
-      case 'WH25':
-        sensor.accessory = new WH25(this, accessory);
-        break;
-
-      case 'WH26':
-        sensor.accessory = new WH26(this, accessory);
-        break;
-
-      case 'WN30':
-        sensor.accessory = new WN30(this, accessory, sensor.channel);
-        break;
-
-      case 'WN31':
-        sensor.accessory = new WN31(this, accessory, sensor.channel);
-        break;
-
-      case 'WN34':
-        sensor.accessory = new WN34(this, accessory, sensor.channel);
-        break;
-
-      case 'WN35':
-        sensor.accessory = new WN35(this, accessory, sensor.channel);
-        break;
-
-      case 'WH40':
-        sensor.accessory = new WH40(this, accessory);
-        break;
-
-      case 'WH41':
-        sensor.accessory = new WH41(this, accessory, sensor.channel);
-        break;
-
-      case 'WH45':
-        sensor.accessory = new WH45(this, accessory);
-        break;
-
-      case 'WH46':
-        sensor.accessory = new WH46(this, accessory);
-        break;
-
-      case 'WH51':
-        sensor.accessory = new WH51(this, accessory, sensor.channel);
-        break;
-
-      case 'WH55':
-        sensor.accessory = new WH55(this, accessory, sensor.channel);
-        break;
-
-      case 'WH57':
-        sensor.accessory = new WH57(this, accessory);
-        break;
-
-      case 'WH65':
-        sensor.accessory = new WH65(this, accessory);
-        break;
-
-      case 'WS68':
-        sensor.accessory = new WS68(this, accessory);
-        break;
-
-      case 'WS80':
-        sensor.accessory = new WS80(this, accessory);
-        break;
-
-      case 'WS85':
-        sensor.accessory = new WS85(this, accessory);
-        break;
-
-      case 'WS90':
-        sensor.accessory = new WS90(this, accessory);
-        break;
-
-      default:
-        this.log.error(`Unsupported device type for ${sensor.type}. Please file a feature request to support `
-          + `additional Ecowitt devices at ${utils.FEATURE_REQ_LINK}`);
-        break;
+  createAccessory(conditions, type, channel) {
+    if (conditions === false) {
+      this.log.debug(`Data report does not include all required properties for ${type}, accessory will not be created`);
+      return;
     }
+
+    // if (!Object.keys(devices).includes(type)) {
+    //   this.log.error(`Unsupported device type for ${type}. Please file a feature request to support `
+    //     + `additional devices at ${utils.FEATURE_REQ_LINK}`);
+    //   return;
+    // }
+
+    const accessoryId = this.serviceId(type, channel);
+    const accessoryUuid = this.serviceUuid(accessoryId);
+
+    sensor.id = accessoryId;
+    sensor.uuid = accessoryUuid;
+
+    const existingAccessory = this.accessories.find(acc => acc.UUID === accessoryUuid);
+
+    let device = undefined;
+
+    if (existingAccessory) {
+      if (typeof channel !== 'undefined') {
+        this.log.debug(`Restoring existing accessory from cache - type: ${existingAccessory.displayName}, uuid: ${existingAccessory.UUID}, , channel: ${channel},`);
+        device = new global[type](this, existingAccessory, channel);
+      } else {
+        this.log.debug(`Restoring existing accessory from cache - type: ${existingAccessory.displayName}, uuid: ${existingAccessory.UUID}`);
+        device = new global[type](this, existingAccessory);
+      }
+    } else {
+      // create a new device accessory
+      const accessory = new this.api.platformAccessory(type, accessoryUuid);
+
+      if (typeof channel !== 'undefined') {
+        this.log.info(`Adding new accessory - type: ${sensor.type}, uuid: ${sensor.uuid}, channel: ${sensor.channel},`);
+        device = new global[type](this, accessory, channel);
+      } else {
+        this.log.info(`Adding new accessory - type: ${sensor.type}, uuid: ${sensor.uuid}`);
+        device = new global[type](this, accessory);
+      }
+
+      // link the sensor accessory to the platform
+      this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [
+        device,
+      ]);
+    }
+
+    this.baseStationInfo.sensors.push({
+      type: type,
+      channel: channel,
+      accessory: device,
+      id: accessoryId,
+      uuid: accessoryUuid,
+    });
+
+    if (device.unusedData.length > 0) {
+      this.log.info(`Note that accessory ${sensor.type} does not currently use and/or display the following ` +
+        `data: ${device.unusedData}`);
+    }
+
+    this.consumedReportData.push(...devices[type].requiredData());
+    this.consumedReportData.push(...devices[type].optionalData());
+    this.consumedReportData.push(...devices[type].unusedData());
+
+    this.unconsumedReportData = Object.keys(dataReport).filter(x => !this.consumedReportData.includes(x));
   }
 
   //----------------------------------------------------------------------------
