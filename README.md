@@ -7,14 +7,14 @@
 
 <!-- badges -->
 
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) [![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![NPM Downloads](https://img.shields.io/npm/d18m/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) [![Test Status](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml/badge.svg)](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/actions/workflows/build-master.yml) [![NPM Version](https://img.shields.io/npm/v/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![NPM Downloads](https://img.shields.io/npm/d18m/homebridge-ecowitt-weather-sensors)](https://www.npmjs.com/package/homebridge-ecowitt-weather-sensors) [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/license/apache-2-0)
 
 :fast\_forward: :fast\_forward: :fast\_forward: **[Getting Started](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started) | [Supported Devices](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#supported-devices) | [Configuration](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#configuration) | [FAQs](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#frequently-asked-questions) | [Contributing](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/blob/master/docs/CONTRIBUTING.md)** :rewind: :rewind: :rewind:
 
 </div>
 </span>
 
-## Complete HomeKit support for [Ecowitt](https://www.ecowitt.com) Weather Sensors with [Homebridge](https://homebridge.io).
+## Complete HomeKit support for [Ecowitt](https://www.ecowitt.com/shop/homePage) Weather Sensors with [Homebridge](https://homebridge.io).
 
 This plugin operates as a service that listens for data reports from an Ecowitt WiFi Gateway or Weather Display Console.  The Ecowitt gateway or console must be configured to publish weather service reports to the Homebridge Ecowitt Weather Sensors plugin.
 
