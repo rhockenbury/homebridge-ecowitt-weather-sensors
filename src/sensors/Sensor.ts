@@ -66,6 +66,12 @@ export class Sensor {
 
   //---------------------------------------------------------------------------
 
+  public hideService(hide: boolean) {
+    this.service.setHiddenService(hide);
+  }
+
+  //---------------------------------------------------------------------------
+
   protected updateTime(time: string) {
     this.service.updateCharacteristic(
       utils.CHAR_TIME_NAME,
