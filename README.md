@@ -184,6 +184,7 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 | additional.acceptAnyPath | `false` | Process data reports that are submitted to the plugin on paths other than the path specified in `baseStation.path`. |
 | additional.validateTimestamp | `true` | Check the recency of the data report with the `dateutc` weather data property, and do not process the data report if its determined to be old. |
 | additional.removeStaleDevices | `true` | Remove the accessory from Homebridge if it does not appear in the current data report during device discovery. |
+| additional.logDataReports | `false` | Show the full data report in Homebridge logs every time a data report is received. If not enabled, the data report is also shown in the logs [when Homebridge is in debug mode](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report#step-1-set-homebridge-to-debug-mode). |
 
 ## Frequently Asked Questions
 

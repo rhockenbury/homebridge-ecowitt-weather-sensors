@@ -246,8 +246,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    this.log.debug('Recieved data report, if you are submitting a bug report copy and paste the full data '
-      + `report object \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    if (utils.truthy(this.config?.additional?.logDataReports)) {
+      this.log.info(`Recieved data report \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    } else {
+      this.log.debug('Recieved data report (if you are submitting a bug report copy and paste the full data '
+        + `report object below) \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    }
 
     if (!utils.includesAll(Object.keys(dataReport), this.requiredReportData)) {
       this.log.warn(`Received incomplete data report. Missing one of ${this.requiredReportData}. `

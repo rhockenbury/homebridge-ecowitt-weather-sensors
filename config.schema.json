@@ -116,6 +116,15 @@
             "description": "Remove an accessory if it is no longer <br> discovered from a data report",
             "enum": [true, false],
             "enumNames": ["Enabled", "Disabled"]
+          },
+          "logDataReports": {
+            "title": "Log Data Reports",
+            "type": "string",
+            "required": true,
+            "default": false,
+            "description": "Show the data report in Homebridge logs <br> each time a data report is received",
+            "enum": [true, false],
+            "enumNames": ["Enabled", "Disabled"]
           }
         }
       },
@@ -1041,7 +1050,8 @@
               "items": [
                 "additional.staticNames",
                 "additional.validateMac",
-                "additional.validateTimestamp"
+                "additional.validateTimestamp",
+                "additional.logDataReports"
               ]
             },
             {
