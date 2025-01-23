@@ -1,3 +1,8 @@
+
+### 2.5.2
+
+* Add configuration option to log data report each time a data report is received
+
 ### 2.5.1
 
 * Update dependencies
