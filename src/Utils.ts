@@ -143,7 +143,7 @@ interface BeaufortType {
   description: string;
   kts: number;
   mph: number;
-  kmh: number;
+  kph: number;
   mps: number;
 }
 
@@ -154,7 +154,7 @@ const kBeaufortScale = [
     description: 'Calm',
     kts: 1,
     mph: 1,
-    kmh: 2,
+    kph: 2,
     mps: 0.5,
   },
   {
@@ -162,7 +162,7 @@ const kBeaufortScale = [
     description: 'Light Air',
     kts: 3,
     mph: 3,
-    kmh: 5,
+    kph: 5,
     mps: 1.5,
   },
   {
@@ -170,7 +170,7 @@ const kBeaufortScale = [
     description: 'Light Breeze',
     kts: 6,
     mph: 7,
-    kmh: 11,
+    kph: 11,
     mps: 3.3,
   },
   {
@@ -178,7 +178,7 @@ const kBeaufortScale = [
     description: 'Gentle Breeze',
     kts: 10,
     mph: 12,
-    kmh: 19,
+    kph: 19,
     mps: 5.5,
   },
   {
@@ -186,7 +186,7 @@ const kBeaufortScale = [
     description: 'Moderate Breeze',
     kts: 16,
     mph: 18,
-    kmh: 28,
+    kph: 28,
     mps: 7.9,
   },
   {
@@ -194,7 +194,7 @@ const kBeaufortScale = [
     description: 'Fresh Breeze',
     kts: 21,
     mph: 24,
-    kmh: 38,
+    kph: 38,
     mps: 10.7,
   },
   {
@@ -202,7 +202,7 @@ const kBeaufortScale = [
     description: 'Strong Breeze',
     kts: 27,
     mph: 31,
-    kmh: 49,
+    kph: 49,
     mps: 13.8,
   },
   {
@@ -210,7 +210,7 @@ const kBeaufortScale = [
     description: 'Near Gale',
     kts: 33,
     mph: 38,
-    kmh: 61,
+    kph: 61,
     mps: 17.1,
   },
   {
@@ -218,7 +218,7 @@ const kBeaufortScale = [
     description: 'Gale',
     kts: 40,
     mph: 46,
-    kmh: 74,
+    kph: 74,
     mps: 20.7,
   },
   {
@@ -226,7 +226,7 @@ const kBeaufortScale = [
     description: 'Strong Gale',
     kts: 47,
     mph: 54,
-    kmh: 88,
+    kph: 88,
     mps: 24.4,
   },
   {
@@ -234,7 +234,7 @@ const kBeaufortScale = [
     description: 'Storm',
     kts: 55,
     mph: 63,
-    kmh: 102,
+    kph: 102,
     mps: 28.4,
   },
   {
@@ -242,7 +242,7 @@ const kBeaufortScale = [
     description: 'Violent Storm',
     kts: 63,
     mph: 72,
-    kmh: 117,
+    kph: 117,
     mps: 32.6,
   },
   {
@@ -250,7 +250,7 @@ const kBeaufortScale = [
     description: 'Hurricane',
     kts: Number.POSITIVE_INFINITY,
     mph: Number.POSITIVE_INFINITY,
-    kmh: Number.POSITIVE_INFINITY,
+    kph: Number.POSITIVE_INFINITY,
     mps: Number.POSITIVE_INFINITY,
   },
 ];
@@ -263,7 +263,7 @@ export function toKts(mph): number {
 
 //------------------------------------------------------------------------------
 
-export function toKmh(mph): number {
+export function toKph(mph): number {
   return parseFloat(mph) * 1.609344;
 }
 

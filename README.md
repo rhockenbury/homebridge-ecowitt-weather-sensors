@@ -171,7 +171,7 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 | baseStation.mac | `00:00:00:00:00:00` | The MAC address of the Ecowitt base station. If not set or if invalid, the default is used *and* MAC validation (`additional.macValidation`) will be disabled |
 | baseStation.port | `8080` | The port on which to listen for data reports from the Ecowitt Gateway or Console |
 | baseStation.path | `/data/report` | The URL path on which to listen for data reports from the Ecowitt Gateway or Console |
-| units.wind | `mph` | The units to display wind speed. Possible values are: <br/><br/>`mph`: Miles per Hour<br/>`kmh`: Kilometers per Hour<br/>`mps`: Meters per Second<br/>`kts`: Knots |
+| units.wind | `mph` | The units to display wind speed. Possible values are: <br/><br/>`mph`: Miles per Hour<br/>`kph`: Kilometers per Hour<br/>`mps`: Meters per Second<br/>`kts`: Knots |
 | units.rain | `in` | The units to display rain accumulation. Possible values are: <br/><br/>`in`: Inches<br/>`mm`: Millimeters</p> |
 | units.distance | `mi` | The units to display distance such as lightning strike distance.  Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers |
 | units.temperature | `fh` | The units to display temperature. Possible values are: <br/><br/>`fh`: Fahrenheit<br/>`ce`: Celcius |

@@ -135,23 +135,23 @@ describe('Wind Sensor Service should be configured for Wind Speed', () => {
     done();
   });
 
-  it('Characteristics are updated (kmh)', (done) => {
-    platform.config.units.wind = "kmh";
+  it('Characteristics are updated (kph)', (done) => {
+    platform.config.units.wind = "kph";
     sensor.updateSpeed(1, 22, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Wind Speed 1.6 kmh");
+    expect(sensor.service.characteristics[0].value).to.equal("Wind Speed 1.6 kph");
     expect(sensor.service.characteristics[1].value).to.equal(false)
-    expect(sensor.service.characteristics[2].value).to.equal("Wind Speed 1.6 kmh");
+    expect(sensor.service.characteristics[2].value).to.equal("Wind Speed 1.6 kph");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
-    expect(sensor.service.characteristics[4].value).to.equal("1.6 kmh");
+    expect(sensor.service.characteristics[4].value).to.equal("1.6 kph");
     expect(sensor.service.characteristics[5].value).to.equal("Calm");
     expect(sensor.service.characteristics[6].value).to.equal(true);
     done();
   });
 
-  it('Motion detected when threshold greater than rate (kmh)', (done) => {
-    platform.config.units.wind = "kmh";
+  it('Motion detected when threshold greater than rate (kph)', (done) => {
+    platform.config.units.wind = "kph";
     sensor.updateSpeed(1, 0.5, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Wind Speed 1.6 kmh");
+    expect(sensor.service.characteristics[0].value).to.equal("Wind Speed 1.6 kph");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();
   });
