@@ -23,10 +23,26 @@ export class WH25 extends EcowittAccessory {
     this.requiredData = ['wh25batt', 'tempinf', 'humidityin'];
     this.unusedData = ['baromrelin', 'baromabsin'];
 
+
+    // need to remove existing battery service
     this.battery = this.addBattery('', false);
+
+    //const batteryService = this.accessory.getService(this.platform.Service.Battery);
+    // if name == old name -> then remove
+    // or just remove it every time???
+
 
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    // if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+    //   const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+    //   this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
+    //   this.battery.hideService(false);
+    // } else {
+    //   this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+    //   this.battery.hideService(true);
+    // }
 
     if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
       const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
@@ -58,8 +74,10 @@ export class WH25 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const lowBattery = dataReport.wh25batt === '1';
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    // this.battery?.updateStatusLow(
+    //   dataReport.wh25batt === '1',
+    //   dataReport.dateutc,
+    // )
 
     this.temperature?.update(
       parseFloat(dataReport.tempinf),
