@@ -44,6 +44,9 @@ export class LightSensor extends Sensor {
       luxStr = '0lx';
     } else if (lux <= 0.0005) {
       luxStr = '0lx';
+    } else if (lux > 100000) {  // ambient light characterstic max is 100000
+      lux = 100000;
+      luxStr = `100000lx`;
     } else {
       luxStr = `${lux.toFixed(3)}lx`;
     }

@@ -65,7 +65,7 @@ export class WindSensor extends MotionSensor {
         speedStr = `${utils.toKts(windSpeedmph).toFixed(1)} kts`;
         break;
 
-      case 'kmh':
+      case 'kph':
         thresholdmph = threshold * 0.621371;
         speedStr = `${utils.toKmh(windSpeedmph).toFixed(1)} kmh`;
         break;

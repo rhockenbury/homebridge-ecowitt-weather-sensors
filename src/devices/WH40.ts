@@ -24,7 +24,7 @@ export class WH40 extends EcowittAccessory {
     super(platform, accessory, 'WH40', 'WH40 Rainfall Sensor');
 
     this.requiredData = [
-      'rainbatt', 'rainratein', 'eventrainin', 'hourlyrainin', 'dailyrainin',
+      'wh40batt', 'rainratein', 'eventrainin', 'hourlyrainin', 'dailyrainin',
       'weeklyrainin', 'monthlyrainin', 'yearlyrainin',
     ];
 
@@ -108,7 +108,7 @@ export class WH40 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const batt = parseFloat(dataReport['rainbatt']);
+    const batt = parseFloat(dataReport['wh40batt']);
     const batteryLevel = batt / 1.6;
     const lowBattery = batt <= 1.1;
 

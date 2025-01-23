@@ -58,7 +58,7 @@ interface BaseStationInfoType {
   softwareRevision: string;
   firmwareRevision: string;
   frequency: string;
-  PASSKEY: string;
+  passkey: string;
   sensors: SensorType[];
 }
 
@@ -80,7 +80,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public registeredProperties: string[] = [];
   public consumedReportData: string[] = [];
   public unconsumedReportData: string[] = [];
-  public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
+  public requiredReportData: string[] = ['passkey', 'stationtype', 'dateutc', 'model', 'freq'];
   public ignoreableReportData: string[] = ['runtime', 'heap', 'interval'];
 
   public baseStationInfo: BaseStationInfoType = {
@@ -92,7 +92,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     softwareRevision: '',
     firmwareRevision: '',
     frequency: '',
-    PASSKEY: '',
+    passkey: '',
     sensors: [],
   };
 
@@ -115,7 +115,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     this.baseStationInfo.serialNumber = mac;
     this.baseStationInfo.shortSerial = mac.replaceAll(':', '').slice(8);
-    this.baseStationInfo.PASSKEY = crypto.createHash('md5').update(mac).digest('hex').toUpperCase();
+    this.baseStationInfo.passkey = crypto.createHash('md5').update(mac).digest('hex').toUpperCase();
 
     if (utils.v1ConfigTest(this.config)) {
       const v2Config = utils.v1ConfigRemapper(this.config);
@@ -246,8 +246,14 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    this.log.debug('Recieved data report, if you are submitting a bug report copy and paste the full data '
-      + `report object \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    // TODO - normalize all keys to lowercase
+
+    if (utils.truthy(this.config?.additional?.logDataReports)) {
+      this.log.info(`Recieved data report \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    } else {
+      this.log.debug('Recieved data report (if you are submitting a bug report copy and paste the full data '
+        + `report object below) \n ${JSON.stringify(dataReport, undefined, 2)}`);
+    }
 
     if (!utils.includesAll(Object.keys(dataReport), this.requiredReportData)) {
       this.log.warn(`Received incomplete data report. Missing one of ${this.requiredReportData}. `
@@ -255,7 +261,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       return;
     }
 
-    if (dataReport.PASSKEY !== this.baseStationInfo.PASSKEY) {
+    if (utils.lookup(dataReport, 'passkey') !== this.baseStationInfo.passkey) {
       if (utils.truthy(this.config?.additional?.validateMac)) {
         this.log.warn('Ignoring data report from unknown MAC address. Verify MAC address is set properly, ' +
           'or disable MAC validation in advanced settings');
@@ -356,7 +362,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
             + `device ${modelInfo[1]} at ${utils.FEATURE_REQ_LINK}`);
       }
     } else {
-      this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
+      this.log.warn('Base station was not detected from data report. Please file a feature request to add support for '
+        + `the base station at ${utils.FEATURE_REQ_LINK}`);
     }
 
     if (!utils.includesAny(hidden, ['WS90']) && !utils.includesAll(hidden, WS90.properties)) {
