@@ -1,8 +1,8 @@
-
 ### 2.5.2
 
 * Add configuration option to log data report each time a data report is received
 * Fix discovery and registration of WH40 accessory
+* Add characteristic value boundary checks, and cap values at Homekit thresholds if exceeded
 
 ### 2.5.1
 

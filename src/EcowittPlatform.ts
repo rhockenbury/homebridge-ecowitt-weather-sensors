@@ -575,8 +575,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.unconsumedReportData = unconsumed;
 
     if (unconsumed.length > 0 && Object.keys(this.config?.hidden || {}).length === 0) {
-      this.log.info(`There was unused data from data report ${unconsumed}. This indicates that a sensor may not ` +
-        'have been successfully discovered. Try restarting Homebridge so that the plugin re-registers ' +
+      this.log.info(`There was unused data from data report ${unconsumed}. This may indicate that a sensor was not ` +
+        'successfully discovered. Try restarting Homebridge so that the plugin re-registers ' +
         'devices from the data report');
     } else {
       this.log.debug('All data from data report was consummable');

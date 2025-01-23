@@ -87,7 +87,7 @@ function modifyData(dataReport) {
       newValue = maximum;
     }
 
-    newValue = +newValue.toFixed(2);
+    newValue = +newValue.toFixed(4);
     dataReport[key] = String(newValue);
 
     //console.log(`${key}: ${value} -> ${key}: ${newValue}`);

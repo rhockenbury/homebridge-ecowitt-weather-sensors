@@ -27,9 +27,9 @@ describe('Light Sensor Service should be configured for Light', () => {
 
   it('Characteristics are updated on Light', (done) => {
     sensor.update(100, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Light 12670.000lx");
-    expect(sensor.service.characteristics[1].value).to.equal(12670.000)
-    expect(sensor.service.characteristics[2].value).to.equal("Light 12670.000lx");
+    expect(sensor.service.characteristics[0].value).to.equal("Light 12670lx");
+    expect(sensor.service.characteristics[1].value).to.equal(12670)
+    expect(sensor.service.characteristics[2].value).to.equal("Light 12670lx");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal(true);
     done();
@@ -37,9 +37,9 @@ describe('Light Sensor Service should be configured for Light', () => {
 
   it('Characteristics are not updated on bad Light value', (done) => {
     sensor.update(undefined, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Light 12670.000lx");
-    expect(sensor.service.characteristics[1].value).to.equal(12670.000)
-    expect(sensor.service.characteristics[2].value).to.equal("Light 12670.000lx");
+    expect(sensor.service.characteristics[0].value).to.equal("Light 12670lx");
+    expect(sensor.service.characteristics[1].value).to.equal(12670)
+    expect(sensor.service.characteristics[2].value).to.equal("Light 12670lx");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal(false);
     done();

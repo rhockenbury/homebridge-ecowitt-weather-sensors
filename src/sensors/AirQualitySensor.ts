@@ -34,6 +34,14 @@ export class AirQualitySensor extends Sensor {
       return;
     }
 
+    if (pm10 < 0) {
+      this.platform.log.warn(`PM10 below the minimum of 0mcg/m³ for ${this.id}`);
+      pm10 = 0;
+    } else if (pm10 > 1000) {
+      this.platform.log.warn(`PM10 above the maximum of 1000mcg/m³ for ${this.id}`);
+      pm10 = 1000;
+    }
+
     const pm10Str = `${pm10.toFixed(0)} mcg/m³`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
@@ -51,6 +59,14 @@ export class AirQualitySensor extends Sensor {
       this.platform.log.warn(`Cannot update ${this.name}, pm2.5 ${pm25} is NaN`);
       this.updateStatusActive(false);
       return;
+    }
+
+    if (pm25 < 0) {
+      this.platform.log.warn(`PM25 below the minimum of 0mcg/m³ for ${this.id}`);
+      pm25 = 0;
+    } else if (pm25 > 1000) {
+      this.platform.log.warn(`PM25 above the maximum of 1000mcg/m³ for ${this.id}`);
+      pm25 = 1000;
     }
 
     const pm25Str = `${pm25.toFixed(0)} mcg/m³`;

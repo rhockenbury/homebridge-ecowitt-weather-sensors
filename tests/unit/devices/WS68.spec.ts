@@ -61,7 +61,7 @@ configs.forEach(config => {
       device.update(dataReport);
 
       expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.solarRadiation.service.characteristics[0].value).to.equal("Solar Radiation 36889.972lx");
+      expect(device.solarRadiation.service.characteristics[0].value).to.equal("Solar Radiation 36890lx");
       expect(device.uvIndex.service.characteristics[0].value).to.equal("UV Index 1");
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction 285° (W)");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed 0.0 mph");
