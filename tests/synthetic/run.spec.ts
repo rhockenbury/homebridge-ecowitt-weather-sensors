@@ -222,6 +222,16 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  it('gw3000 sensors are created', (done) => {
+    testData = require('./data/gw3000.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(1);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("GW3000");
+    expect(platform.unconsumedReportData.length).to.equal(0);
+    done();
+  });
+
   it('hp2550_wh65_wh51multi_wh41_wn31multi_wh25 sensors are created', (done) => {
     testData = require('./data/hp2550_wh65_wh51multi_wh41_wn31multi_wh25.json');
     platform = createPlatform("synthetic");

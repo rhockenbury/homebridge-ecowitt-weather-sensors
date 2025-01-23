@@ -1,5 +1,6 @@
-### 2.5.2
+### 2.6.0
 
+* Add support for GW3000 Wifi Gateway
 * Add configuration option to log data report each time a data report is received
 * Fix discovery and registration of WH40 accessory
 * Add characteristic value boundary checks, and cap values at Homekit thresholds if exceeded

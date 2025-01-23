@@ -12,6 +12,7 @@ import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { GW1000 } from './devices/GW1000';
 import { GW2000 } from './devices/GW2000';
+import { GW3000 } from './devices/GW3000';
 import { HP2560} from './devices/HP2560';
 import { WH25 } from './devices/WH25';
 import { WH26 } from './devices/WH26';
@@ -311,10 +312,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   registerAccessories(dataReport) {
     const stationTypeInfo = dataReport?.stationtype.match(
-      /(EasyWeather|GW[12][012]00(?:[ABC]?))_?(.*)/,
+      /(EasyWeather|GW[123][012]00(?:[ABC]?))_?(.*)/,
     );
     const modelInfo = dataReport?.model.match(
-      /(HP[23]5[056][014]|GW[12][012]00)[ABC]?_?(.*)/,
+      /(HP[23]5[056][014]|GW[123][012]00)[ABC]?_?(.*)/,
     );
 
     this.baseStationInfo.model = dataReport.model;
@@ -331,6 +332,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         case 'GW1100':
         case 'GW1200':
         case 'GW2000':
+        case 'GW3000':
           this.baseStationInfo.hardwareRevision = stationTypeInfo[0];
           this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
           if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
@@ -601,6 +603,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       case 'GW2000':
         sensor.accessory = new GW2000(this, accessory, sensor.type);
+        break;
+
+      case 'GW3000':
+        sensor.accessory = new GW3000(this, accessory, sensor.type);
         break;
 
       case 'HP2560':
