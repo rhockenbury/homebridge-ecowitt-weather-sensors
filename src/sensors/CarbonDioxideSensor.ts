@@ -35,6 +35,14 @@ export class CarbonDioxideSensor extends Sensor {
       return;
     }
 
+    if (co2 < 0) {
+      this.platform.log.warn(`CO2 below the minimum of 0ppm for ${this.id}`);
+      co2 = 0;
+    } else if (co2 > 100000) {
+      this.platform.log.warn(`CO2 above the maximum of 100000ppm for ${this.id}`);
+      co2 = 100000;
+    }
+
     const co2Str = `${co2.toFixed(0)}ppm`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
 
