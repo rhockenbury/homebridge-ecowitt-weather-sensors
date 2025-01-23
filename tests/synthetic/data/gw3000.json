@@ -1,0 +1,14 @@
+{
+  "PASSKEY": "528C8E6CD4A3C6598999A0E9DF15AD32",
+  "stationtype": "GW3000B_V1.0.2",
+  "runtime": "91433",
+  "heap": "149968",
+  "dateutc": "2025-01-12 00:28:40",
+  "tempinf": "69.08",
+  "humidityin": "44",
+  "baromrelin": "29.923",
+  "baromabsin": "29.923",
+  "freq": "915M",
+  "model": "GW3000B",
+  "interval": "10"
+}

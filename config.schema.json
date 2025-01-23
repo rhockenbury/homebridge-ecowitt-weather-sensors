@@ -377,6 +377,11 @@
             "type": "boolean",
             "required": false
           },
+          "GW3000": {
+            "title": "GW3000",
+            "type": "boolean",
+            "required": false
+          },
           "HP2560": {
             "title": "HP2560",
             "type": "boolean",
@@ -712,6 +717,7 @@
               "items": [
                 "hidden.GW1000",
                 "hidden.GW2000",
+                "hidden.GW3000",
                 "hidden.HP2560",
                 "hidden.WH25",
                 "hidden.WH26",
