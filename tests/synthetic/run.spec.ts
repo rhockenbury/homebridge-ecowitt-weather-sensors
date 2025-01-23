@@ -125,6 +125,20 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  it('gw1200_wh51multi_wh40 sensors are created', (done) => {
+    testData = require('./data/gw1200_wh51multi_wh40.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(5);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1200");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[4].type).to.equal("WH40");
+    expect(platform.unconsumedReportData.length).to.equal(1); // 'totalrainin'
+    done();
+  });
+
   it('gw2000_wh51multi sensors are created', (done) => {
     testData = require('./data/gw2000_wh51multi.json');
     platform = createPlatform("synthetic");

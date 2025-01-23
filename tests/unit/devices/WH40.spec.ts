@@ -17,7 +17,7 @@ const dataReport = {
   "weeklyrainin": "5.500",
   "monthlyrainin": "6.600",
   "yearlyrainin": "7.700",
-  "rainbatt": "1.2"
+  "wh40batt": "1.2"
 };
 
 const configs = ["v1Default", "v1Full", "v2Default", "v2Full"];
