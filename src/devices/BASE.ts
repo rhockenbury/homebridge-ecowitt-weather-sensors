@@ -7,7 +7,7 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class GW2000 extends EcowittAccessory {
+export class BASE extends EcowittAccessory {
   static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
 
   protected temperature: TemperatureSensor | undefined;
@@ -26,8 +26,8 @@ export class GW2000 extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
+    if (!utils.includesAny(hidden, ['indoorTemperature', 'BASE:indoorTemperature'])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, 'BASE:indoorTemperature');
       this.temperature = new TemperatureSensor(platform, accessory,
         `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
     } else {
@@ -36,8 +36,8 @@ export class GW2000 extends EcowittAccessory {
       this.temperature = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
+    if (!utils.includesAny(hidden, ['indoorHumidity', 'BASE:indoorHumidity'])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, 'BASE:indoorHumidity');
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
     } else {
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
