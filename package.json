@@ -25,7 +25,7 @@
   "main": "dist/index.js",
   "scripts": {
     "lint": "eslint src/*.ts src/**/*.ts --max-warnings=0",
-    "remark": "remark --use remark-validate-links . --quiet --output",
+    "remark": "remark --use remark-validate-links ./*.md --quiet --output",
     "build": "rimraf ./dist && tsc && npm link",
     "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",
     "all": "npm run lint && npm run remark && npm run build && npm run test",

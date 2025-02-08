@@ -233,6 +233,7 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  // NOTE: hp2550 does not create accessory
   it('hp2550_wh65_wh51multi_wh41_wn31multi_wh25 sensors are created', (done) => {
     testData = require('./data/hp2550_wh65_wh51multi_wh41_wn31multi_wh25.json');
     platform = createPlatform("synthetic");
@@ -276,28 +277,44 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
-  // NOTE: WS2350 not supported
-  it('ws2350 sensors are created', (done) => {
-    testData = require('./data/ws2350.json');
+  it('wn1980_ws90_wh51multi_wn31_wn30 sensors are created', (done) => {
+    testData = require('./data/wn1980_ws90_wh51multi_wn31_wn30.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(0);
-    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.baseStationInfo.sensors.length).to.equal(6);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("WN1980");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WS90");
+    expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[4].type).to.equal("WN31");
+    expect(platform.baseStationInfo.sensors[5].type).to.equal("WN30");
+    expect(platform.unconsumedReportData.length).to.equal(1); // 'console_batt'
     done();
   });
 
-  // NOTE: WS2900 not supported
+  it('wn1980_wn31 sensors are created', (done) => {
+    testData = require('./data/wn1980_wn31.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(2);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("WN1980");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WN31");
+    expect(platform.unconsumedReportData.length).to.equal(1); // 'console_batt'
+    done();
+  });
+
   it('ws2900_wh65 sensors are created', (done) => {
     testData = require('./data/ws2900_wh65.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
-    expect(platform.baseStationInfo.sensors.length).to.equal(1);
-    expect(platform.baseStationInfo.sensors[0].type).to.equal("WH65");
-    expect(platform.unconsumedReportData.length).to.equal(4); // 'tempinf', 'humidityin', 'baromrelin', 'baromabsin'
+    expect(platform.baseStationInfo.sensors.length).to.equal(2);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
+    expect(platform.unconsumedReportData.length).to.equal(0);
     done();
   });
 
-  // NOTE: WS3800 not supported
+  // NOTE: hp3800 does not create accessory
   it('ws3800_ws85_ws80_wh65_wh57_wh55_wh51multi_wh45_wh41multi_wn35_wn34multi_wn31multi_wn30_wh26_wh25 sensors are created', (done) => {
     testData = require('./data/ws3800_ws85_ws80_wh65_wh57_wh55_wh51multi_wh45_wh41multi_wn35_wn34multi_wn31multi_wn30_wh26_wh25.json');
     platform = createPlatform("synthetic");

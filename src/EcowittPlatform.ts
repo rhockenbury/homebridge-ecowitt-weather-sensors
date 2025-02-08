@@ -10,10 +10,7 @@ import {
 
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
-import { GW1000 } from './devices/GW1000';
-import { GW2000 } from './devices/GW2000';
-import { GW3000 } from './devices/GW3000';
-import { HP2560} from './devices/HP2560';
+import { BASE } from './devices/BASE';
 import { WH25 } from './devices/WH25';
 import { WH26 } from './devices/WH26';
 import { WN30 } from './devices/WN30';
@@ -41,6 +38,11 @@ import * as crypto from 'crypto';
 import { EcowittAccessory } from './EcowittAccessory';
 
 import express, { Request, Response, Next } from 'express';
+
+// eslint-disable-next-line  @typescript-eslint/no-var-requires
+const merge = require('deepmerge');
+// eslint-disable-next-line  @typescript-eslint/no-var-requires
+const querystring = require('querystring');
 
 interface SensorType {
   type: string;
@@ -83,6 +85,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   public unconsumedReportData: string[] = [];
   public requiredReportData: string[] = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq'];
   public ignoreableReportData: string[] = ['runtime', 'heap', 'interval'];
+  public protocolCheckFields: string[] = ['ID', 'PASSWORD'];
 
   public baseStationInfo: BaseStationInfoType = {
     model: '',
@@ -138,29 +141,46 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     this.dataReportServer.use(bodyParser.json());
     this.dataReportServer.use(bodyParser.urlencoded({ extended: true }));
 
-    this.dataReportServer.post(encodedPath, (req: Request, res: Response, next: Next) => {
-      this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
+    // depending on the vendor/protocol, the request can be POST or GET and data properties
+    // can be sent as query params or as JSON body
+    // additionally, users frequently forget to add the query prefix character (?) to the path option
+    // when configuring the custom server upload, so that case is handled here
+    this.dataReportServer.all('*', (req: Request, res: Response, next: Next) => {
+      const parsedPath = req.path.split(/[?#&]/)[0];
+      this.log.debug(`Received request ${req.method} ${parsedPath} from ${req.socket.remoteAddress}`);
+
+      if (parsedPath !== encodedPath && utils.falsy(this.config?.additional?.acceptAnyPath)) {
+        this.log.debug(req.path);
+        this.log.warn(`Received request for ${req.method} ${parsedPath} from ${req.socket.remoteAddress}. `
+          + `Configure the base station to send data reports to ${encodedPath} or enable accept any path in advanced settings`);
+        res.send();
+        return;
+      }
+
+      let dataReport = {};
+
+      if (req.originalUrl.includes('?')) { // query params should be well-formatted and parseable
+        dataReport = merge(req.body, req.query);
+      } else if (req.path.includes('&')) { // query params not formed correctly
+        const params = req.path.substring(req.path.indexOf('&') + 1);
+        dataReport = merge(req.body, querystring.parse(params));
+      } else {
+        dataReport = req.body;
+      }
+
+      if (utils.includesAny(Object.keys(dataReport), this.protocolCheckFields)) {
+        this.log.warn('Data report appears to use the Wunderground protocol. Please ensure ' +
+          'that the Ecowitt protocol is used when sending data reports to this plugin');
+        res.send();
+        return;
+      }
+
       try {
-        this.onDataReport(req.body);
+        this.onDataReport(dataReport);
+        res.send();
       } catch (err) {
         next(err);
       }
-      res.send();
-    });
-
-    this.dataReportServer.all('*', (req: Request, res: Response, next: Next) => {
-      if (utils.falsy(this.config?.additional?.acceptAnyPath)) {
-        this.log.warn(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}. `
-          + `Configure the Ecowitt base station to send data reports to POST ${encodedPath}`);
-      } else {
-        this.log.debug(`Received request for ${req.method} ${req.path} from ${req.socket.remoteAddress}`);
-        try {
-          this.onDataReport(req.body);
-        } catch (err) {
-          next(err);
-        }
-      }
-      res.send();
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -311,12 +331,37 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
   //----------------------------------------------------------------------------
 
   registerAccessories(dataReport) {
-    const stationTypeInfo = dataReport?.stationtype.match(
-      /(EasyWeather|GW[123][012]00(?:[ABC]?))_?(.*)/,
-    );
-    const modelInfo = dataReport?.model.match(
-      /(HP[23]5[056][014]|GW[123][012]00)[ABC]?_?(.*)/,
-    );
+    let stationTypeInfo, modelInfo;
+
+    // ecowitt gateway - gw (WIFI) series
+    if (dataReport.model.trim().startsWith('GW')) {
+      modelInfo = dataReport.model.trim().match(/(GW[123][0-9]{3})[ABC]?_?(.*)/);
+    }
+
+    // ecowitt console - hp (TFT) series
+    if (dataReport.model.trim().startsWith('HP')) {
+      modelInfo = dataReport.model.trim().match(/(HP[2][56][0-9]{2})[ABC]?_?(.*)/);
+    }
+
+    // ecowitt console - ws (LCD) series
+    if (dataReport.model.trim().startsWith('WS')) {
+      modelInfo = dataReport.model.trim().match(/(WS[23][389][0-9]{2})[ABC]?_?(.*)/);
+    }
+
+    // ecowitt console - wn (LCD) series
+    if (dataReport.model.trim().startsWith('WN')) {
+      modelInfo = dataReport.model.trim().match(/(WN[1][89][0-9]{2})[ABC]?_?(.*)/);
+    }
+
+    if (modelInfo.length === 3) { // 3 match groups always expected
+      this.baseStationInfo.deviceName = modelInfo[1];
+    }
+
+    // parse out software version info if possible from station type
+    if (!dataReport.stationtype.trim().startsWith('EasyWeather')) {
+      stationTypeInfo = dataReport.stationtype.split('_');
+      this.baseStationInfo.softwareRevision = stationTypeInfo[stationTypeInfo.length - 1];
+    }
 
     this.baseStationInfo.model = dataReport.model;
     this.baseStationInfo.frequency = dataReport.freq;
@@ -324,45 +369,14 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     const hideConfig = this.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (Array.isArray(modelInfo) && modelInfo.length === 3) {
-      this.baseStationInfo.deviceName = modelInfo[1];
-
-      switch (modelInfo[1]) {
-        case 'GW1000':
-        case 'GW1100':
-        case 'GW1200':
-        case 'GW2000':
-        case 'GW3000':
-          this.baseStationInfo.hardwareRevision = stationTypeInfo[0];
-          this.baseStationInfo.firmwareRevision = stationTypeInfo[2];
-          if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
-            this.addSensorType(true, modelInfo[1]);
-          }
-          break;
-
-        case 'HP2560':
-        case 'HP2561':
-        case 'HP2564':
-          this.baseStationInfo.softwareRevision = dataReport.stationtype;
-          this.baseStationInfo.firmwareRevision = modelInfo[2];
-          if (!utils.includesAll(hidden, [`${this.baseStationInfo.deviceName}`])) {
-            this.addSensorType(true, modelInfo[1]);
-          }
-          break;
-
-        case 'HP2550':
-        case 'HP2551':
-        case 'HP3500':
-          this.baseStationInfo.softwareRevision = dataReport.stationtype;
-          this.baseStationInfo.firmwareRevision = modelInfo[2];
-          break;
-
-        default:
-          this.log.warn('Base station was not detected from data report. Please file a feature request to add support for '
-            + `device ${modelInfo[1]} at ${utils.FEATURE_REQ_LINK}`);
+    if (this.baseStationInfo.deviceName.length > 0) {
+      if (!utils.includesAll(hidden, ['BASE']) && !utils.includesAll(hidden, BASE.properties)) {
+        // validate that an external THP monitor is not providing the indoor metrics
+        this.addSensorType(dataReport.wh25batt === undefined, this.baseStationInfo.deviceName);
       }
     } else {
-      this.log.warn(`Base station was not detected from the data report. Please file a bug report at ${utils.BUG_REPORT_LINK}`);
+      this.log.warn('Base station was not detected from data report. Please file a feature request to add support for '
+        + `device ${this.baseStationInfo.deviceName} at ${utils.FEATURE_REQ_LINK}`);
     }
 
     if (!utils.includesAny(hidden, ['WS90']) && !utils.includesAll(hidden, WS90.properties)) {
@@ -595,24 +609,25 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
   createAccessory(sensor, accessory) {
     switch (sensor.type) {
-      case 'GW1000':
+      case 'GW1000':  // gateways
       case 'GW1100':
       case 'GW1200':
-        sensor.accessory = new GW1000(this, accessory, sensor.type);
-        break;
-
       case 'GW2000':
-        sensor.accessory = new GW2000(this, accessory, sensor.type);
-        break;
-
       case 'GW3000':
-        sensor.accessory = new GW3000(this, accessory, sensor.type);
-        break;
-
-      case 'HP2560':
+      case 'HP2560':  // HP consoles
       case 'HP2561':
       case 'HP2564':
-        sensor.accessory = new HP2560(this, accessory, sensor.type);
+      case 'WS2320':  // WS consoles
+      case 'WS2900':
+      case 'WS2910':
+      case 'WS3800':
+      case 'WS3820':
+      case 'WS3900':
+      case 'WS3910':
+      case 'WN1820':  // WN consoles
+      case 'WN1821':
+      case 'WN1980':
+        sensor.accessory = new BASE(this, accessory, sensor.type);
         break;
 
       case 'WH25':
@@ -729,7 +744,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           sensor.accessory.update(dataReport);
         } else {
           this.log.warn(`Skipping update on ${sensor.type}, accessory is not defined. Please file a `
-            + `bug report at ${utils.BUG_REPORT_LINK}`);
+            + `bug report at ${utils.BUG_REPORT_LINK} if needed`);
         }
       } catch(err) {
         let stack: string | undefined = undefined;

@@ -110,7 +110,9 @@ After the gateway or display console configuration has been updated, there shoul
 
 The full list of all [Ecowitt sensors](https://shop.ecowitt.com/collections/Wifi-sensor) and [Ecowitt consoles](https://shop.ecowitt.com/collections/console) can be found on the [Ecowitt online store](https://shop.ecowitt.com/).
 
-This plugin currently supports the Ecowitt devices shown in the table below. If your Ecowitt device is currently not supported, [please open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=).
+This plugin currently supports the Ecowitt devices shown in the tables below. If your Ecowitt gateway, console and/or sensor is currently not supported, [please open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=).
+
+### Gateways and Consoles
 
 | Device | Description | Service | Product Image |
 | -------- | ------- | ------- | ------ |
@@ -118,9 +120,20 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 | GW1200 | Wifi Weather Station Gateway | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/GW1200.jpeg" alt="GW1200" width="200"/> |
 | GW2000 | Wifi Weather Station Gateway | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/GW2000.jpeg" alt="GW2000" width="200"/> |
 | GW3000 | Wifi Weather Station Gateway | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/GW3000.jpeg" alt="GW3000" width="200"/> |
-| HP2550 (and variants) | 7" TFT Color Display Console |  | <img src="./docs/assets/HP2550.jpeg" alt="HP2550" width="200"/> |
+| HP2550 (and variants) | 7" TFT Color Display Console | *use WN32P for indoor temperature and humidity* | <img src="./docs/assets/HP2550.jpeg" alt="HP2550" width="200"/> |
 | HP2560 (and variants) | 7" TFT Color Display Console with Indoor Sensor Antenna | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/HP2560.jpeg" alt="HP2560" width="200"/> |
-| HP3500 (and variants) | 4.3" TFT Color Display Console | | <img src="./docs/assets/HP3500.jpeg" alt="HP3500" width="200"/> |
+| HP3500 (and variants) | 4.3" TFT Color Display Console | *use WN32P for indoor temperature and humidity* | <img src="./docs/assets/HP3500.jpeg" alt="HP3500" width="200"/> |
+| WS2320 | 7" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS2320.jpeg" alt="WS2320" width="200"/> |
+| WS2900 / WS2910 | 6.8" Color LCD Display with Touch Buttons | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS2900.jpeg" alt="WS2900" width="200"/> |
+| WS3800 / WS3820 | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS3800.jpeg" alt="WS3800" width="200"/> |
+| WS3900 / WS3910 | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WS3900.jpeg" alt="WS3900" width="200"/> |
+| WN1820 / WN1821 | 4.9" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WN1820.jpeg" alt="WN1820" width="200"/> |
+| WN1980 |  5.3" LCD Display with Touch Screen Keys | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WN1980.jpeg" alt="WN1980" width="200"/> |
+
+### Sensors and Sensor Arrays
+
+| Device | Description | Service | Product Image |
+| -------- | ------- | ------- | ------ |
 | WH25 | Indoor Temperature, Humidity and Barometric Sensor | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WH25.jpeg" alt="WH25" width="200"/> |
 | WH26| Outdoor Temperature and Humidity Sensor | <ul><li>Temperature</li><li>Humidity</li></ul> | <img src="./docs/assets/WH26.jpeg" alt="WH26" width="200"/> |
 | WN30 | Thermometer with Probe | <ul><li>Temperature</li></ul> | <img src="./docs/assets/WN30.jpeg" alt="WN30" width="200"/> |
@@ -144,7 +157,7 @@ This plugin currently supports the Ecowitt devices shown in the table below. If 
 | WS85 | 3-in-1 Solar Weather Station | <ul><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li></ul> | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
 | WS90 | Solar Powered 7-in-1 Outdoor Anti-vibration Haptic Sensor Array | <ul><li>Temperature</li><li>Humidity</li><li>Solar Radiation</li><li>UV Index</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li></ul> | <img src="./docs/assets/WS90.jpeg" alt="WS90" width="200"/> |
 
-> :warning: **This plugin does not currently implement barometric (pressure) services and PM1.0/PM4.0 air quality services. While these are not supported natively by HomeKit as this time, they are planned to be implemented with custom characteristics, see [this issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/5).**
+> :warning: **This plugin does not currently implement barometric (pressure) services and PM1.0/PM4.0 air quality services.  While these are not supported natively by HomeKit as this time, they are planned to be implemented with custom characteristics, see [this issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/5).**
 
 ## Configuration
 
@@ -177,7 +190,7 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 | units.distance | `mi` | The units to display distance such as lightning strike distance.  Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers |
 | units.temperature | `fh` | The units to display temperature. Possible values are: <br/><br/>`fh`: Fahrenheit<br/>`ce`: Celcius |
 | thresholds | `{}` | A mapping of a weather data property to the trigger threshold for that property.  By default no thresholds are set. Trigger thresholds should be specified in the units selected under the `units` configuration block. Possible keys are: <br/><br/>`windSpeed`<br/>`windGustSpeed`<br/>`windMaxDailySpeed`<br/>`rainRate`<br/>`rainEventTotal`<br/>`rainHourlyTotal`<br/>`rainDailyTotal`<br/>`rainWeeklyTotal`<br/>`rainMonthlyTotal`<br/>`rainYearlyTotal`<br/>`uvIndex`<br/>`lightningEvents`<br/>`lightningDistance *`<br/>`lightningTime *` <br/><br/> \*The value of the weather data property must be <strong>greater than</strong> the threshold to trigger the accessory (motion detected), except for `lightningDistance` and `lightningTime` which are triggered when the weather data property is <strong>less than</strong> the threshold. |
-| hidden | `{}` | A mapping of a weather data property or device to whether it should be displayed. By default no weather data or devices are hidden. Possible keys to hide weather data are: <br/><br/>`windDirection`<br>`windSpeed`<br/>`windGustSpeed`<br/>`windMaxDailySpeed`<br/>`rainRate`<br/>`rainEventTotal`<br/>`rainHourlyTotal`<br/>`rainDailyTotal`<br/>`rainWeeklyTotal`<br/>`rainMonthlyTotal`<br/>`rainYearlyTotal`<br/>`solarRadiation`<br/>`uvIndex`<br/>`temperature`<br/>`humidity`<br/>`indoorTemperature`<br/>`indoorhumidity`<br/>`soilMoisture`<br/>`leafWetness`<br/>`waterLeak`<br/>`airQualityPM25`<br/>`airQualityPM25Avg`<br/>`airQualityPM10`<br/>`airQualityPM10Avg`<br/>`carbonDioxide`<br/>`carbonDioxideAvg`<br/>`lightningEvents`<br/>`lightningDistance`<br/>`lightningTime` <br/><br/> Possible keys to hide devices are: <br/><br>`GW1000`<br>`GW2000`<br>`GW3000`<br>`HP2560`<br>`WH25` (Also use for `WN32P`)<br>`WH26` (Also use for `WN32`)<br>`WN30` (Also use for `WN36`)<br>`WN31`<br>`WN34`<br>`WN35`<br>`WH40`<br>`WH41` (Also use for `WH43`)<br>`WH45`<br>`WH46`<br>`WH51`<br>`WH55`<br>`WH57`<br>`WH65`<br>`WS68`<br>`WS80`<br>`WS85`<br/>`WS90`<br><br> Please note that if all weather data properties for a device are hidden, the device itself will be hidden automatically. |
+| hidden | `{}` | A mapping of a weather data property or device to whether it should be displayed. By default no weather data or devices are hidden. Possible keys to hide weather data are: <br/><br/>`windDirection`<br>`windSpeed`<br/>`windGustSpeed`<br/>`windMaxDailySpeed`<br/>`rainRate`<br/>`rainEventTotal`<br/>`rainHourlyTotal`<br/>`rainDailyTotal`<br/>`rainWeeklyTotal`<br/>`rainMonthlyTotal`<br/>`rainYearlyTotal`<br/>`solarRadiation`<br/>`uvIndex`<br/>`temperature`<br/>`humidity`<br/>`indoorTemperature`<br/>`indoorhumidity`<br/>`soilMoisture`<br/>`leafWetness`<br/>`waterLeak`<br/>`airQualityPM25`<br/>`airQualityPM25Avg`<br/>`airQualityPM10`<br/>`airQualityPM10Avg`<br/>`carbonDioxide`<br/>`carbonDioxideAvg`<br/>`lightningEvents`<br/>`lightningDistance`<br/>`lightningTime` <br/><br/> Possible keys to hide devices are: <br/><br>`BASE` (For gateway or console)<br>`WH25` (Also use for `WN32P`)<br>`WH26` (Also use for `WN32`)<br>`WN30` (Also use for `WN36`)<br>`WN31`<br>`WN34`<br>`WN35`<br>`WH40`<br>`WH41` (Also use for `WH43`)<br>`WH45`<br>`WH46`<br>`WH51`<br>`WH55`<br>`WH57`<br>`WH65`<br>`WS68`<br>`WS80`<br>`WS85`<br/>`WS90`<br><br> Please note that if all weather data properties for a device are hidden, the device itself will be hidden automatically. |
 | nameOverrides | `[]` | A list of key value pairs that specifies the override name for an accessory service.  Each override takes on the form: <br><br> `{"key": "<the-service-identifier>", "value", "<the-override-name>"}` <br><br> The service identifier is specified in the form `YYYY(CHZ)` or if an accessory has multiple services the weather data property should be included in the identifier `YYYY(CHZ):<weather-data-property>`. <br><br>`YYYY` is the device id (e.g. WH41) <br> `(CHZ)` is the optional channel id if the device uses a channel. <br><br> The weather data property can be set to any of the weather data keys indicated in `hidden` |
 | additional.staticNames | `false` | Set to `true` to not show the weather metric value in the service names of the accessory so that the service names do not change. |
 | additional.validateMac | `true` | Check that the MAC address in each data report matches the MAC address specified for the plugin, and do not process the data report if it does not match. |
@@ -199,7 +212,7 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 
 > There are a number of weather station distributors that re-package and re-brand the hardware sensors from [Fine Offset](https://www.foshk.com/Wifi_Weather_Station/). Along with Ecowitt, other notable distributors include Aercus, Ambient Weather, and Frogger.  These brands typically also use similar firmware / software within their ecosystem, and many provide the ability to publish weather data reports to a custom endpoint.
 
-> If the weather station equipment you are using supports a custom weather service endpoint, please [file a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=) to let me know what devices you would like support for. Please make sure to [include the data report](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report) in the feature request.
+> If the weather station equipment you are using supports a custom weather service endpoint using the Ecowitt protocol, then this plugin can support it regardless of the labeled distributor. For any issues, please [file a Github issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose), and make sure to [include the data report](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report).
 
 ### I've added an Ecowitt device to my gateway or console, and can see it on the **WSView Plus** app , but the accessory is not showing up in Homebridge or Homekit?
 
@@ -215,7 +228,7 @@ Contributions are welcomed! Please report bugs, suggest improvements, and open p
 
 ## Supporting
 
-This plugin requires my time and energy to develop and maintain, as well as the occasional Ecowitt device purchase. If you feel you have gotten value from this plugin, please consider [making a donation](https://www.paypal.com/donate/?business=4G6G3V4CYG2CY).
+This plugin requires my time and energy to develop and maintain, as well as the occasional purchase of an Ecowitt sensor. If you feel you have gotten value from this plugin, please consider [making a donation](https://www.paypal.com/donate/?business=4G6G3V4CYG2CY). Github Stars are appreciated too!
 
 <span align="center" style="text-align:center">
 <div align="center" style="text-align:center">

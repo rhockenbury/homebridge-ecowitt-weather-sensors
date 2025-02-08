@@ -1,3 +1,9 @@
+### 2.7.0
+
+* Add support for WN and WS series Ecowitt consoles (see README)
+* Consolidate gateway/console hiding feature to single hide/show setting
+* Internal refactor of data report request parsing and base station discovery
+
 ### 2.6.0
 
 * Add support for GW3000 Wifi Gateway

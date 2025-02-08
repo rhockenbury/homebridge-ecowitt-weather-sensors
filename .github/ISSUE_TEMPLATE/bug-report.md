@@ -1,12 +1,11 @@
-***
-
+---
 name: Bug Report
 about: Create a report to help us improve
 title: ''
 labels: bug
 assignees: ''
 
-***
+---
 
 <!-- You must use the issue template below when submitting a bug -->
 
@@ -32,7 +31,7 @@ Show the Homebridge logs here, remove any sensitive information.
 
 ```
 Please include the Ecowitt data report here.
-Refer to https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report 
+Refer to https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report
 for further instructions on obtaining the data report.
 ```
 

@@ -367,23 +367,8 @@
             "type": "boolean",
             "required": false
           },
-          "GW1000": {
-            "title": "GW1000",
-            "type": "boolean",
-            "required": false
-          },
-          "GW2000": {
-            "title": "GW2000",
-            "type": "boolean",
-            "required": false
-          },
-          "GW3000": {
-            "title": "GW3000",
-            "type": "boolean",
-            "required": false
-          },
-          "HP2560": {
-            "title": "HP2560",
+          "BASE": {
+            "title": "Base Station",
             "type": "boolean",
             "required": false
           },
@@ -715,32 +700,29 @@
             {
               "type": "flex",
               "items": [
-                "hidden.GW1000",
-                "hidden.GW2000",
-                "hidden.GW3000",
-                "hidden.HP2560",
+                "hidden.BASE",
                 "hidden.WH25",
                 "hidden.WH26",
                 "hidden.WN30",
-                "hidden.WN31"
+                "hidden.WN31",
+                "hidden.WN34",
+                "hidden.WN35"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WN34",
-                "hidden.WN35",
                 "hidden.WH40",
                 "hidden.WH41",
                 "hidden.WH45",
                 "hidden.WH46",
-                "hidden.WH51"
+                "hidden.WH51",
+                "hidden.WH55"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH55",
                 "hidden.WH57",
                 "hidden.WH65",
                 "hidden.WS68",
