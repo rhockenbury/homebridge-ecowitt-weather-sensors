@@ -137,7 +137,7 @@ This plugin currently supports the Ecowitt devices shown in the tables below. If
 | WH25 | Indoor Temperature, Humidity and Barometric Sensor | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WH25.jpeg" alt="WH25" width="200"/> |
 | WH26| Outdoor Temperature and Humidity Sensor | <ul><li>Temperature</li><li>Humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WH26.jpeg" alt="WH26" width="200"/> |
 | WN30 | Thermometer with Probe | <ul><li>Temperature</li><li>Battery</li></ul> | <img src="./docs/assets/WN30.jpeg" alt="WN30" width="200"/> |
-| WN31 / WH31 (including S and EP variants) | Multi-Channel Temperature and Humidity Sensor | <ul><li>Temperature</li><li>humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WN31.jpeg" alt="WN31" width="200"/> |
+| WN31 / WH31 (including S and EP variants) | Multi-Channel Temperature and Humidity Sensor | <ul><li>Temperature</li><li>Humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WN31.jpeg" alt="WN31" width="200"/> |
 | WN32 / WH32 (including EP variant) | Outdoor Temperature and Humidity Sensor <br><br> *Note this will register as a WH26* | <ul><li>Temperature</li><li>Humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WN32.jpeg" alt="WN32" width="200"/> |
 | WN32P | Indoor Temperature, Humidity and Barometric Sensor <br><br> *Note this will register as a WH25*| <ul><li>Indoor Temperature</li><li>Indoor Humidity</li><li>Battery</li></ul> | <img src="./docs/assets/WN32P.jpeg" alt="WN32P" width="200"/> |
 | WN34 (S, D, and L variants) | Multi-Channel Temperature Sensor | <ul><li>Temperature</li><li>Battery</li></ul>  | <img src="./docs/assets/WN34.jpeg" alt="WN34" width="200"/> |
