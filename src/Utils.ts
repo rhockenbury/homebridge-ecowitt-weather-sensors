@@ -430,6 +430,41 @@ export function v1ConfigTest(v1Config: object): boolean {
 //------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function baseStationRemapper(config: any): PlatformConfig {
+  const remappedConfig = JSON.parse(JSON.stringify(config));
+  let key, value;
+
+  // hidden
+  if (config.hidden !== undefined ) {
+    for (const entry of Object.entries(config.hidden)) {
+      key = entry[0];
+      value = entry[1];
+
+      if (key === 'GW1000' || key === 'GW2000' || key === 'GW3000' || key === 'HP2560') {
+        delete remappedConfig.hidden[key];
+        remappedConfig.hidden.BASE = value;
+      }
+    }
+  }
+
+  // nameoverride
+  if (config.nameOverrides !== undefined) {
+    for (let i = 0; i < config.nameOverrides.length; i++) {
+      key = config.nameOverrides[i].key.split(':');
+      value = config.nameOverrides[i].value;
+
+      if (key[0] === 'GW1000' || key[0] === 'GW2000' || key[0] === 'GW3000' || key[0] === 'HP2560') {
+        remappedConfig.nameOverrides[i].key = `BASE:${key[1]}`;
+      }
+    }
+  }
+
+  return remappedConfig;
+}
+
+//------------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const v2Config: any = {

@@ -36,7 +36,11 @@ configs.forEach(config => {
   describe(`WS90 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
-      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
+      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
+
+      platform.config.nameOverrides = [];
+      platform.config.hidden = {};
+
       device = new WS90(platform, accessory);
     });
 
@@ -65,7 +69,7 @@ configs.forEach(config => {
       expect(device.monthlyRain).to.not.be.undefined;
       expect(device.yearlyRain).to.not.be.undefined;
 
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature");
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity");
       expect(device.solarRadiation.service.characteristics[0].value).to.equal("Solar Radiation");
@@ -89,7 +93,7 @@ configs.forEach(config => {
       device = new WS90(platform, accessory);
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
       expect(device.solarRadiation.service.characteristics[0].value).to.equal("Solar Radiation 36890lx");

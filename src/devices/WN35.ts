@@ -1,7 +1,8 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { HumiditySensor } from './../sensors/HumiditySensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -9,7 +10,7 @@ import * as utils from './../Utils';
 export class WN35 extends EcowittAccessory {
   static readonly properties: string[] = ['leafWetness'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected leafWetness: HumiditySensor | undefined;
 
   constructor(
@@ -21,14 +22,20 @@ export class WN35 extends EcowittAccessory {
 
     this.requiredData = [`leaf_batt${this.channel}`, `leafwetness_ch${this.channel}`];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
+
     if (!utils.includesAny(hidden, ['leafWetness', `${this.shortServiceId}:leafWetness`])) {
-      const leafWetnessName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:leafWetness`) ||
-          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
+      const leafWetnessName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:leafWetness`);
       this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, leafWetnessName || 'Leaf Wetness');
     } else {
       this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, 'Leaf Wetness');
@@ -50,8 +57,15 @@ export class WN35 extends EcowittAccessory {
     const batteryLevel = batt / 1.6;
     const lowBattery = batt <= 1.2;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.leafWetness?.update(
       parseFloat(dataReport[`leafwetness_ch${this.channel}`]),

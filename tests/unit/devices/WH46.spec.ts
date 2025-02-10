@@ -52,7 +52,7 @@ configs.forEach(config => {
       expect(device.carbonDioxide).to.not.be.undefined;
       expect(device.carbonDioxideAvg).to.not.be.undefined;
 
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.temperature.service.displayName).to.equal("Temperature");
       expect(device.humidity.service.displayName).to.equal("Humidity");
       expect(device.airQualityPM25.service.displayName).to.equal("PM2.5 Air Quality");
@@ -68,8 +68,8 @@ configs.forEach(config => {
       device = new WH46(platform, accessory);
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(100); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(100); // batt percentage
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 70.70°F");
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 65 %");
       expect(device.airQualityPM25.service.characteristics[0].value).to.equal("PM2.5 Air Quality 2 mcg/m³");

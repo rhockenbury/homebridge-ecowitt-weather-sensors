@@ -1,13 +1,14 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { LightningSensor } from './../sensors/LightningSensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 export class WH57 extends EcowittAccessory {
   static readonly properties: string[] = ['lightningEvents', 'lightningDistance', 'lightningTime'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected lightningEvents: LightningSensor | undefined;
   protected lightningDistance: LightningSensor | undefined;
   protected lightningTime: LightningSensor | undefined;
@@ -20,12 +21,19 @@ export class WH57 extends EcowittAccessory {
 
     this.requiredData = ['wh57batt', 'lightning', 'lightning_num', 'lightning_time'];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     let nameOverride: string | undefined;
+
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['lightningEvents', `${this.shortServiceId}:lightningEvents`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:lightningEvents`);
@@ -71,8 +79,15 @@ export class WH57 extends EcowittAccessory {
     const batteryLevel = batt / 5.0;
     const lowBattery = batt <= 1.1;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.lightningEvents?.updateLightningEvent(
       parseFloat(dataReport['lightning_num']),

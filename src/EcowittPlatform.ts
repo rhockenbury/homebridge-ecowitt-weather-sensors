@@ -128,8 +128,16 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         + `see ${utils.MIGRATION_GUIDE_LINK} for the migration guide \n ${JSON.stringify(v2Config, undefined, 2)}`);
       this.config = v2Config;
       this.log.debug(`Plugin config has been auto-migrated to v2 \n ${JSON.stringify(this.config, undefined, 2)}`);
+    }
+
+    // structure of base station changed in v2.7.0 and prior versions need to be remapped
+    const updatedConfig = utils.baseStationRemapper(this.config);
+    if (JSON.stringify(updatedConfig) === JSON.stringify(this.config)) {
+      this.log.debug('Plugin configuration migration for base station not required');
     } else {
-      this.log.debug(`Plugin config \n ${JSON.stringify(this.config, undefined, 2)}`);
+      this.config = updatedConfig;
+      this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
+        + `of your plugin configuration has been generated below \n ${JSON.stringify(updatedConfig, undefined, 2)}`);
     }
 
     const encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report');
@@ -340,7 +348,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     // ecowitt console - hp (TFT) series
     if (dataReport.model.trim().startsWith('HP')) {
-      modelInfo = dataReport.model.trim().match(/(HP[2][56][0-9]{2})[ABC]?_?(.*)/);
+      modelInfo = dataReport.model.trim().match(/(HP[23][56][0-9]{2})[ABC]?_?(.*)/);
     }
 
     // ecowitt console - ws (LCD) series
