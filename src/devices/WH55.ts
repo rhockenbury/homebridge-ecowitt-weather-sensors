@@ -1,7 +1,8 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { LeakSensor } from './../sensors/LeakSensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -9,7 +10,7 @@ import * as utils from './../Utils';
 export class WH55 extends EcowittAccessory {
   static readonly properties: string[] = ['waterLeak'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected leak: LeakSensor | undefined;
 
   constructor(
@@ -21,14 +22,20 @@ export class WH55 extends EcowittAccessory {
 
     this.requiredData = [`leakbatt${this.channel}`, `leak_ch${this.channel}`];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
+
     if (!utils.includesAny(hidden, ['waterleak', `${this.shortServiceId}:waterleak`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:waterleak`) ||
-          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:waterleak`);
       this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || 'Water Leak');
     } else {
       this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, 'Water Leak');
@@ -49,8 +56,15 @@ export class WH55 extends EcowittAccessory {
     const batteryLevel = parseFloat(dataReport[`leakbatt${this.channel}`]) / 5.0;
     const lowBattery = batteryLevel <= 0.2;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.leak?.update(
       parseFloat(dataReport[`leak_ch${this.channel}`]),

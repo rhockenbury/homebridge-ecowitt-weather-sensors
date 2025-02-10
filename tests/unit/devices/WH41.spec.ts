@@ -21,7 +21,7 @@ configs.forEach(config => {
   describe(`WH41 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
-      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
+      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
     });
 
     beforeEach('Reset config', () => {
@@ -36,7 +36,7 @@ configs.forEach(config => {
       expect(device.airQualityPM25).to.not.be.undefined;
       expect(device.airQualityPM25Avg).to.not.be.undefined;
 
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.airQualityPM25.service.displayName).to.equal("PM2.5 Air Quality");
       expect(device.airQualityPM25Avg.service.displayName).to.equal("PM2.5 Air Quality 24h Avg");
       done();
@@ -46,8 +46,8 @@ configs.forEach(config => {
       device = new WH41(platform, accessory, 1);
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(24); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(24); // batt percentage
       expect(device.airQualityPM25.service.characteristics[0].value).to.equal("PM2.5 Air Quality 14 mcg/m³");
       expect(device.airQualityPM25Avg.service.characteristics[0].value).to.equal("PM2.5 Air Quality 24h Avg 3 mcg/m³");
       done();

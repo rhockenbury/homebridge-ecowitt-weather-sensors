@@ -1,4 +1,4 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { LightSensor } from './../sensors/LightSensor';
@@ -7,6 +7,7 @@ import { TemperatureSensor } from './../sensors/TemperatureSensor';
 import { HumiditySensor } from './../sensors/HumiditySensor';
 import { WindSensor } from './../sensors/WindSensor';
 import { RainSensor } from './../sensors/RainSensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -17,7 +18,7 @@ export class WH65 extends EcowittAccessory {
     'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal',
     'rainYearlyTotal'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
   protected solarRadiation: LightSensor | undefined;
@@ -47,12 +48,19 @@ export class WH65 extends EcowittAccessory {
     this.optionalData = [];
     this.unusedData = ['totalrainin'];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     let nameOverride: string | undefined;
+
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
@@ -200,8 +208,10 @@ export class WH65 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const lowBattery = dataReport.wh65batt === '1';
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateStatusLow(
+      dataReport.wh65batt === '1',
+      dataReport.dateutc,
+    );
 
     this.temperature?.update(
       parseFloat(dataReport['tempf']),
@@ -233,7 +243,6 @@ export class WH65 extends EcowittAccessory {
       parseFloat(dataReport.windspeedmph),
       utils.lookup(this.platform.config?.thresholds, 'windSpeed'),
       dataReport.dateutc,
-
     );
 
     this.windGust?.updateSpeed(

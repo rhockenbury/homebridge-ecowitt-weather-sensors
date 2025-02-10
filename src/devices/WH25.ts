@@ -1,8 +1,9 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { TemperatureSensor } from './../sensors/TemperatureSensor';
 import { HumiditySensor } from './../sensors/HumiditySensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -10,7 +11,7 @@ import * as utils from './../Utils';
 export class WH25 extends EcowittAccessory {
   static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
 
@@ -23,10 +24,17 @@ export class WH25 extends EcowittAccessory {
     this.requiredData = ['wh25batt', 'tempinf', 'humidityin'];
     this.unusedData = ['baromrelin', 'baromabsin'];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`])) {
       const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
@@ -58,8 +66,10 @@ export class WH25 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    const lowBattery = dataReport.wh25batt === '1';
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateStatusLow(
+      dataReport.wh25batt === '1',
+      dataReport.dateutc,
+    );
 
     this.temperature?.update(
       parseFloat(dataReport.tempinf),

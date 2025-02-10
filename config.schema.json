@@ -367,8 +367,13 @@
             "type": "boolean",
             "required": false
           },
+          "battery": {
+            "title": "Battery",
+            "type": "boolean",
+            "required": false
+          },
           "BASE": {
-            "title": "Base Station",
+            "title": "BASE",
             "type": "boolean",
             "required": false
           },
@@ -635,7 +640,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the weather data that should not be displayed."
+          "helpvalue": "<p class=\"help-block\">Select the data that should not be displayed."
         },
         {
           "type": "flex",
@@ -683,7 +688,8 @@
                 "hidden.carbonDioxideAvg",
                 "hidden.lightningEvents",
                 "hidden.lightningDistance",
-                "hidden.lightningTime"
+                "hidden.lightningTime",
+                "hidden.battery"
               ]
             }
           ]

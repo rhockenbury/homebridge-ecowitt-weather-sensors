@@ -1,14 +1,15 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { RainSensor } from './../sensors/RainSensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 export class WH40 extends EcowittAccessory {
   static readonly properties: string[] = ['rainRate', 'rainEventTotal', 'rainHourlyTotal',
     'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected rainRate: RainSensor | undefined;
   protected eventRain: RainSensor | undefined;
   protected hourlyRain: RainSensor | undefined;
@@ -28,12 +29,19 @@ export class WH40 extends EcowittAccessory {
       'weeklyrainin', 'monthlyrainin', 'yearlyrainin',
     ];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     let nameOverride: string | undefined;
+
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainrate`);
@@ -112,8 +120,15 @@ export class WH40 extends EcowittAccessory {
     const batteryLevel = batt / 1.6;
     const lowBattery = batt <= 1.1;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.rainRate?.updateRate(
       parseFloat(dataReport.rainratein),

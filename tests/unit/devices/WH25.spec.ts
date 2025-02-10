@@ -21,7 +21,11 @@ configs.forEach(config => {
   describe(`WH25 device should be configured ${config}`, () => {
     before('Initialize platform', () => {
       platform = createPlatform(config);
-      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
+      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
+
+      platform.config.nameOverrides = [];
+      platform.config.hidden = {};
+
       device = new WH25(platform, accessory);
     });
 
@@ -34,7 +38,7 @@ configs.forEach(config => {
       expect(device.battery).to.not.be.undefined;
       expect(device.temperature).to.not.be.undefined;
       expect(device.humidity).to.not.be.undefined;
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.temperature.service.displayName).to.equal("Temperature");
       expect(device.humidity.service.displayName).to.equal("Humidity");
       done();
@@ -43,7 +47,7 @@ configs.forEach(config => {
     it('Update is called successfully', (done) => {
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(1); // low batt
+      expect(device.battery.service.characteristics[1].value).to.equal(1); // low batt
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
       done();

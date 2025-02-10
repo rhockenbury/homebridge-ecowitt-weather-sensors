@@ -26,7 +26,11 @@ configs.forEach(config => {
   describe(`WH40 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
-      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
+      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
+
+      platform.config.nameOverrides = [];
+      platform.config.hidden = {};
+
       device = new WH40(platform, accessory);
     });
 
@@ -45,7 +49,7 @@ configs.forEach(config => {
       expect(device.monthlyRain).to.not.be.undefined;
       expect(device.yearlyRain).to.not.be.undefined;
 
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.characteristics[0].value).to.equal('Battery');
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total");
@@ -59,8 +63,8 @@ configs.forEach(config => {
     it('Update is called successfully', (done) => {
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(75); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(75); // batt percentage
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate 1.1 in/hour");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total 2.2 in");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total 3.3 in");

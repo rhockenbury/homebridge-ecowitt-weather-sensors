@@ -1,7 +1,8 @@
-import { PlatformAccessory, Service } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { HumiditySensor } from './../sensors/HumiditySensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -9,7 +10,7 @@ import * as utils from './../Utils';
 export class WH51 extends EcowittAccessory {
   static readonly properties: string[] = ['soilMoisture'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected soilMoisture: HumiditySensor | undefined;
 
   constructor(
@@ -22,14 +23,20 @@ export class WH51 extends EcowittAccessory {
     this.requiredData = [`soilbatt${this.channel}`, `soilmoisture${this.channel}`];
     this.unusedData = [`soilad${this.channel}`];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
+
     if (!utils.includesAny(hidden, ['soilmoisture', `${this.shortServiceId}:soilmoisture`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:soilmoisture`) ||
-          utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}`);
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:soilmoisture`);
       this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, nameOverride || 'Soil Moisture');
     } else {
       this.soilMoisture = new HumiditySensor(platform, accessory, `${this.accessoryId}:soilmoisture`, 'Soil Moisture');
@@ -51,8 +58,15 @@ export class WH51 extends EcowittAccessory {
     const batteryLevel = batt / 1.6;
     const lowBattery = batt <= 1.2;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.soilMoisture?.update(
       parseFloat(dataReport[`soilmoisture${this.channel}`]),

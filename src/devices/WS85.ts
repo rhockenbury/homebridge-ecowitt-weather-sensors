@@ -1,8 +1,9 @@
-import { Service, PlatformAccessory } from 'homebridge';
+import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { WindSensor } from './../sensors/WindSensor';
 import { RainSensor } from './../sensors/RainSensor';
+import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
@@ -12,7 +13,7 @@ export class WS85 extends EcowittAccessory {
     'windMaxDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal',
     'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
 
-  protected battery: Service;
+  protected battery: BatterySensor | undefined;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
@@ -38,12 +39,19 @@ export class WS85 extends EcowittAccessory {
     ];
     this.unusedData = ['ws85cap_volt', 'ws85_ver'];
 
-    this.battery = this.addBattery('', false);
-
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
     let nameOverride: string | undefined;
+
+    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
+    } else {
+      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
+      this.battery.removeService();
+      this.battery = undefined;
+    }
 
     if (!utils.includesAny(hidden, ['winddirection', `${this.shortServiceId}:winddirection`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:winddirection`);
@@ -159,8 +167,15 @@ export class WS85 extends EcowittAccessory {
     const batteryLevel = batt / 3.3;
     const lowBattery = batt <= 2.3;
 
-    this.updateBatteryLevel(this.battery, utils.boundRange(batteryLevel * 100));
-    this.updateStatusLowBattery(this.battery, lowBattery);
+    this.battery?.updateLevel(
+      utils.boundRange(batteryLevel * 100),
+      dataReport.dateutc,
+    );
+
+    this.battery?.updateStatusLow(
+      lowBattery,
+      dataReport.dateutc,
+    );
 
     this.windDirection?.updateDirection(
       parseFloat(dataReport.winddir),
@@ -171,7 +186,6 @@ export class WS85 extends EcowittAccessory {
       parseFloat(dataReport.windspeedmph),
       utils.lookup(this.platform.config?.thresholds, 'windSpeed'),
       dataReport.dateutc,
-
     );
 
     this.windGust?.updateSpeed(

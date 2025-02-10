@@ -32,7 +32,11 @@ configs.forEach(config => {
   describe(`WS85 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
-      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03")
+      accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
+
+      platform.config.nameOverrides = [];
+      platform.config.hidden = {};
+
       device = new WS85(platform, accessory);
     });
 
@@ -57,7 +61,7 @@ configs.forEach(config => {
       expect(device.monthlyRain).to.not.be.undefined;
       expect(device.yearlyRain).to.not.be.undefined;
 
-      expect(device.battery.displayName).to.equal('');
+      expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed");
       expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed");
@@ -76,8 +80,8 @@ configs.forEach(config => {
       device = new WS85(platform, accessory);
       device.update(dataReport);
 
-      expect(device.battery.characteristics[0].value).to.equal(0); // low batt
-      expect(device.battery.characteristics[3].value).to.equal(99); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(99); // batt percentage
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction 285° (W)");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed 0.0 mph");
       expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
