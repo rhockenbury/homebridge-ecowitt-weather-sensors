@@ -1002,7 +1002,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor."
+          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor. <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides\">See here for help</a>"
         },
         {
           "key": "nameOverrides",
