@@ -50,7 +50,7 @@ The plugin's **Base Station** settings must be configured before configuring the
 
 This can be found on the *About* screen on the Weather Display Console, or via the **WSView Plus** app on the "My Devices" tab.
 
-The MAC address is used to validate that the data report received is coming from the correct gateway or display console.
+The MAC address is used to validate that the data report received is coming from the correct gateway or display console. If the MAC address is not provided, MAC validation will be disabled meaning that the source MAC of each data report will not be checked.
 
 ### Data Report Service
 
@@ -76,7 +76,9 @@ Before updating the gateway or display console to report its data to the plugin,
 
 The plugin requires the custom weather service to be configured to report data with **Path** and **Port** parameters that match the same in the **Base Station** settings.
 
-The service **Protocol Type** must be configured as **Ecowitt**. The **Upload Interval** can be configured as desired. Anywhere from 20 seconds to 60 seconds is recommended as the data report messages are relatively small and do not put much load on the network or Homebridge host. Keep in mind that Ecowitt devices typically transmit data to the base station every 60-80 seconds (depending on the device) so single digit values for the **Upload Interval** may result in the same repeated data being transmitted from the base station to the plugin.
+:warning: **Please triple check that the path and port on the custom weather service match the path and port specified on the plugin settings** :warning:
+
+The service **Protocol Type** must be configured as **Ecowitt**. The **Upload Interval** can be configured as desired. Anywhere from 20 seconds to 60 seconds is recommended as the data report messages are relatively small and do not put much load on the network or Homebridge host. Keep in mind that Ecowitt devices transmit data at different rates - anywhere from ~16 seconds to ~80 seconds (depending on the device) so single digit values for the **Upload Interval** may result in the same repeated data being transmitted from the base station to the plugin.
 
 The gateway or display console can be configured using the Ecowitt **WSView Plus** app. In the app, select gateway or display console under "My Devices" then navigate to "More" on the upper right to select "Weather Services."
 
@@ -128,7 +130,8 @@ This plugin currently supports the Ecowitt devices shown in the tables below. If
 | WS3800 / WS3820 | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS3800.jpeg" alt="WS3800" width="200"/> |
 | WS3900 / WS3910 | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WS3900.jpeg" alt="WS3900" width="200"/> |
 | WN1820 / WN1821 | 4.9" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WN1820.jpeg" alt="WN1820" width="200"/> |
-| WN1980 |  5.3" LCD Display with Touch Screen Keys | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WN1980.jpeg" alt="WN1980" width="200"/> |
+| WN1900 / WN1910 / WN1920 | 4.9" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WN1900.jpeg" alt="WN1900" width="200"/> |
+| WN1980 | 5.3" LCD Display with Touch Screen Keys | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WN1980.jpeg" alt="WN1980" width="200"/> |
 
 ### Sensors and Sensor Arrays
 
@@ -151,7 +154,8 @@ This plugin currently supports the Ecowitt devices shown in the tables below. If
 | WH51 (and L variant)| Soil Moisture Sensor | <ul><li>Soil Moisture</li><li>Battery</li></ul> | <img src="./docs/assets/WH51.jpeg" alt="WH51" width="200"/> |
 | WH55 | Water Leak Detection Sensor | <ul><li>Water Leak</li><li>Battery</li></ul> | <img src="./docs/assets/WH55.jpeg" alt="WH55" width="200"/> |
 | WH57 | Lightning Detection Sensor | <ul><li>Lightning Events</li><li>Lightning Distance</li><li>Lightning Time</li><li>Battery</li></ul> | <img src="./docs/assets/WH57.jpeg" alt="WH57" width="200"/> |
-| WH65 / WS69 | Solar Powered 7-in-1 Outdoor Station | <ul><li>Temperature</li><li>Humidity</li><li>Solar Radiation</li><li>UV Index</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li><li>Battery</li></ul> | <img src="./docs/assets/WH65.jpeg" alt="WH65" width="200"/> |
+| WH65 (Y-shape) / WS69 (I-shape) | Solar Powered 7-in-1 Outdoor Station | <ul><li>Temperature</li><li>Humidity</li><li>Solar Radiation</li><li>UV Index</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li><li>Battery</li></ul> | <img src="./docs/assets/WH65.jpeg" alt="WH65" width="200"/> |
+| WN67 | 5-in-1 Outdoor Station | <ul><li>Temperature</li><li>Humidity</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li><li>Battery</li></ul> | <img src="./docs/assets/WN67.jpeg" alt="WN67" width="200"/> |
 | WS68 | Solar Powered 4-in-1 Outdoor Station | <ul><li>Solar Radiation</li><li>UV Index</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Battery</li></ul> | <img src="./docs/assets/WS68.jpeg" alt="WS68" width="200"/> |
 | WS80 | Solar Powered 6-in-1 Outdoor Station | <ul><li>Temperature</li><li>Humidity</li><li>Solar Radiation</li><li>UV Index</li><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Battery</li></ul> | <img src="./docs/assets/WS80.jpeg" alt="WS80" width="200"/> |
 | WS85 | 3-in-1 Solar Weather Station | <ul><li>Wind Direction</li><li>Wind Speed</li><li>Wind Gust Speed</li><li>Wind Max Daily Speed</li><li>Rain Rate</li><li>Rain Event Total</li><li>Rain Hourly Total</li><li>Rain Daily Total</li><li>Rain Weekly Total</li><li>Rain Monthly Total</li><li>Rain Yearly Total</li><li>Battery</li></ul> | <img src="./docs/assets/WS85.jpeg" alt="WS85" width="200"/> |
@@ -184,7 +188,7 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 | -------- | ------- | ------- |
 | baseStation.mac | `00:00:00:00:00:00` | The MAC address of the Ecowitt base station. If not set or if invalid, the default is used *and* MAC validation (`additional.macValidation`) will be disabled |
 | baseStation.port | `8080` | The port on which to listen for data reports from the Ecowitt Gateway or Console |
-| baseStation.path | `/data/report` | The URL path on which to listen for data reports from the Ecowitt Gateway or Console |
+| baseStation.path | `/data/report/` | The URL path on which to listen for data reports from the Ecowitt Gateway or Console |
 | units.wind | `mph` | The units to display wind speed. Possible values are: <br/><br/>`mph`: Miles per Hour<br/>`kph`: Kilometers per Hour<br/>`mps`: Meters per Second<br/>`kts`: Knots |
 | units.rain | `in` | The units to display rain accumulation. Possible values are: <br/><br/>`in`: Inches<br/>`mm`: Millimeters</p> |
 | units.distance | `mi` | The units to display distance such as lightning strike distance.  Possible values are: <br/><br/>`mi`: Miles<br/>`km`: Kilometers |

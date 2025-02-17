@@ -1,6 +1,13 @@
-### 2.7.0
+### 2.8.0-beta
 
+* Introduce limited alpha support for Ambient Weather devices (only WS1965)
+* Implement support for WN1900 / WN1910 / WN1920 Ecowitt consoles
+* Updates for easier first time setup for MAC and path settings
+* Add support for WN67 5-in-1 weather sensor array
 * Add more documentation on setting name overrides for a sensor
+
+### 2.7.0-beta
+
 * Add support for WN and WS series Ecowitt consoles (see README)
 * Add support for hiding battery service and setting name override for battery service
 * Consolidate gateway/console hiding feature to single hide/show setting
