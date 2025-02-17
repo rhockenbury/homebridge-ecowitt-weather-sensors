@@ -39,7 +39,7 @@
             "pattern": "^/[A-Za-z/]+$",
             "required": true,
             "default": "/data/report/",
-            "description": "Host path to receive data reports<img width=\"10%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Please ensure that the path entered here exactly matches the path entered for the custom server upload on your gateway device.\">"
+            "description": "Host path to receive data reports<img width=\"10%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Please ensure that the path entered here exactly matches the path entered for the custom server upload on your gateway device. Alternatively, you can enable 'Accept Any Path' in advanced settings and not specify the path.\">"
           }
         }
       },

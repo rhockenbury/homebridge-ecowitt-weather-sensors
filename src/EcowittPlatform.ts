@@ -202,8 +202,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       // WU sends with unique data report properties
       if (utils.includesAny(Object.keys(dataReport), this.protocolCheckFieldsWU)) {
-        this.log.error('Data report appears to use the Wunderground protocol. Please ensure ' +
-          'that the Ecowitt protocol is used when sending data reports to this plugin');
+        this.log.error('Data report appears to use the Wunderground protocol, which is ' +
+          'not supported. Please ensure that the Ecowitt protocol is used when sending ' +
+          'data reports to this plugin');
         this.baseStationInfo.vendor = 'Underground';
         res.send();
         return;
@@ -211,9 +212,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       // AMB sends get request with data as query params
       if (req.method === 'GET' && (Object.keys(req.query).length > 0 || req.path.length > 2)) {
-        this.log.warn('Data report appears to use the Ambient Weather protocol. This plugin ' +
-          'has limited alpha support for Ambient Weather so your Ambient device may not work with ' +
-          `this plugin. Please file bug reports at ${utils.BUG_REPORT_LINK}`);
+        if (this.lastDataReport === null) { // only show once on startup
+          this.log.warn('Data report appears to use the Ambient Weather protocol. This plugin ' +
+            'has limited alpha support for Ambient Weather so your Ambient devices may not work with ' +
+            'this plugin. I am trying to improve support for Ambient Weather devices so please ' +
+            `file bug reports at ${utils.BUG_REPORT_LINK} and feature requests at ${utils.FEATURE_REQ_LINK}`);
+        }
         this.baseStationInfo.vendor = 'Ambient';
       }
 

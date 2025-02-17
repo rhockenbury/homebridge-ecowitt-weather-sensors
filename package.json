@@ -38,7 +38,8 @@
     "ecowitt",
     "fine-offset",
     "ambient-weather",
-    "weather"
+    "weather",
+    "weather-station"
   ],
   "dependencies": {
     "@network-utils/arp-lookup": "^2.1.0",

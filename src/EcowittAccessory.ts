@@ -31,7 +31,7 @@ export class EcowittAccessory {
       )
       .setCharacteristic(
         this.platform.Characteristic.Model,
-        modelName,
+        this.accessoryName.split(' ')[0],
       )
       .setCharacteristic(
         this.platform.Characteristic.Name,

@@ -226,6 +226,11 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 
 > Please [open a feature request](https://github.com/rhockenbury/homebridge-ecowitt/issues/new?assignees=\&labels=enhancement\&projects=\&template=feature-request.md\&title=) on the Github project to let me know what devices you are interested in getting support for. Please make sure to [include the data report](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Submitting-Data-Report) in the feature request.
 
+### I'm having difficulties with setting the name overrides for a data property.  Can you help?
+
+> Yes, this is definitely a bit tricky, and might require a bit of trial of error.  I would suggest first looking at the [Name Overrides Guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides) and see if that is able to help for your case.  And of course, if you need additional help with setting name overrides, please file a [Githbub issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new?template=support-request.md).
+
+
 ## Contributing
 
 Contributions are welcomed! Please report bugs, suggest improvements, and open pull requests. For major pull requests, please open an issue first to discuss what you would like to change. See the [Contributing Guide](./docs/CONTRIBUTING.md) for more info.
