@@ -230,7 +230,6 @@ It's recommended to configure the plugin through the Plugin Config UI on the Hom
 
 > Yes, this is definitely a bit tricky, and might require a bit of trial of error.  I would suggest first looking at the [Name Overrides Guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides) and see if that is able to help for your case.  And of course, if you need additional help with setting name overrides, please file a [Githbub issue](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new?template=support-request.md).
 
-
 ## Contributing
 
 Contributions are welcomed! Please report bugs, suggest improvements, and open pull requests. For major pull requests, please open an issue first to discuss what you would like to change. See the [Contributing Guide](./docs/CONTRIBUTING.md) for more info.
