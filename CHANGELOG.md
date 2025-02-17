@@ -8,6 +8,7 @@
 
 ### 2.7.0-beta
 
+* Add more documentation on setting name overrides for a sensor
 * Add support for WN and WS series Ecowitt consoles (see README)
 * Add support for hiding battery service and setting name override for battery service
 * Consolidate gateway/console hiding feature to single hide/show setting
