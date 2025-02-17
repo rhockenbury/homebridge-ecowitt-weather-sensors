@@ -27,7 +27,7 @@ export class EcowittAccessory {
     accessoryInfo
       .setCharacteristic(
         this.platform.Characteristic.Manufacturer,
-        'Ecowitt',
+        platform.baseStationInfo.vendor,
       )
       .setCharacteristic(
         this.platform.Characteristic.Model,

@@ -1,8 +1,6 @@
 import { PlatformAccessory } from 'homebridge';
 import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
-import { LightSensor } from './../sensors/LightSensor';
-import { UltravioletSensor } from './../sensors/UltravioletSensor';
 import { TemperatureSensor } from './../sensors/TemperatureSensor';
 import { HumiditySensor } from './../sensors/HumiditySensor';
 import { WindSensor } from './../sensors/WindSensor';
@@ -12,17 +10,14 @@ import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
-export class WH65 extends EcowittAccessory {
-  static readonly properties: string[] = ['temperature', 'humidity', 'solarRadiation',
-    'uvIndex', 'windDirection', 'windSpeed', 'windGustSpeed', 'windMaxDailySpeed',
-    'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal',
-    'rainMonthlyTotal', 'rainYearlyTotal'];
+export class WN67 extends EcowittAccessory {
+  static readonly properties: string[] = ['temperature', 'humidity', 'windDirection',
+    'windSpeed', 'windGustSpeed', 'windMaxDailySpeed', 'rainEventTotal', 'rainHourlyTotal',
+    'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
 
   protected battery: BatterySensor | undefined;
   protected temperature: TemperatureSensor | undefined;
   protected humidity: HumiditySensor | undefined;
-  protected solarRadiation: LightSensor | undefined;
-  protected uvIndex: UltravioletSensor | undefined;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
   protected windGust: WindSensor | undefined;
@@ -39,12 +34,12 @@ export class WH65 extends EcowittAccessory {
     protected readonly platform: EcowittPlatform,
     protected readonly accessory: PlatformAccessory,
   ) {
-    super(platform, accessory, 'WH65', 'WH65 7-in-1 Solar Weather Sensor');
+    super(platform, accessory, 'WN67', 'WN67 5-in-1 Weather Sensor');
 
     this.requiredData = [
-      'wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
-      'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
-      'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
+      'wh65batt', 'tempf', 'humidity', 'winddir', 'windspeedmph', 'windgustmph',
+      'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin', 'weeklyrainin',
+      'monthlyrainin', 'yearlyrainin'];
     this.optionalData = ['rainratein'];
     this.unusedData = ['totalrainin'];
 
@@ -78,24 +73,6 @@ export class WH65 extends EcowittAccessory {
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
       this.humidity.removeService();
       this.humidity = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['solarRadiation', `${this.shortServiceId}:solarRadiation`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:solarRadiation`);
-      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, nameOverride || 'Solar Radiation');
-    } else {
-      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, 'Solar Radiation');
-      this.solarRadiation.removeService();
-      this.solarRadiation = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['uvIndex', `${this.shortServiceId}:uvIndex`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:uvIndex`);
-      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, nameOverride || 'UV Index');
-    } else {
-      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, 'UV Index');
-      this.uvIndex.removeService();
-      this.uvIndex = undefined;
     }
 
     if (!utils.includesAny(hidden, ['winddirection', `${this.shortServiceId}:winddirection`])) {
@@ -221,17 +198,6 @@ export class WH65 extends EcowittAccessory {
 
     this.humidity?.update(
       parseFloat(dataReport['humidity']),
-      dataReport.dateutc,
-    );
-
-    this.solarRadiation?.update(
-      parseFloat(dataReport['solarradiation']),
-      dataReport.dateutc,
-    );
-
-    this.uvIndex?.update(
-      parseFloat(dataReport['uv']),
-      utils.lookup(this.platform.config?.thresholds, 'uvIndex'),
       dataReport.dateutc,
     );
 
