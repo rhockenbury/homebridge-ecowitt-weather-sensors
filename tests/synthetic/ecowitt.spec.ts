@@ -9,7 +9,7 @@ let platform = null;
 describe('Platform should be configured with accessories', () => {
 
   it('gw1000_wh51_wn31multi_wh26 sensors are created', (done) => {
-    testData = require('./data/gw1000_wh51_wn31multi_wh26.json');
+    testData = require('./data/ecowitt/gw1000_wh51_wn31multi_wh26.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(6);
@@ -24,7 +24,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1000_wh65_wh57_wh55_wh51multi_wn31multi sensors are created', (done) => {
-    testData = require('./data/gw1000_wh65_wh57_wh55_wh51multi_wn31multi.json');
+    testData = require('./data/ecowitt/gw1000_wh65_wh57_wh55_wh51multi_wn31multi.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(9);
@@ -42,7 +42,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1000_wn31multi_wh26 sensors are created', (done) => {
-    testData = require('./data/gw1000_wn31multi_wh26.json');
+    testData = require('./data/ecowitt/gw1000_wn31multi_wh26.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(6)
@@ -57,7 +57,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1000_ws68_wh65_wh26 sensors are created', (done) => {
-    testData = require('./data/gw1000_ws68_wh65_wh26.json');
+    testData = require('./data/ecowitt/gw1000_ws68_wh65_wh26.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(4)
@@ -70,7 +70,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1000 are created', (done) => {
-    testData = require('./data/gw1000.json');
+    testData = require('./data/ecowitt/gw1000.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(1);
@@ -80,7 +80,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1100_wh51 sensors are created', (done) => {
-    testData = require('./data/gw1100_wh51.json');
+    testData = require('./data/ecowitt/gw1100_wh51.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -91,7 +91,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1100_wh65_wh51 sensors are created', (done) => {
-    testData = require('./data/gw1100_wh65_wh51.json');
+    testData = require('./data/ecowitt/gw1100_wh65_wh51.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(3);
@@ -103,7 +103,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1100_wn30multi sensors are created', (done) => {
-    testData = require('./data/gw1100_wn30multi.json');
+    testData = require('./data/ecowitt/gw1100_wn30multi.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(3)
@@ -115,7 +115,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1200_wh46 sensors are created', (done) => {
-    testData = require('./data/gw1200_wh46.json');
+    testData = require('./data/ecowitt/gw1200_wh46.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -126,7 +126,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw1200_wh51multi_wh40 sensors are created', (done) => {
-    testData = require('./data/gw1200_wh51multi_wh40.json');
+    testData = require('./data/ecowitt/gw1200_wh51multi_wh40.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(5);
@@ -140,7 +140,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw2000_wh51multi sensors are created', (done) => {
-    testData = require('./data/gw2000_wh51multi.json');
+    testData = require('./data/ecowitt/gw2000_wh51multi.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(4);
@@ -153,7 +153,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw2000_ws85_ws68_wn32_wn30 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws85_ws68_wn32_wn30.json');
+    testData = require('./data/ecowitt/gw2000_ws85_ws68_wn32_wn30.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(5);
@@ -167,7 +167,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw2000_ws90_wh65_wh51 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws90_wh65_wh51.json');
+    testData = require('./data/ecowitt/gw2000_ws90_wh65_wh51.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(4);
@@ -180,7 +180,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw2000_ws90_wh65_wh57_wh51multi_wh45_wh41_wn35_wn34_wn31multi_wh26 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws90_wh65_wh57_wh51multi_wh45_wh41_wn35_wn34_wn31multi_wh26.json');
+    testData = require('./data/ecowitt/gw2000_ws90_wh65_wh57_wh51multi_wh45_wh41_wn35_wn34_wn31multi_wh26.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(24);
@@ -213,7 +213,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw2000_ws90 sensors are created', (done) => {
-    testData = require('./data/gw2000_ws90.json');
+    testData = require('./data/ecowitt/gw2000_ws90.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -224,7 +224,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('gw3000 sensors are created', (done) => {
-    testData = require('./data/gw3000.json');
+    testData = require('./data/ecowitt/gw3000.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(1);
@@ -235,7 +235,7 @@ describe('Platform should be configured with accessories', () => {
 
   // NOTE: hp2550 does not create accessory
   it('hp2550_wh65_wh51multi_wh41_wn31multi_wh25 sensors are created', (done) => {
-    testData = require('./data/hp2550_wh65_wh51multi_wh41_wn31multi_wh25.json');
+    testData = require('./data/ecowitt/hp2550_wh65_wh51multi_wh41_wn31multi_wh25.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(8);
@@ -252,7 +252,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('hp2560_wh65_wn31multi sensors are created', (done) => {
-    testData = require('./data/hp2561_wh65_wn31multi.json');
+    testData = require('./data/ecowitt/hp2561_wh65_wn31multi.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(6);
@@ -267,7 +267,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('hp2564_ws90 sensors are created', (done) => {
-    testData = require('./data/hp2564_ws90.json');
+    testData = require('./data/ecowitt/hp2564_ws90.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -278,7 +278,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('wn1980_ws90_wh51multi_wn31_wn30 sensors are created', (done) => {
-    testData = require('./data/wn1980_ws90_wh51multi_wn31_wn30.json');
+    testData = require('./data/ecowitt/wn1980_ws90_wh51multi_wn31_wn30.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(6);
@@ -293,7 +293,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('wn1980_wn31 sensors are created', (done) => {
-    testData = require('./data/wn1980_wn31.json');
+    testData = require('./data/ecowitt/wn1980_wn31.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -304,7 +304,7 @@ describe('Platform should be configured with accessories', () => {
   });
 
   it('ws2900_wh65 sensors are created', (done) => {
-    testData = require('./data/ws2900_wh65.json');
+    testData = require('./data/ecowitt/ws2900_wh65.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(2);
@@ -314,9 +314,9 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
-  // NOTE: hp3800 does not create accessory
+  // NOTE: ws3800 does not create accessory b/c of presense of WH25
   it('ws3800_ws85_ws80_wh65_wh57_wh55_wh51multi_wh45_wh41multi_wn35_wn34multi_wn31multi_wn30_wh26_wh25 sensors are created', (done) => {
-    testData = require('./data/ws3800_ws85_ws80_wh65_wh57_wh55_wh51multi_wh45_wh41multi_wn35_wn34multi_wn31multi_wn30_wh26_wh25.json');
+    testData = require('./data/ecowitt/ws3800_ws85_ws80_wh65_wh57_wh55_wh51multi_wh45_wh41multi_wn35_wn34multi_wn31multi_wn30_wh26_wh25.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
     expect(platform.baseStationInfo.sensors.length).to.equal(26);

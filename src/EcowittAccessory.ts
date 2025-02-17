@@ -27,11 +27,11 @@ export class EcowittAccessory {
     accessoryInfo
       .setCharacteristic(
         this.platform.Characteristic.Manufacturer,
-        'Ecowitt',
+        platform.baseStationInfo.vendor,
       )
       .setCharacteristic(
         this.platform.Characteristic.Model,
-        modelName,
+        this.accessoryName.split(' ')[0],
       )
       .setCharacteristic(
         this.platform.Characteristic.Name,

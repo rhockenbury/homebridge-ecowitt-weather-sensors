@@ -429,6 +429,30 @@ export function v1ConfigTest(v1Config: object): boolean {
 
 //------------------------------------------------------------------------------
 
+// convert ambient data report to ecowitt data report
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function dataReportTranslator(ambDataReport: any): any {
+  const ecoDataReport = JSON.parse(JSON.stringify(ambDataReport));
+  let key, value;
+
+  for (const entry of Object.entries(ambDataReport)) {
+    key = entry[0];
+    value = entry[1];
+
+    if (key === 'battout') {
+      if (ambDataReport.stationtype.startsWith('WS1965')) {
+        delete ecoDataReport.battout;
+        ecoDataReport.wh65batt = value; // assume default sensor array
+        ecoDataReport.model = 'WN1920';
+      }
+    }
+  }
+
+  return ecoDataReport;
+}
+
+//------------------------------------------------------------------------------
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function baseStationRemapper(config: any): PlatformConfig {
   const remappedConfig = JSON.parse(JSON.stringify(config));

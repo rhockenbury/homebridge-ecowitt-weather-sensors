@@ -1,4 +1,13 @@
-### 2.7.0
+### 2.8.0-beta
+
+* Introduce limited alpha support for Ambient Weather devices (only WS1965)
+* Implement support for WN1900 / WN1910 / WN1920 Ecowitt consoles
+* Add support for WN67 5-in-1 weather sensor array
+* Resolve a bug where the comparison PASSKEY was generated incorrectly
+* Updates in Plugin UI and log messages for easier first-time setup
+* Add more documentation on setting name overrides for a sensor
+
+### 2.7.0-beta
 
 * Add more documentation on setting name overrides for a sensor
 * Add support for WN and WS series Ecowitt consoles (see README)

@@ -21,24 +21,25 @@
             "title": "MAC Address",
             "type": "string",
             "pattern": "^([A-Fa-f0-9]{2}:){5}[A-Fa-f0-9]{2}$",
-            "required": true,
+            "required": false,
             "placeholder": "e.g. 30:C9:22:3E:DD:2B",
-            "description": "The MAC address of the console or gateway"
+            "description": "The MAC address of the console or gateway<img width=\"5%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The MAC address can be omitted, leaving it empty will disable MAC validation on each received data report. If you wish to enable MAC validation, find the MAC of your gateway device and enter it here.\">"
           },
           "port": {
             "title": "Port",
             "type": "integer",
             "default": 8080,
             "minimum": 1024,
-            "description": "Port number to listen for data reports"
+            "required": true,
+            "description": "Port number to listen for data reports<img width=\"10%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Please ensure that the port entered here exactly matches the port entered for the custom server upload on your gateway device.\">"
           },
           "path": {
             "title": "Path",
             "type": "string",
-            "pattern": "^/[A-Za-z/]+[A-Za-z]$",
+            "pattern": "^/[A-Za-z/]+$",
             "required": true,
-            "default": "/data/report",
-            "description": "Host path to receive data reports"
+            "default": "/data/report/",
+            "description": "Host path to receive data reports<img width=\"10%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Please ensure that the path entered here exactly matches the path entered for the custom server upload on your gateway device. Alternatively, you can enable 'Accept Any Path' in advanced settings and not specify the path.\">"
           }
         }
       },
@@ -447,6 +448,11 @@
             "type": "boolean",
             "required": false
           },
+          "WN67": {
+            "title": "WN67",
+            "type": "boolean",
+            "required": false
+          },
           "WS68": {
             "title": "WS68",
             "type": "boolean",
@@ -640,7 +646,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the data that should not be displayed."
+          "helpvalue": "<p class=\"help-block\">Select the data that should not be displayed.<img width=\"5%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The data property will be hidden across all devices that show that specific data property.\"></p>"
         },
         {
           "type": "flex",
@@ -696,7 +702,7 @@
         },
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the devices that should not be displayed."
+          "helpvalue": "<p class=\"help-block\">Select the devices that should not be displayed.<img width=\"5%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The device will not show as an accessory and all data properties from the device will not be available.\"></p>"
         },
         {
           "type": "flex",
@@ -723,14 +729,15 @@
                 "hidden.WH45",
                 "hidden.WH46",
                 "hidden.WH51",
-                "hidden.WH55"
+                "hidden.WH55",
+                "hidden.WH57"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH57",
                 "hidden.WH65",
+                "hidden.WN67",
                 "hidden.WS68",
                 "hidden.WS80",
                 "hidden.WS85",
@@ -1002,7 +1009,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor. <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides\">See here for help</a>"
+          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor.<a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides\" target=\"_blank\"><img width=\"5%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Detailed instructions can be found by clicking here.\"></a></p>"
         },
         {
           "key": "nameOverrides",
