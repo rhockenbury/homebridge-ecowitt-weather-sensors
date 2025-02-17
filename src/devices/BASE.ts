@@ -18,7 +18,7 @@ export class BASE extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected readonly modelName: string,
   ) {
-    super(platform, accessory, `${modelName}`, `${modelName} Gateway`);
+    super(platform, accessory, 'BASE', `${modelName} Gateway`);
 
     this.requiredData = ['tempinf', 'humidityin'];
     this.unusedData = ['baromrelin', 'baromabsin'];
@@ -26,8 +26,8 @@ export class BASE extends EcowittAccessory {
     const hideConfig = this.platform.config?.hidden || {};
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
 
-    if (!utils.includesAny(hidden, ['indoorTemperature', 'BASE:indoorTemperature'])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, 'BASE:indoorTemperature');
+    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`, `${modelName}:indoorTemperature`])) {
+      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
       this.temperature = new TemperatureSensor(platform, accessory,
         `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
     } else {
@@ -36,8 +36,8 @@ export class BASE extends EcowittAccessory {
       this.temperature = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['indoorHumidity', 'BASE:indoorHumidity'])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, 'BASE:indoorHumidity');
+    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`, `${modelName}:indoorHumidity`])) {
+      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
     } else {
       this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
