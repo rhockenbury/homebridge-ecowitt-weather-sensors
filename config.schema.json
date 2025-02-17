@@ -448,6 +448,11 @@
             "type": "boolean",
             "required": false
           },
+          "WN67": {
+            "title": "WN67",
+            "type": "boolean",
+            "required": false
+          },
           "WS68": {
             "title": "WS68",
             "type": "boolean",
@@ -724,14 +729,15 @@
                 "hidden.WH45",
                 "hidden.WH46",
                 "hidden.WH51",
-                "hidden.WH55"
+                "hidden.WH55",
+                "hidden.WH57"
               ]
             },
             {
               "type": "flex",
               "items": [
-                "hidden.WH57",
                 "hidden.WH65",
+                "hidden.WN67",
                 "hidden.WS68",
                 "hidden.WS80",
                 "hidden.WS85",
