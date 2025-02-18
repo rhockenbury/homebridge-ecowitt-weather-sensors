@@ -1,4 +1,4 @@
-### 2.8.0-beta
+### 2.8.2-beta
 
 * Introduce limited alpha support for Ambient Weather devices (only WS1965)
 * Implement support for WN1900 / WN1910 / WN1920 Ecowitt consoles
