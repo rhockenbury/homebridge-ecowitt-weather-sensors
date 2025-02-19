@@ -22,7 +22,8 @@ export class WH57 extends EcowittAccessory {
     this.requiredData = ['wh57batt', 'lightning', 'lightning_num', 'lightning_time'];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     let nameOverride: string | undefined;
 

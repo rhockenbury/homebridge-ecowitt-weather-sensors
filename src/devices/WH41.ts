@@ -24,7 +24,8 @@ export class WH41 extends EcowittAccessory {
     this.requiredData = [`pm25batt${this.channel}`, `pm25_ch${this.channel}`, `pm25_avg_24h_ch${this.channel}`];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
       const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);

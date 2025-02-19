@@ -40,7 +40,8 @@ export class WS85 extends EcowittAccessory {
     this.unusedData = ['ws85cap_volt', 'ws85_ver'];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     let nameOverride: string | undefined;
 
