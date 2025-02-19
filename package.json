@@ -36,10 +36,17 @@
     "homebridge",
     "homekit",
     "ecowitt",
-    "fine-offset",
-    "ambient-weather",
+    "fine offset",
+    "ambient",
+    "ambient weather",
     "weather",
-    "weather-station"
+    "weather-station",
+    "observations",
+    "temperature",
+    "humdity",
+    "wind",
+    "pws",
+    "personal weather station"
   ],
   "dependencies": {
     "@network-utils/arp-lookup": "^2.1.0",

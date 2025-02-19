@@ -35,7 +35,8 @@ export class WH45 extends EcowittAccessory {
       'pm10_co2', 'pm10_24h_co2', 'co2', 'co2_24h'];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     let nameOverride: string | undefined;
 

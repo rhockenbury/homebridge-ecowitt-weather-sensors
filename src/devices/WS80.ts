@@ -36,7 +36,8 @@ export class WS80 extends EcowittAccessory {
       'windgustmph', 'maxdailygust'];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     let nameOverride: string | undefined;
 

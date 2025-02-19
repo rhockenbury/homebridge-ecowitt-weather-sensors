@@ -448,7 +448,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     const hideConfig = this.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     if (this.baseStationInfo.deviceName.length > 0) {
       if (!utils.includesAll(hidden, ['BASE']) && !utils.includesAll(hidden, BASE.properties)) {

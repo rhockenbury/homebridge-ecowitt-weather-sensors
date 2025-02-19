@@ -497,6 +497,7 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
     'additional': {},
     'thresholds': {},
     'hidden': {},
+    'customHidden': [],
     'units': {},
     'platform': 'Ecowitt',
   };

@@ -24,7 +24,8 @@ export class WH51 extends EcowittAccessory {
     this.unusedData = [`soilad${this.channel}`];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
       const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
