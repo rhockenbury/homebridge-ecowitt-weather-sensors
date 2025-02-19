@@ -1,3 +1,8 @@
+### 2.9.0-beta
+
+* Add custom hidden feature to hide specific service on a specific device
+* Minor updates to plugin UI such as adding additional tooltips and updating text
+
 ### 2.8.2-beta
 
 * Introduce limited alpha support for Ambient Weather devices (only WS1965)
