@@ -129,6 +129,50 @@
           }
         }
       },
+      "sensors": {
+        "title": "Sensors",
+        "type": "array",
+        "required": true,
+        "items": {
+          "title": "Custom Sensor",
+          "type": "object",
+          "notitle": true,
+          "properties": {
+            "name": {
+              "title": "Threshold Sensor Name",
+              "type": "string",
+              "minLength": 3,
+              "required": true,
+              "placeholder": "eg. Backyard High Wind Warning"
+            },
+            "dataProperty": {
+              "title": "Data Property",
+              "type": "string",
+              "required": true,
+              "notitle": true,
+              "default": "windSpeed",
+              "enum": ["windSpeed", "windGustSpeed", "windMaxDailySpeed", "rainRate", "rainEventTotal", "rainHourlyTotal", "rainDailyTotal", "rainWeeklyTotal", "rainMonthlyTotal", "rainYearlyTotal", "uvIndex", "lightningEvents", "lightningDistance", "lightningTime"],
+              "enumNames": ["Wind Speed", "Wind Gust Speed", "Wind Max Daily Speed", "Rain Rate", "Rain Event Total", "Rain Hourly Total", "Rain Daily Total", "Rain Weekly Total", "Rain Monthly Total", "Rain Yearly Total", "UV Index", "Lightning Events", "Lightning Distance", "Lightning Time"]
+            },
+            "comparator": {
+              "title": "Comparator",
+              "type": "string",
+              "required": true,
+              "notitle": true,
+              "default": "gt",
+              "enum": ["gt", "lt"],
+              "enumNames": ["Greater than", "Less than"]
+            },
+            "threshold": {
+              "title": "Threshold",
+              "type": "number",
+              "required": true,
+              "notitle": true,
+              "placeholder": "eg. 12.5"
+            }
+          }
+        }
+      },
       "thresholds": {
         "type": "object",
         "properties": {
@@ -649,7 +693,7 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Hide Values",
+      "title": "Hidden Values",
       "displayFlex": true,
       "items": [
         {
@@ -760,7 +804,7 @@
         },
         {
           "key": "customHidden",
-          "add": "Hide Another Item",
+          "title": "Hidden Values",
           "notitle": true,
           "type": "flex",
           "startEmpty": true,
@@ -774,248 +818,127 @@
       "type": "fieldset",
       "expandable": true,
       "expanded": false,
-      "title": "Trigger Thresholds",
+      "title": "Threshold Triggers",
       "displayFlex": true,
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure the thresholds to trigger the sensor.<img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Select units first before configuring this section. Leave threshold empty for no trigger on that data property.\"></p>"
+          "helpvalue": "<p class=\"help-block\">Configure the thresholds to trigger the motion sensor.<img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Select units first before configuring thresholds. Currently only supports one threshold trigger per data property.\"></p>"
         },
         {
           "type": "flex",
-          "flex-flow": "row wrap",
-          "flex": "3 3",
+          "key": "sensors",
+          "title": "Threshold Triggers",
+          "notitle": true,
           "items": [
             {
               "type": "flex",
+              "flex-flow": "row wrap",
+              "flex": "3 3",
               "items": [
                 {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Speed (mph)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mph';"
-                  }
+                  "type": "flex",
+                  "items": [
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>When the data property...<strong>"
+                    },
+                    "sensors[].dataProperty"
+                  ]
                 },
                 {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Speed (kts)<strong>&nbsp;&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kts';"
-                  }
+                  "type": "flex",
+                  "items": [
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>is...<strong>"
+                    },
+                    "sensors[].comparator"
+                  ]
                 },
                 {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Speed (kph)<strong>&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kph';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Speed (mps)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mps';"
-                  }
-                },
-                "thresholds.windSpeed",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Gust Speed (mph)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mph';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Gust Speed (kts)<strong>&nbsp;&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kts';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Gust Speed (kph)<strong>&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kph';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Gust Speed (mps)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mps';"
-                  }
-                },
-                "thresholds.windGustSpeed",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Max Daily Speed (mph)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mph';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Max Daily Speed (kts)<strong>&nbsp;&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kts';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Max Daily Speed (kph)<strong>&nbsp;",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'kph';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Wind Max Daily Speed (mps)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.wind === 'mps';"
-                  }
-                },
-                "thresholds.windMaxDailySpeed",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Rate (in/h)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Rate (mm/h)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainRate",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Event Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Event Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainEventTotal",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Hourly Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Hourly Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainHourlyTotal",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Daily Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Daily Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainDailyTotal"
-              ]
-            },
-            {
-              "type": "flex",
-              "items": [
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Weekly Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Weekly Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainWeeklyTotal",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Monthly Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Monthly Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainMonthlyTotal",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Yearly Total (in)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'in';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Rain Yearly Total (mm)<strong>",
-                  "condition": {
-                    "functionBody": "return model.units.rain === 'mm';"
-                  }
-                },
-                "thresholds.rainYearlyTotal",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>UV Index<strong>"
-                },
-                "thresholds.uvIndex",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Lightning Events<strong>"
-                },
-                "thresholds.lightningEvents",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Lightning Distance (mi)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
-                  "condition": {
-                    "functionBody": "return model.units.distance === 'mi';"
-                  }
-                },
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Lightning Distance (km)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
-                  "condition": {
-                    "functionBody": "return model.units.distance === 'km';"
-                  }
-                },
-                "thresholds.lightningDistance",
-                {
-                  "type": "help",
-                  "helpvalue": "<strong>Lightning Time (secs)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">"
-                },
-                "thresholds.lightningTime"
+                  "type": "flex",
+                  "items": [
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (mph) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'mph');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (kts) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'kts');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (kph) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'kph');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (mps) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'mps');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (in) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('rain') && model.units.rain === 'in');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (mm) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('rain') && model.units.rain === 'mm');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold of...<strong>",
+                      "condition": {
+                        "functionBody": "return model.sensors[arrayIndices].dataProperty.startsWith('uv');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold of...<strong>",
+                      "condition": {
+                        "functionBody": "return model.sensors[arrayIndices].dataProperty.startsWith('lightningEvents');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (miles) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('lightningDistance') && model.units.distance === 'mi');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (km) of...<strong>",
+                      "condition": {
+                        "functionBody": "return (model.sensors[arrayIndices].dataProperty.startsWith('lightningDistance') && model.units.distance === 'km');"
+                      }
+                    },
+                    {
+                      "type": "help",
+                      "helpvalue": "<strong>the threshold (secs) of...<strong>",
+                      "condition": {
+                        "functionBody": "return model.sensors[arrayIndices].dataProperty.startsWith('lightningTime');"
+                      }
+                    },
+                    "sensors[].threshold"
+                  ]
+                }
               ]
             }
           ]
@@ -1031,7 +954,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a sensor.<a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides\" target=\"_blank\"><img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Detailed instructions for setting the Service ID can be found by clicking here.\"></a></p>"
+          "helpvalue": "<p class=\"help-block\">Configure custom names for the services on a device.<a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Name-Overrides\" target=\"_blank\"><img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Detailed instructions for setting the Service ID can be found by clicking here.\"></a></p>"
         },
         {
           "key": "nameOverrides",
