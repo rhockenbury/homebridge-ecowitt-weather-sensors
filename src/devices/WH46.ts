@@ -37,7 +37,8 @@ export class WH46 extends EcowittAccessory {
     this.unusedData = ['pm1_co2', 'pm1_24h_co2', 'pm4_co2', 'pm4_24h_co2'];
 
     const hideConfig = this.platform.config?.hidden || {};
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]);
+    const hideConfigCustom = this.platform.config?.customHidden || [];
+    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
 
     let nameOverride: string | undefined;
 

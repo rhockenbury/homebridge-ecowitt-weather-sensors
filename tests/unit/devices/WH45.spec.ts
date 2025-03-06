@@ -31,6 +31,7 @@ configs.forEach(config => {
     });
 
     beforeEach('Reset config', () => {
+      platform.baseStationInfo.protocol = "Ecowitt";
       platform.config.nameOverrides = [];
       platform.config.hidden = {};
     });

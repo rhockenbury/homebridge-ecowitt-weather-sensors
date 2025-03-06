@@ -1,3 +1,14 @@
+### 2.10.0
+
+* Add support for most Ambient Weather stations and sensors
+* Add logic to create accessory for base station even if station model is not recognized
+* Accept both PASSKEY and MAC for data report source validation
+
+### 2.9.0-beta
+
+* Add custom hidden feature to hide specific service on a specific device
+* Minor updates to plugin UI such as adding additional tooltips and updating text
+
 ### 2.8.2-beta
 
 * Introduce limited alpha support for Ambient Weather devices (only WS1965)

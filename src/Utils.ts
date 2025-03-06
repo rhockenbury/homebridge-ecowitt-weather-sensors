@@ -22,6 +22,17 @@ export const CHAR_INTENSITY_UUID = 'fdd76937-37bb-49f2-b1a0-0705fe548782';
 
 //------------------------------------------------------------------------------
 
+// protocol types
+export const ECOWITT = 'Ecowitt';
+export const AMBIENT = 'Ambient';
+export const UNDERGROUND = 'Underground';
+
+//------------------------------------------------------------------------------
+
+export const UNKNOWN = 'Unknown';
+
+//------------------------------------------------------------------------------
+
 // config keys
 export const v1ConfigKeys = ['mac', 'port', 'path', 'unregister', 'ws', 'thbin', 'th', 'tf', 'soil', 'leak', 'pm25', 'lightning'];
 export const v2ConfigKeys = ['baseStation', 'nameOverrides', 'additional', 'thresholds', 'hidden', 'units'];
@@ -435,17 +446,247 @@ export function dataReportTranslator(ambDataReport: any): any {
   const ecoDataReport = JSON.parse(JSON.stringify(ambDataReport));
   let key, value;
 
+  const wh65Prop = ['wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+    'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
+    'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
+  const wh67Prop = ['wh65batt', 'tempf', 'humidity', 'winddir', 'windspeedmph',
+    'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
+    'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
+  const wh80Prop = ['wh80batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+    'windgustmph', 'maxdailygust'];
+  const wh90Prop = ['wh90batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+    'windgustmph', 'maxdailygust', 'rrain_piezo', 'erain_piezo', 'hrain_piezo',
+    'drain_piezo', 'wrain_piezo', 'mrain_piezo', 'yrain_piezo'];
+
   for (const entry of Object.entries(ambDataReport)) {
     key = entry[0];
     value = entry[1];
 
+    // battout maps to the sensor array battery which depends on the product bundle
     if (key === 'battout') {
+      // verified - from data report
       if (ambDataReport.stationtype.startsWith('WS1965')) {
-        delete ecoDataReport.battout;
-        ecoDataReport.wh65batt = value; // assume default sensor array
+        ecoDataReport.wh65batt = value; // wh67 default
+
+        if (includesAll(Object.keys(ecoDataReport), wh67Prop)) {
+          delete ecoDataReport.battout;
+        } else {
+          delete ecoDataReport.wh65batt;
+        }
+
         ecoDataReport.model = 'WN1920';
       }
+
+      // verified - self-tested
+      if (ambDataReport.stationtype.startsWith('AMBWeatherPro')) { // WS2000, WS2902
+        ecoDataReport.wh65batt = value; // wh65 default
+
+        if (includesAll(Object.keys(ecoDataReport), wh65Prop)) {
+          delete ecoDataReport.battout;
+        } else {
+          delete ecoDataReport.wh65batt;
+        }
+
+        if (ambDataReport.battin !== undefined) {  // WS2000 comes with WH25 for indoor
+          ecoDataReport.model = 'HP2550';  // WS2000
+        } else {
+          ecoDataReport.model = 'WS2900';  // WS2902
+        }
+      }
+
+      if (ambDataReport.stationtype.startsWith('WS4000')) {
+        ecoDataReport.wh90batt = value; // ws90 default
+
+        if (includesAll(Object.keys(ecoDataReport), wh90Prop)) {
+          delete ecoDataReport.battout;
+        } else {
+          delete ecoDataReport.wh90batt;
+        }
+
+        ecoDataReport.model = 'HP2550';
+      }
+
+      if (ambDataReport.stationtype.startsWith('WS5000')) {
+        ecoDataReport.wh80batt = value; // ws80 default
+
+        if (includesAll(Object.keys(ecoDataReport), wh80Prop)) {
+          delete ecoDataReport.battout;
+        } else {
+          delete ecoDataReport.wh80batt;
+        }
+
+        ecoDataReport.model = 'HP2550';
+      }
+
+      // verified - from data report
+      if (ambDataReport.stationtype.startsWith('OBSERVERIP')) { // WS5000
+        ecoDataReport.wh80batt = value; // ws80 default
+
+        if (includesAll(Object.keys(ecoDataReport), wh80Prop)) {
+          delete ecoDataReport.battout;
+        } else {
+          delete ecoDataReport.wh80batt;
+        }
+
+        ecoDataReport.model = 'OBSERVERIP';
+      }
+
+      // if no sensor array matched, then assume outdoor TH sensor
+      if (ecoDataReport.battout !== undefined) {
+        delete ecoDataReport.battout;
+        ecoDataReport.wh26batt = value;
+        ecoDataReport.model = UNKNOWN;
+      }
     }
+
+    // indoor temp/humdity sensor - wh25
+    if (key === 'battin') {
+      delete ecoDataReport.battin;
+      ecoDataReport.wh25batt = value;
+    }
+
+    // rain detector - wh40
+    if (key === 'battrain') {
+      delete ecoDataReport.battrain;
+      ecoDataReport.wh40batt = value;
+    }
+
+    // pm25 outdoor sensor - wh41, ch1
+    if (key === 'batt_25') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25batt1 = value;
+    }
+
+    if (key === 'pm25') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_ch1 = value;
+    }
+
+    if (key === 'pm25_24hr') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_avg_24h_ch1 = value;
+    }
+
+    // pm25 indoor sensor - wh43, ch2
+    if (key === 'batt_25in') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25batt2 = value;
+    }
+
+    if (key === 'pm25_in') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_ch2 = value;
+    }
+
+    if (key === 'pm25_in_24hr') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_avg_24h_ch2 = value;
+    }
+
+    // air quality sensor - wh45
+    if (key.startsWith('batt_co2')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('batt_co2', 'co2_batt')] = value;
+    }
+
+    if (key === 'pm_in_temp_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.tf_co2 = value;
+    }
+
+    if (key === 'pm_in_humidity_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.humi_co2 = value;
+    }
+
+    if (key === 'pm10_in_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm10_co2 = value;
+    }
+
+    if (key === 'pm10_in_24h_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm10_24h_co2 = value;
+    }
+
+    if (key === 'pm25_in_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_co2 = value;
+    }
+
+    if (key === 'pm25_in_24h_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.pm25_24h_co2 = value;
+    }
+
+    if (key === 'co2_in_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.co2 = value;
+    }
+
+    if (key === 'co2_in_24h_aqin') {
+      delete ecoDataReport[key];
+      ecoDataReport.co2_24h = value;
+    }
+
+    // soil moisture sensor - wh51
+    if (key.startsWith('battsm')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('battsm', 'soilbatt')] = value;
+    }
+
+    if (key.startsWith('soilhum')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('soilhum', 'soilmoisture')] = value;
+    }
+
+    // leak sensor - wh55
+    if (key.startsWith('batleak')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('batleak', 'leakbatt')] = value;
+    }
+
+    if (key.startsWith('leak')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('leak', 'leak_ch')] = value;
+    }
+
+    // lightning sensor - wh57
+    if (key === 'batt_lightning') {
+      delete ecoDataReport.batt_lightning;
+      ecoDataReport.wh57batt = value;
+    }
+
+    if (key === 'lightning_distance') {
+      delete ecoDataReport.lightning_distance;
+      ecoDataReport.lightning = value;
+    }
+
+    if (key === 'lightning_day') {
+      delete ecoDataReport.lightning_day;
+      ecoDataReport.lightning_num = value;
+    }
+
+    if (key === 'lightning_hour' && ambDataReport.lightning_day === undefined) {
+      delete ecoDataReport.lightning_hour;
+      ecoDataReport.lightning_num = value;
+    }
+
+    // leaf wetness sensor - wn35
+    if (key.startsWith('batt_lw')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('batt_lw', 'leaf_batt')] = value;
+    }
+
+    if (key.startsWith('leafwetness')) {
+      delete ecoDataReport[key];
+      ecoDataReport[key.replace('leafwetness', 'leafwetness_ch')] = value;
+    }
+  }
+
+  // set model if not detected
+  if (ecoDataReport.model === undefined) {
+    ecoDataReport.model = UNKNOWN;
   }
 
   return ecoDataReport;
@@ -497,6 +738,7 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
     'additional': {},
     'thresholds': {},
     'hidden': {},
+    'customHidden': [],
     'units': {},
     'platform': 'Ecowitt',
   };
