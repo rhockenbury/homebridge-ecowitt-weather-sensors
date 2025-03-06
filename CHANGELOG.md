@@ -1,3 +1,9 @@
+### 2.10.0
+
+* Add support for most Ambient Weather stations and sensors
+* Add logic to create accessory for base station even if station model is not recognized
+* Accept both PASSKEY and MAC for data report source validation
+
 ### 2.9.0-beta
 
 * Add custom hidden feature to hide specific service on a specific device

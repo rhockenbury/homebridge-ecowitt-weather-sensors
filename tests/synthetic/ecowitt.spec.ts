@@ -20,6 +20,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[5].type).to.equal("WH26");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -38,6 +39,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[7].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[8].type).to.equal("WN31");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(2); // blank lightning values
     done();
   });
 
@@ -53,6 +55,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[5].type).to.equal("WH26");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -66,6 +69,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH65");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH26");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -76,6 +80,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors.length).to.equal(1);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1000");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -87,6 +92,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1100");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH51");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -99,6 +105,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // solar radiation minimum
     done();
   });
 
@@ -111,6 +118,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WN30");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WN30");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -122,6 +130,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1200");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH46");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -135,7 +144,8 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WH40");
-    expect(platform.unconsumedReportData.length).to.equal(1); // 'totalrainin'
+    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -149,6 +159,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -163,6 +174,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WN30");
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WH26");
     expect(platform.unconsumedReportData.length).to.equal(1); // srain_piezo
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -176,6 +188,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH65");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(2); // solar radiation minimum
     done();
   });
 
@@ -209,6 +222,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[22].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[23].type).to.equal("WH26");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -220,6 +234,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW2000");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WS90");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -230,6 +245,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors.length).to.equal(1);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("GW3000");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -248,10 +264,24 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[6].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[7].type).to.equal("WH25");
     expect(platform.unconsumedReportData.length).to.equal(2);  // 'winddir_avg10m', 'windspdmph_avg10m'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // no base station required
     done();
   });
 
-  it('hp2560_wh65_wn31multi sensors are created', (done) => {
+  // NOTE: hp2551 does not create accessory
+  it('hp2551_wh65_wh25 sensors are created', (done) => {
+    testData = require('./data/ecowitt/hp2551_wh65_wh25.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(2);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("WH65");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH25");
+    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // no base station required
+    done();
+  });
+
+  it('hp2561_wh65_wn31multi sensors are created', (done) => {
     testData = require('./data/ecowitt/hp2561_wh65_wn31multi.json');
     platform = createPlatform("synthetic");
     platform.onDataReport(testData);
@@ -263,6 +293,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[5].type).to.equal("WN31");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(2); // low interval, solar radiation minimum
     done();
   });
 
@@ -274,6 +305,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("HP2564");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WS90");
     expect(platform.unconsumedReportData.length).to.equal(5); // 'gain10_piezo', 'gain20_piezo', 'gain30_piezo', 'gain40_piezo', 'gain50_piezo'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -289,6 +321,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[4].type).to.equal("WN31");
     expect(platform.baseStationInfo.sensors[5].type).to.equal("WN30");
     expect(platform.unconsumedReportData.length).to.equal(1); // 'console_batt'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -300,6 +333,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WN1980");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WN31");
     expect(platform.unconsumedReportData.length).to.equal(1); // 'console_batt'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -311,6 +345,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
     expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // solar radiation minimum
     done();
   });
 
@@ -347,6 +382,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[24].type).to.equal("WH26");
     expect(platform.baseStationInfo.sensors[25].type).to.equal("WH25");
     expect(platform.unconsumedReportData.length).to.equal(1); // 'console_batt'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(2); // no base station required, low interval
     done();
   });
 });

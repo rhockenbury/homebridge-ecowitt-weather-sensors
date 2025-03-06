@@ -37,7 +37,7 @@ configs.forEach(config => {
     before('Initialize device', () => {
       platform = createPlatform(config);
       accessory = new api.platformAccessory('Accessory', "5746853e-4fee-4e47-97dd-53065ef1de03");
-
+      platform.baseStationInfo.protocol = "Ecowitt";
       platform.config.nameOverrides = [];
       platform.config.hidden = {};
 

@@ -6,7 +6,7 @@ import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 export class WH40 extends EcowittAccessory {
-  static readonly properties: string[] = ['rainRate', 'rainEventTotal', 'rainHourlyTotal',
+  static readonly properties: string[] = ['rainEventTotal', 'rainHourlyTotal',
     'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
 
   protected battery: BatterySensor | undefined;
@@ -25,9 +25,11 @@ export class WH40 extends EcowittAccessory {
     super(platform, accessory, 'WH40', 'WH40 Rainfall Sensor');
 
     this.requiredData = [
-      'wh40batt', 'rainratein', 'eventrainin', 'hourlyrainin', 'dailyrainin',
+      'wh40batt', 'eventrainin', 'hourlyrainin', 'dailyrainin',
       'weeklyrainin', 'monthlyrainin', 'yearlyrainin',
     ];
+    this.optionalData = ['rainratein'];
+    this.unusedData = ['totalrainin'];
 
     const hideConfig = this.platform.config?.hidden || {};
     const hideConfigCustom = this.platform.config?.customHidden || [];
@@ -44,7 +46,8 @@ export class WH40 extends EcowittAccessory {
       this.battery = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
+    // current rain rate only appears in ecowitt data reports
+    if (this.platform.isEcowitt() && !utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainrate`);
       this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, nameOverride || 'Rain Rate');
     } else {
