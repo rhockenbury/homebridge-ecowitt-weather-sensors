@@ -73,8 +73,7 @@
     "date-fns": "^3.6.0",
     "deepmerge": "^4.3.1",
     "express": "^4.21.0",
-    "telnet-client": "^2.2.5",
-    "winston-transport": "^4.9.0"
+    "telnet-client": "^2.2.5"
   },
   "devDependencies": {
     "@types/node": "^20.14.12",
@@ -95,6 +94,7 @@
     "ts-node": "^9.1.1",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
-    "winston": "^3.14.1"
+    "winston": "^3.14.1",
+    "winston-transport": "^4.9.0"
   }
 }

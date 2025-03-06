@@ -250,8 +250,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     // to start discovery of new accessories.
     this.api.on('didFinishLaunching', () => {
       this.dataReportServer.listen(port, () => {
-        this.log.success(`Setup complete, plugin is listening for data reports on ${port} '${encodedPath}'`);
-        this.log.success(`See ${utils.GATEWAY_SETUP_LINK} for help with sending data reports to this plugin`);
+        this.log.info(`Setup complete, plugin is listening for data reports on ${port} '${encodedPath}'`);
+        this.log.info(`See ${utils.GATEWAY_SETUP_LINK} for help with sending data reports to this plugin`);
       }).on('error', (err) => {
         if (err instanceof Error) {
           if (err['code'] === 'EADDRINUSE') {

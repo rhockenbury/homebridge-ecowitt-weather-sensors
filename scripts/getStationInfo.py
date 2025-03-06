@@ -1,3 +1,6 @@
+#
+# This script will fetch information directly from the base station.
+#
 
 import socket
 
