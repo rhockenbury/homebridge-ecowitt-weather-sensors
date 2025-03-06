@@ -27,8 +27,8 @@ This plugin runs a server that can receive data reports from your weather statio
 
 ## Requirements
 
-* Wifi Gateway or Display Console such as the Ecowitt GW2000 or the Ambient WS4000 ([check supported devices](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#supported-devices))
-* For Ecowitt (and most other white-labels), the **WSView Plus** app ([iOS](https://apps.apple.com/us/app/wsview-plus/id1581353359)/ [Android](https://play.google.com/store/apps/details?id=com.ost.wsautool))
+* Wifi Gateway or Display Console such as the Ecowitt GW2000 or the Ambient WS4000 ([supported devices](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors?tab=readme-ov-file#supported-devices))
+* For Ecowitt (and most other white-labels), the **WSView Plus** app ([iOS](https://apps.apple.com/us/app/wsview-plus/id1581353359) / [Android](https://play.google.com/store/apps/details?id=com.ost.wsautool))
 * For Ambient products, the **awnet** app ([iOS](https://apps.apple.com/us/app/awnet/id1341994564) / [Android](https://play.google.com/store/apps/details?id=com.dtston.ambienttoolplus))
 
 > :warning: **This plugin uses a few custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Eve](https://www.evehome.com/en-us/eve-app), [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended, but not required.**
