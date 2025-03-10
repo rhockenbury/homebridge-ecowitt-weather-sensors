@@ -71,7 +71,7 @@
             "type": "string",
             "required": true,
             "default": "enabled",
-            "description": "Enable or disable weather metric values <br> in the service names",
+            "description": "Enable or disable data property values <br> in the service names",
             "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
@@ -196,7 +196,14 @@
             "required": false
           },
           "rainYearlyTotal": {
-            "title": "Rain Monthly Total",
+            "title": "Rain Yearly Total",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
+          "rainTotal": {
+            "title": "Rain Total",
             "type": "number",
             "labelHtmlClass": "d-none",
             "notitle": true,
@@ -237,6 +244,21 @@
       "hidden": {
         "type": "object",
         "properties": {
+          "airGap": {
+            "title": "Air Gap",
+            "type": "boolean",
+            "required": false
+          },
+          "currentDepth": {
+            "title": "Current Depth",
+            "type": "boolean",
+            "required": false
+          },
+          "totalDepth": {
+            "title": "Total Depth",
+            "type": "boolean",
+            "required": false
+          },
           "windDirection": {
             "title": "Wind Direction",
             "type": "boolean",
@@ -289,6 +311,11 @@
           },
           "rainYearlyTotal": {
             "title": "Rain Yearly Total",
+            "type": "boolean",
+            "required": false
+          },
+          "rainTotal": {
+            "title": "Rain Total",
             "type": "boolean",
             "required": false
           },
@@ -389,6 +416,11 @@
           },
           "BASE": {
             "title": "BASE",
+            "type": "boolean",
+            "required": false
+          },
+          "LDS01": {
+            "title": "LDS01",
             "type": "boolean",
             "required": false
           },
@@ -541,35 +573,67 @@
             "required": true,
             "oneOf": [
               {
+                "title": "Inches",
+                "enum": [
+                  "in"
+                ]
+              },
+              {
+                "title": "Millimeters",
+                "enum": [
+                  "mm"
+                ]
+              }
+            ]
+          },
+          "lightningDistance": {
+            "title": "Lightning Distance",
+            "type": "string",
+            "default": "mi",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Miles",
+                "enum": [
+                  "mi"
+                ]
+              },
+              {
+                "title": "Kilometers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+                "enum": [
+                  "km"
+                ]
+              }
+            ]
+          },
+          "laserDistance": {
+            "title": "Laser Distance",
+            "type": "string",
+            "default": "in",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Inches",
+                "enum": [
+                  "in"
+                ]
+              },
+              {
+                "title": "Feet",
+                "enum": [
+                  "ft"
+                ]
+              },
+              {
                 "title": "Millimeters",
                 "enum": [
                   "mm"
                 ]
               },
               {
-                "title": "Inches",
+                "title": "Meters",
                 "enum": [
-                  "in"
-                ]
-              }
-            ]
-          },
-          "distance": {
-            "title": "Distance",
-            "type": "string",
-            "default": "mi",
-            "required": true,
-            "oneOf": [
-              {
-                "title": "Kilometers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
-                "enum": [
-                  "km"
-                ]
-              },
-              {
-                "title": "Miles",
-                "enum": [
-                  "mi"
+                  "mt"
                 ]
               }
             ]
@@ -607,7 +671,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive weather data.</p>"
+          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive data reports.</p>"
         },
         {
           "type": "flex",
@@ -639,26 +703,31 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Select the units for the weather data.</p>"
+          "helpvalue": "<p class=\"help-block\">Select the units for the data properties.</p>"
         },
         {
           "type": "flex",
           "flex-flow": "row wrap",
-          "flex": "3 3",
+          "flex": "2 2",
           "notitle": true,
           "items": [
-            "units.wind",
-            "units.distance"
-          ]
-        },
-        {
-          "type": "flex",
-          "flex-flow": "row wrap",
-          "flex": "3 3",
-          "notitle": true,
-          "items": [
-            "units.temperature",
-            "units.rain"
+            {
+              "type": "flex",
+              "notitle": true,
+              "items": [
+                "units.wind",
+                "units.temperature",
+                "units.laserDistance"
+              ]
+            },
+            {
+              "type": "flex",
+              "notitle": true,
+              "items": [
+                "units.rain",
+                "units.lightningDistance"
+              ]
+            }
           ]
         }
       ]
@@ -693,14 +762,15 @@
                 "hidden.rainHourlyTotal",
                 "hidden.rainDailyTotal",
                 "hidden.rainWeeklyTotal",
-                "hidden.rainMonthlyTotal"
+                "hidden.rainMonthlyTotal",
+                "hidden.rainYearlyTotal",
+                "hidden.rainTotal"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
-                "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
                 "hidden.uvIndex",
                 "hidden.indoorTemperature",
@@ -709,15 +779,15 @@
                 "hidden.humidity",
                 "hidden.soilMoisture",
                 "hidden.waterLeak",
-                "hidden.leafWetness"
+                "hidden.leafWetness",
+                "hidden.airQualityPM10",
+                "hidden.airQualityPM10Avg"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
-                "hidden.airQualityPM10",
-                "hidden.airQualityPM10Avg",
                 "hidden.airQualityPM25",
                 "hidden.airQualityPM25Avg",
                 "hidden.carbonDioxide",
@@ -725,6 +795,9 @@
                 "hidden.lightningEvents",
                 "hidden.lightningDistance",
                 "hidden.lightningTime",
+                "hidden.airGap",
+                "hidden.currentDepth",
+                "hidden.totalDepth",
                 "hidden.battery"
               ]
             }
@@ -745,31 +818,32 @@
               "notitle": true,
               "items": [
                 "hidden.BASE",
+                "hidden.LDS01",
                 "hidden.WH25",
                 "hidden.WH26",
                 "hidden.WN30",
                 "hidden.WN31",
-                "hidden.WN34",
-                "hidden.WN35"
+                "hidden.WN34"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.WN35",
                 "hidden.WH40",
                 "hidden.WH41",
                 "hidden.WH45",
                 "hidden.WH46",
                 "hidden.WH51",
-                "hidden.WH55",
-                "hidden.WH57"
+                "hidden.WH55"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.WH57",
                 "hidden.WH65",
                 "hidden.WN67",
                 "hidden.WS68",
@@ -1055,25 +1129,25 @@
                 "thresholds.lightningEvents",
                 {
                   "type": "help",
-                  "helpvalue": "<strong>Lightning Distance (mi)<strong>&nbsp;<img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
+                  "helpvalue": "<strong>Lightning Distance (mi)<strong>&nbsp;<img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the data property is greater than the threshold.\">",
                   "htmlClass": "mb-0",
                   "condition": {
-                    "functionBody": "return model.units.distance === 'mi';"
+                    "functionBody": "return model.units.lightningDistance === 'mi';"
                   }
                 },
                 {
                   "type": "help",
-                  "helpvalue": "<strong>Lightning Distance (km)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
+                  "helpvalue": "<strong>Lightning Distance (km)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the data property is greater than the threshold.\">",
                   "htmlClass": "mb-0",
                   "condition": {
-                    "functionBody": "return model.units.distance === 'km';"
+                    "functionBody": "return model.units.lightningDistance === 'km';"
                   }
                 },
                 "thresholds.lightningDistance",
                 {
                   "type": "help",
                   "htmlClass": "mb-0",
-                  "helpvalue": "<strong>Lightning Time (secs)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">"
+                  "helpvalue": "<strong>Lightning Time (secs)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the data property is greater than the threshold.\">"
                 },
                 "thresholds.lightningTime"
               ]
