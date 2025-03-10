@@ -8,7 +8,7 @@ let platform = null;
 let accessory = null;
 let sensor = null;
 
-const dataReport = {
+const dataReport1 = {
   "dateutc": "2024-07-24 19:04:22",
   "tempf": "80.78",
   "humidity": "49",
@@ -19,6 +19,26 @@ const dataReport = {
   "solarradiation": "291.16",
   "uv": "1",
   "rainratein": "0.03",
+  "eventrainin": "0.4",
+  "hourlyrainin": "0.5",
+  "dailyrainin": "0.000",
+  "weeklyrainin": "0.272",
+  "monthlyrainin": "0.819",
+  "yearlyrainin": "0.819",
+  "totalrainin": "0.819",
+  "wh65batt": "0",
+};
+
+const dataReport2 = {
+  "dateutc": "2024-07-24 19:04:22",
+  "tempf": "80.78",
+  "humidity": "49",
+  "winddir": "285",
+  "windspeedmph": "0.0",
+  "windgustmph": "5.62",
+  "maxdailygust": "1.79",
+  "solarradiation": "291.16",
+  "uv": "1",
   "eventrainin": "0.4",
   "hourlyrainin": "0.5",
   "dailyrainin": "0.000",
@@ -66,6 +86,7 @@ configs.forEach(config => {
       expect(device.weeklyRain).to.not.be.undefined;
       expect(device.monthlyRain).to.not.be.undefined;
       expect(device.yearlyRain).to.not.be.undefined;
+      expect(device.totalRain).to.not.be.undefined;
 
       expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature");
@@ -83,13 +104,14 @@ configs.forEach(config => {
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total");
       expect(device.yearlyRain.service.characteristics[0].value).to.equal("Rain Yearly Total");
+      expect(device.totalRain.service.characteristics[0].value).to.equal("Rain Total");
       done();
     });
 
 
     it('Update is called successfully', (done) => {
       device = new WH65(platform, accessory);
-      device.update(dataReport);
+      device.update(dataReport1);
 
       expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
       expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
@@ -107,6 +129,32 @@ configs.forEach(config => {
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total 0.3 in");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total 0.8 in");
       expect(device.yearlyRain.service.characteristics[0].value).to.equal("Rain Yearly Total 0.8 in");
+      expect(device.totalRain.service.characteristics[0].value).to.equal("Rain Total 0.8 in");
+      done();
+    });
+
+    it('Update is called successfully with no optional data', (done) => {
+      device.update(dataReport2);
+
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
+      expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
+      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
+      expect(device.solarRadiation.service.characteristics[0].value).to.equal("Solar Radiation 36890lx");
+      expect(device.uvIndex.service.characteristics[0].value).to.equal("UV Index 1");
+      expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction 285° (W)");
+      expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed 0.0 mph");
+      expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
+      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Wind Max Daily Speed 1.8 mph");
+      expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total 0.4 in");
+      expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total 0.5 in");
+      expect(device.dailyRain.service.characteristics[0].value).to.equal("Rain Daily Total 0.0 in");
+      expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total 0.3 in");
+      expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total 0.8 in");
+      expect(device.yearlyRain.service.characteristics[0].value).to.equal("Rain Yearly Total 0.8 in");
+
+      // optional
+      expect(device.rainRate).to.be.undefined;
+      expect(device.totalRain).to.be.undefined;
       done();
     });
 
@@ -126,6 +174,7 @@ configs.forEach(config => {
       platform.config.nameOverrides[12] = {"key": "WH65:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
       platform.config.nameOverrides[13] = {"key": "WH65:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
       platform.config.nameOverrides[14] = {"key": "WH65:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
+      platform.config.nameOverrides[15] = {"key": "WH65:rainTotal", "value": "Test Rain Total Name"};
 
       device = new WH65(platform, accessory);
 
@@ -144,6 +193,7 @@ configs.forEach(config => {
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Test Rain Weekly Total Name");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Test Rain Monthly Total Name");
       expect(device.yearlyRain.service.characteristics[0].value).to.equal("Test Rain Yearly Total Name");
+      expect(device.totalRain.service.characteristics[0].value).to.equal("Test Rain Total Name");
       done();
     });
 
@@ -163,6 +213,7 @@ configs.forEach(config => {
       platform.config.hidden["rainWeeklyTotal"] = true;
       platform.config.hidden["rainMonthlyTotal"] = true;
       platform.config.hidden["rainYearlyTotal"] = true;
+      platform.config.hidden["rainTotal"] = true;
 
       device = new WH65(platform, accessory);
 
@@ -181,6 +232,7 @@ configs.forEach(config => {
       expect(device.weeklyRain).to.be.undefined;
       expect(device.monthlyRain).to.be.undefined;
       expect(device.yearlyRain).to.be.undefined;
+      expect(device.totalRain).to.be.undefined;
       done();
     });
 
@@ -200,6 +252,7 @@ configs.forEach(config => {
       platform.config.hidden["WH65:rainWeeklyTotal"] = true;
       platform.config.hidden["WH65:rainMonthlyTotal"] = true;
       platform.config.hidden["WH65:rainYearlyTotal"] = true;
+      platform.config.hidden["WH65:rainTotal"] = true;
 
       device = new WH65(platform, accessory);
 
@@ -218,6 +271,7 @@ configs.forEach(config => {
       expect(device.weeklyRain).to.be.undefined;
       expect(device.monthlyRain).to.be.undefined;
       expect(device.yearlyRain).to.be.undefined;
+      expect(device.totalRain).to.be.undefined;
       done();
     });
   });

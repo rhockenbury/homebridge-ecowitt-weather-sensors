@@ -6,8 +6,8 @@ import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 export class WH40 extends EcowittAccessory {
-  static readonly properties: string[] = ['rainEventTotal', 'rainHourlyTotal',
-    'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
+  static readonly properties: string[] = ['rainRate', 'rainEventTotal', 'rainHourlyTotal',
+    'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal', 'rainTotal'];
 
   protected battery: BatterySensor | undefined;
   protected rainRate: RainSensor | undefined;
@@ -17,6 +17,7 @@ export class WH40 extends EcowittAccessory {
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
   protected yearlyRain: RainSensor | undefined;
+  protected totalRain: RainSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -27,8 +28,7 @@ export class WH40 extends EcowittAccessory {
     this.requiredData = [
       'wh40batt', 'eventrainin', 'hourlyrainin', 'dailyrainin',
       'weeklyrainin', 'monthlyrainin'];
-    this.optionalData = ['yearlyrainin', 'rainratein'];
-    this.unusedData = ['totalrainin'];
+    this.optionalData = ['yearlyrainin', 'rainratein', 'totalrainin'];
 
     const hideConfig = this.platform.config?.hidden || {};
     const hideConfigCustom = this.platform.config?.customHidden || [];
@@ -107,6 +107,15 @@ export class WH40 extends EcowittAccessory {
       this.yearlyRain.removeService();
       this.yearlyRain = undefined;
     }
+
+    if (!utils.includesAny(hidden, ['rainTotal', `${this.shortServiceId}:rainTotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainTotal`);
+      this.totalRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainTotal`, nameOverride || 'Rain Total');
+    } else {
+      this.totalRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainTotal`, 'Rain Total');
+      this.totalRain.removeService();
+      this.totalRain = undefined;
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -132,6 +141,7 @@ export class WH40 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
+    // optional
     if (dataReport.rainratein === undefined) {
       this.rainRate?.removeService();
       this.rainRate = undefined;
@@ -173,6 +183,7 @@ export class WH40 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
+    // optional
     if (dataReport.yearlyrainin === undefined) {
       this.yearlyRain?.removeService();
       this.yearlyRain = undefined;
@@ -180,6 +191,18 @@ export class WH40 extends EcowittAccessory {
       this.yearlyRain?.updateTotal(
         parseFloat(dataReport.yearlyrainin),
         utils.lookup(this.platform.config?.thresholds, 'rainYearlyTotal'),
+        dataReport.dateutc,
+      );
+    }
+
+    // optional
+    if (dataReport.totalrainin === undefined) {
+      this.totalRain?.removeService();
+      this.totalRain = undefined;
+    } else {
+      this.totalRain?.updateTotal(
+        parseFloat(dataReport.totalrainin),
+        utils.lookup(this.platform.config?.thresholds, 'rainTotal'),
         dataReport.dateutc,
       );
     }

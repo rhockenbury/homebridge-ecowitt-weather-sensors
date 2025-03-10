@@ -63,7 +63,7 @@ export class LightningSensor extends MotionSensor {
     let distanceStr: string;
     let thresholdkm: number;
 
-    switch (this.platform.config?.units?.distance) {
+    switch (this.platform.config?.units?.lightningDistance) {
       case 'km':
         thresholdkm = threshold;
         distanceStr = `${distancekm.toFixed(1)} km`;
