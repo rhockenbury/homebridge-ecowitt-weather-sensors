@@ -11,6 +11,7 @@ import {
 import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { BASE } from './devices/BASE';
+import { LDS01 } from './devices/LDS01';
 import { WH25 } from './devices/WH25';
 import { WH26 } from './devices/WH26';
 import { WN30 } from './devices/WN30';
@@ -635,6 +636,18 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
     }
 
+    if (!utils.includesAny(hidden, ['LDS01']) && !utils.includesAll(hidden, LDS01.properties)) {
+      for (let channel = 1; channel <= 4; channel++) {
+        if (!utils.includesAny(hidden, [`LDS01CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`ldsbatt${channel}`] !== undefined,
+            'LDS01',
+            channel,
+          );
+        }
+      }
+    }
+
     if (this.baseStationInfo.sensors.length === 0) {
       this.log.warn('No devices discovered from data report. Verify plugin configuration with docs '
         + `at ${utils.GATEWAY_SETUP_LINK}, and/or file a feature request to support your weather devices at ${utils.FEATURE_REQ_LINK}`);
@@ -760,6 +773,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       case 'WN1920':
       case 'WN1980':
         sensor.accessory = new BASE(this, accessory, sensor.type);
+        break;
+
+      case 'LDS01':
+        sensor.accessory = new LDS01(this, accessory, sensor.channel);
         break;
 
       case 'WH25':

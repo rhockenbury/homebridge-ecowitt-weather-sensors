@@ -13,7 +13,7 @@ Here's the rough order of things that I recommend when adding support for a new 
 * \[ ] Add any conversion logic for Ambient devices to `src/Util.ts`
 * \[ ] Modify `src/EcowittPlatform.ts` to add the device
 * \[ ] Implement synthetic tests for the device (must have sample data)
-* \[ ] Update `config.schema.json` for additional config properties (if needed)
+* \[ ] Update `config.schema.json` to add config properties (hidden and thresholds)
 * \[ ] Update the `README.md` to add the device
 * \[ ] Open a PR targeting the `dev` branch
 

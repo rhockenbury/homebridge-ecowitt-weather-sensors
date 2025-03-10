@@ -15,7 +15,7 @@ import * as utils from './../Utils';
 export class WH65 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature', 'humidity', 'solarRadiation',
     'uvIndex', 'windDirection', 'windSpeed', 'windGustSpeed', 'windMaxDailySpeed',
-    'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal',
+    'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal',
     'rainMonthlyTotal', 'rainYearlyTotal'];
 
   protected battery: BatterySensor | undefined;
@@ -34,6 +34,7 @@ export class WH65 extends EcowittAccessory {
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
   protected yearlyRain: RainSensor | undefined;
+  protected totalRain: RainSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -136,8 +137,7 @@ export class WH65 extends EcowittAccessory {
       this.maxDailyGust = undefined;
     }
 
-    // current rain rate only appears in ecowitt data reports
-    if (this.platform.isEcowitt() && !utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
+    if (!utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainrate`);
       this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, nameOverride || 'Rain Rate');
     } else {
@@ -199,6 +199,15 @@ export class WH65 extends EcowittAccessory {
       this.yearlyRain.removeService();
       this.yearlyRain = undefined;
     }
+
+    if (!utils.includesAny(hidden, ['rainTotal', `${this.shortServiceId}:rainTotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainTotal`);
+      this.totalRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainTotal`, nameOverride || 'Rain Total');
+    } else {
+      this.totalRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainTotal`, 'Rain Total');
+      this.totalRain.removeService();
+      this.totalRain = undefined;
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -259,11 +268,17 @@ export class WH65 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.rainRate?.updateRate(
-      parseFloat(dataReport.rainratein),
-      utils.lookup(this.platform.config?.thresholds, 'rainRate'),
-      dataReport.dateutc,
-    );
+    // optional
+    if (dataReport.rainratein === undefined) {
+      this.rainRate?.removeService();
+      this.rainRate = undefined;
+    } else {
+      this.rainRate?.updateRate(
+        parseFloat(dataReport.rainratein),
+        utils.lookup(this.platform.config?.thresholds, 'rainRate'),
+        dataReport.dateutc,
+      );
+    }
 
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
@@ -300,5 +315,17 @@ export class WH65 extends EcowittAccessory {
       utils.lookup(this.platform.config?.thresholds, 'rainYearlyTotal'),
       dataReport.dateutc,
     );
+
+    // optional
+    if (dataReport.totalrainin === undefined) {
+      this.totalRain?.removeService();
+      this.totalRain = undefined;
+    } else {
+      this.totalRain?.updateTotal(
+        parseFloat(dataReport.totalrainin),
+        utils.lookup(this.platform.config?.thresholds, 'rainTotal'),
+        dataReport.dateutc,
+      );
+    }
   }
 }

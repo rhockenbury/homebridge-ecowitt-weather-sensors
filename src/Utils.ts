@@ -766,7 +766,7 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
   }
 
   if (v1Config?.lightning?.units ) {
-    v2Config.units.distance = v1Config?.lightning?.units;
+    v2Config.units.lightningDistance = v1Config?.lightning?.units;
   }
 
   v2Config.units.temperature = 'fh';
