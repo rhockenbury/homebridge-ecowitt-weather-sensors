@@ -472,11 +472,12 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     const hideConfig = this.config?.hidden || {};
     const hideConfigCustom = this.config?.customHidden || [];
     const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    const thresholds = this.config?.customThresholds || [];
 
     const validateIndoor = dataReport.tempinf !== undefined && dataReport.humidityin !== undefined;
     const validateTHP = dataReport.wh25batt !== undefined; // THP monitor may be providing indoor metrics
 
-    if (!utils.includesAll(hidden, ['BASE']) && !utils.includesAll(hidden, BASE.properties)) {
+    if (!BASE.hide(hidden, thresholds)) {
       if (this.baseStationInfo.deviceName !== utils.UNKNOWN) {
         if (!validateTHP && validateIndoor) {  // indoor metrics not covered by THP monitor
           this.addSensorType(true, this.baseStationInfo.deviceName);
@@ -501,36 +502,36 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WS90']) && !utils.includesAll(hidden, WS90.properties)) {
+    if (!WS90.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh90batt !== undefined, 'WS90');
     }
 
-    if (!utils.includesAny(hidden, ['WS85']) && !utils.includesAll(hidden, WS85.properties)) {
+    if (!WS85.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh85batt !== undefined, 'WS85');
     }
 
-    if (!utils.includesAny(hidden, ['WS80']) && !utils.includesAll(hidden, WS80.properties)) {
+    if (!WS80.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh80batt !== undefined, 'WS80');
     }
 
-    if (!utils.includesAny(hidden, ['WS68']) && !utils.includesAll(hidden, WS68.properties)) {
+    if (!WS68.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh68batt !== undefined, 'WS68');
     }
 
     // WH65 and WN67 are the same sensor type, except WN67 does not have solarRadiation and UVIndex
-    if (!utils.includesAny(hidden, ['WH65']) && !utils.includesAll(hidden, WH65.properties)) {
+    if (!WH65.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh65batt !== undefined && dataReport.uv !== undefined, 'WH65');
     }
 
-    if (!utils.includesAny(hidden, ['WN67']) && !utils.includesAll(hidden, WN67.properties)) {
+    if (!WN67.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh65batt !== undefined && dataReport.uv === undefined, 'WN67');
     }
 
-    if (!utils.includesAny(hidden, ['WH57']) && !utils.includesAll(hidden, WH57.properties)) {
+    if (!WH57.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh57batt !== undefined, 'WH57');
     }
 
-    if (!utils.includesAny(hidden, ['WH55']) && !utils.includesAll(hidden, WH55.properties)) {
+    if (!WH55.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 4; channel++) {
         if (!utils.includesAny(hidden, [`WH55CH${channel}`])) {
           this.addSensorType(
@@ -542,7 +543,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
+    if (!WH51.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
           this.addSensorType(
@@ -555,15 +556,15 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
-    if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
+    if (!WH46.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
     }
 
-    if (!utils.includesAny(hidden, ['WH45']) && !utils.includesAll(hidden, WH45.properties)) {
+    if (!WH45.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 === undefined, 'WH45');
     }
 
-    if (!utils.includesAny(hidden, ['WH41']) && !utils.includesAll(hidden, WH41.properties)) {
+    if (!WH41.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 4; channel++) {
         if (!utils.includesAny(hidden, [`WH41CH${channel}`])) {
           this.addSensorType(
@@ -575,11 +576,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WH40']) && !utils.includesAll(hidden, WH40.properties)) {
+    if (!WH40.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
     }
 
-    if (!utils.includesAny(hidden, ['WN35']) && !utils.includesAll(hidden, WN35.properties)) {
+    if (!WN35.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN35CH${channel}`])) {
           this.addSensorType(
@@ -591,7 +592,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
+    if (!WN34.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN34CH${channel}`])) {
           this.addSensorType(
@@ -604,7 +605,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     // WN31 and WN30 are the same sensor type, except WN30 does not have humidity
-    if (!utils.includesAny(hidden, ['WN31']) && !utils.includesAll(hidden, WN31.properties)) {
+    if (!WN31.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN31CH${channel}`])) {
           this.addSensorType(
@@ -616,7 +617,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WN30']) && !utils.includesAll(hidden, WN30.properties)) {
+    if (!WN30.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN30CH${channel}`])) {
           this.addSensorType(
@@ -628,15 +629,15 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
-    if (!utils.includesAny(hidden, ['WH26']) && !utils.includesAll(hidden, WH26.properties)) {
+    if (!WH26.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh26batt !== undefined, 'WH26');
     }
 
-    if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
+    if (!WH25.hide(hidden, thresholds)) {
       this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
     }
 
-    if (!utils.includesAny(hidden, ['LDS01']) && !utils.includesAll(hidden, LDS01.properties)) {
+    if (!LDS01.hide(hidden, thresholds)) {
       for (let channel = 1; channel <= 4; channel++) {
         if (!utils.includesAny(hidden, [`LDS01CH${channel}`])) {
           this.addSensorType(
@@ -650,8 +651,8 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
     if (this.baseStationInfo.sensors.length === 0) {
       this.log.warn('No devices discovered from data report. Verify plugin configuration with docs '
-        + `at ${utils.GATEWAY_SETUP_LINK}, and/or file a feature request to support your weather devices at ${utils.FEATURE_REQ_LINK}`);
-      return;
+        + `at ${utils.GATEWAY_SETUP_LINK} to ensure all devices are not hidden, and/or file a `
+        + `feature request to add support for your devices at ${utils.FEATURE_REQ_LINK}`);
     }
 
     this.log.debug(`StationInfo: ${JSON.stringify(this.baseStationInfo, undefined, 2)}`);
@@ -703,8 +704,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     const accessoryUuids = this.accessories.map(acc => acc.UUID);
 
     const accessoriesToRemove = accessoryUuids.filter(x => !sensorUuids.includes(x));
+    this.log.info(`${accessoriesToRemove}`);
+
     for (const accessoryUuid of accessoriesToRemove) {
       const accessory = this.accessories.find(acc => acc.UUID === accessoryUuid);
+      this.log.info(`${accessory}`);
       if (typeof accessory === 'undefined') {
         continue;
       }
@@ -916,7 +920,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
             `Please file bug reports at ${utils.BUG_REPORT_LINK}`);
         } else {
           this.log.warn(`An issue occurred while updating sensor values for ${sensor.type}. Review the error message below `
-            + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
+            + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n${stack}`);
         }
       }
     }

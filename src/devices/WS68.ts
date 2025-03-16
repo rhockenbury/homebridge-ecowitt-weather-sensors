@@ -18,8 +18,8 @@ export class WS68 extends EcowittAccessory {
   protected uvIndex: UltravioletSensor | undefined;
   protected windDirection: WindSensor | undefined;
   protected windSpeed: WindSensor | undefined;
-  protected windGust: WindSensor | undefined;
-  protected maxDailyGust: WindSensor | undefined;
+  protected windGustSpeed: WindSensor | undefined;
+  protected windMaxDailySpeed: WindSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -30,75 +30,24 @@ export class WS68 extends EcowittAccessory {
     this.requiredData = ['wh68batt', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
       'windgustmph', 'maxdailygust'];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor)
 
-    let nameOverride: string | undefined;
+    this.setPrimary('solarRadiation', 'Solar Radiation', LightSensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
+    this.setPrimary('uvIndex', 'UV Index', UltravioletSensor);
+    this.setThresholds('uvIndex', 'UV Index', UltravioletSensor);
 
-    if (!utils.includesAny(hidden, ['solarRadiation', `${this.shortServiceId}:solarRadiation`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:solarRadiation`);
-      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, nameOverride || 'Solar Radiation');
-    } else {
-      this.solarRadiation = new LightSensor(platform, accessory, `${this.accessoryId}:solarRadiation`, 'Solar Radiation');
-      this.solarRadiation.removeService();
-      this.solarRadiation = undefined;
-    }
+    this.setPrimary('windDirection', 'Wind Direction', WindSensor);
+    this.setThresholds('windDirection', 'Wind Direction', WindSensor);
 
-    if (!utils.includesAny(hidden, ['uvIndex', `${this.shortServiceId}:uvIndex`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:uvIndex`);
-      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, nameOverride || 'UV Index');
-    } else {
-      this.uvIndex = new UltravioletSensor(platform, accessory, `${this.accessoryId}:uvIndex`, 'UV Index');
-      this.uvIndex.removeService();
-      this.uvIndex = undefined;
-    }
+    this.setPrimary('windSpeed', 'Wind Speed', WindSensor);
+    this.setThresholds('windSpeed', 'Wind Speed', WindSensor);
 
-    if (!utils.includesAny(hidden, ['winddirection', `${this.shortServiceId}:winddirection`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:winddirection`);
-      this.windDirection = new WindSensor(platform, accessory, `${this.accessoryId}:winddirection`, nameOverride || 'Wind Direction');
-    } else {
-      this.windDirection = new WindSensor(platform, accessory, `${this.accessoryId}:winddirection`, 'Wind Direction');
-      this.windDirection.removeService();
-      this.windDirection = undefined;
-    }
+    this.setPrimary('windGustSpeed', 'Wind Gust Speed', WindSensor);
+    this.setThresholds('windGustSpeed', 'Wind Gust Speed', WindSensor);
 
-    if (!utils.includesAny(hidden, ['windspeed', `${this.shortServiceId}:windspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windspeed`);
-      this.windSpeed = new WindSensor(platform, accessory, `${this.accessoryId}:windspeed`, nameOverride || 'Wind Speed');
-    } else {
-      this.windSpeed = new WindSensor(platform, accessory, `${this.accessoryId}:windspeed`, 'Wind Speed');
-      this.windSpeed.removeService();
-      this.windSpeed = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['windgustspeed', `${this.shortServiceId}:windgustspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windgustspeed`);
-      this.windGust = new WindSensor(platform, accessory, `${this.accessoryId}:windgustspeed`, nameOverride || 'Wind Gust Speed');
-    } else {
-      this.windGust = new WindSensor(platform, accessory, `${this.accessoryId}:windgustspeed`, 'Wind Gust Speed');
-      this.windGust.removeService();
-      this.windGust = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['windmaxdailyspeed', `${this.shortServiceId}:windmaxdailyspeed`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:windmaxdailyspeed`);
-      this.maxDailyGust = new WindSensor(platform, accessory,
-        `${this.accessoryId}:windmaxdailyspeed`, nameOverride || 'Wind Max Daily Speed');
-    } else {
-      this.maxDailyGust = new WindSensor(platform, accessory, `${this.accessoryId}:windmaxdailyspeed`, 'Wind Max Daily Speed');
-      this.maxDailyGust.removeService();
-      this.maxDailyGust = undefined;
-    }
+    this.setPrimary('windMaxDailySpeed', 'Wind Max Daily Speed', WindSensor);
+    this.setThresholds('windMaxDailySpeed', 'Wind Max Daily Speed', WindSensor);
   }
 
   //----------------------------------------------------------------------------
@@ -124,38 +73,11 @@ export class WS68 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.solarRadiation?.update(
-      parseFloat(dataReport['solarradiation']),
-      dataReport.dateutc,
-    );
-
-    this.uvIndex?.update(
-      parseFloat(dataReport['uv']),
-      utils.lookup(this.platform.config?.thresholds, 'uvIndex'),
-      dataReport.dateutc,
-    );
-
-    this.windDirection?.updateDirection(
-      parseFloat(dataReport.winddir),
-      dataReport.dateutc,
-    );
-
-    this.windSpeed?.updateSpeed(
-      parseFloat(dataReport.windspeedmph),
-      utils.lookup(this.platform.config?.thresholds, 'windSpeed'),
-      dataReport.dateutc,
-    );
-
-    this.windGust?.updateSpeed(
-      parseFloat(dataReport.windgustmph),
-      utils.lookup(this.platform.config?.thresholds, 'windGustSpeed'),
-      dataReport.dateutc,
-    );
-
-    this.maxDailyGust?.updateSpeed(
-      parseFloat(dataReport.maxdailygust),
-      utils.lookup(this.platform.config?.thresholds, 'windMaxDailySpeed'),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'solarRadiation', 'solarradiation');
+    this.dispatchUpdate(dataReport, 'update', 'uvIndex', 'uv');
+    this.dispatchUpdate(dataReport, 'updateDirection', 'windDirection', 'winddir');
+    this.dispatchUpdate(dataReport, 'updateSpeed', 'windSpeed', 'windspeedmph');
+    this.dispatchUpdate(dataReport, 'updateSpeed', 'windGustSpeed', 'windgustmph');
+    this.dispatchUpdate(dataReport, 'updateSpeed', 'windMaxDailySpeed', 'maxdailygust');
   }
 }

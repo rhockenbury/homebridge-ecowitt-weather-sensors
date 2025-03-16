@@ -3,7 +3,7 @@ set -ev
 
 HOST="localhost"
 PORT="8085"
-TRACK="ecowitt/gw2000_ws90"
+TRACK="ecowitt/gw1200_ws90_wh51_wh40_wn30_lds"
 DIR=`pwd`
 
 DATA=$(cat "$DIR/tests/synthetic/data/$TRACK.json")

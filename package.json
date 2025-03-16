@@ -19,7 +19,7 @@
     "url": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues"
   },
   "engines": {
-    "node": "^18.20.4 || ^20.18.0 || ^22.10.0",
+    "node": "^18.20.4 || ^20.16.0 || ^22.10.0",
     "homebridge": "^1.6.0 || ^2.0.0-beta.0"
   },
   "main": "dist/index.js",
@@ -27,7 +27,7 @@
     "lint": "eslint src/*.ts src/**/*.ts --max-warnings=0",
     "remark": "remark --use remark-validate-links ./*.md --quiet --output",
     "build": "rimraf ./dist && tsc && npm link",
-    "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/**/*.spec.ts\"",
+    "test": "NODE_OPTIONS=\"--import=tsx\" mocha \"tests/unit/**/*.spec.ts\"",
     "all": "npm run lint && npm run remark && npm run build && npm run test",
     "prepublishOnly": "npm run all"
   },

@@ -22,7 +22,7 @@ export class LightningSensor extends MotionSensor {
 
   //---------------------------------------------------------------------------
 
-  public updateLightningEvent(events: number, threshold: number, time: string) {
+  public updateLightningEvent(events: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(events)) {
       this.platform.log.warn(`Cannot update ${this.name}, strike events ${events} is NaN`);
       this.updateStatusActive(false);
@@ -31,29 +31,18 @@ export class LightningSensor extends MotionSensor {
 
     const eventsStr = `${events.toFixed(0)} strikes`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(events, threshold, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${eventsStr}`);
     this.updateValue(eventsStr);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(events >= threshold);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //---------------------------------------------------------------------------
 
-  public updateLightningDistance(distancekm: number, threshold: number, time: string) {
+  public updateLightningDistance(distancekm: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(distancekm)) {
       this.platform.log.warn(`Cannot update ${this.name}, strike distance ${distancekm} is NaN`);
       this.updateStatusActive(false);
@@ -77,29 +66,18 @@ export class LightningSensor extends MotionSensor {
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(distancekm, thresholdkm, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${distanceStr}`);
     this.updateValue(distanceStr);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(distancekm <= thresholdkm);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //---------------------------------------------------------------------------
 
-  public updateLightningTime(timems: number, threshold: number, time: string) {
+  public updateLightningTime(timems: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(timems)) {
       this.platform.log.warn(`Cannot update ${this.name}, strike time ${timems} is NaN`);
       this.updateStatusActive(false);
@@ -108,26 +86,16 @@ export class LightningSensor extends MotionSensor {
 
     const thresholdms = threshold * 1000;
 
+    // value is set to relative time string - https://date-fns.org/v4.1.0/docs/intlFormatDistance
     const timeStr = intlFormatDistance(new Date().getTime() - timems, new Date().getTime());
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(timems, thresholdms, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${timeStr}`);
     this.updateValue(timeStr);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(timems <= thresholdms);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //---------------------------------------------------------------------------

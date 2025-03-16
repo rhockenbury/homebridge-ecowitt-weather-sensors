@@ -30,7 +30,7 @@ export class UltravioletSensor extends MotionSensor {
 
   //---------------------------------------------------------------------------
 
-  public update(index: number, threshold: number, time: string) {
+  public update(index: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(index)) {
       this.platform.log.warn(`Cannot update ${this.name}, UV Index ${index} is NaN`);
       this.updateStatusActive(false);
@@ -39,25 +39,14 @@ export class UltravioletSensor extends MotionSensor {
 
     const uvIndexStr = `${index.toFixed(0)}`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(index, threshold, comparator);
 
     this.updateName(staticNames ? this.name : `${this.name} ${uvIndexStr}`);
     this.updateValue(uvIndexStr);
     this.updateIntensity(index);
     this.updateStatusActive(true);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(index >= threshold);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //---------------------------------------------------------------------------

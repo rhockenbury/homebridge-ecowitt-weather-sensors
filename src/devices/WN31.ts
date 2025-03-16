@@ -24,36 +24,11 @@ export class WN31 extends EcowittAccessory {
 
     this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor)
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
+    this.setPrimary('temperature', 'Temperature', TemperatureSensor);
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
-    } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
-      this.temperature.removeService();
-      this.temperature = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['humidity', `${this.shortServiceId}:humidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:humidity`);
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, humidityName || 'Humidity');
-    } else {
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
-      this.humidity.removeService();
-      this.humidity = undefined;
-    }
+    this.setPrimary('humidity', 'Humidity', HumiditySensor);
   }
 
   //----------------------------------------------------------------------------
@@ -70,14 +45,7 @@ export class WN31 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.temperature?.update(
-      parseFloat(dataReport[`temp${this.channel}f`]),
-      dataReport.dateutc,
-    );
-
-    this.humidity?.update(
-      parseFloat(dataReport[`humidity${this.channel}`]),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'temperature', `temp${this.channel}f`);
+    this.dispatchUpdate(dataReport, 'update', 'humidity', `humidity${this.channel}`);
   }
 }

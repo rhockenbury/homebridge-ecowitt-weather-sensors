@@ -50,8 +50,8 @@ configs.forEach(config => {
       expect(device.uvIndex).to.not.be.undefined;
       expect(device.windDirection).to.not.be.undefined;
       expect(device.windSpeed).to.not.be.undefined;
-      expect(device.windGust).to.not.be.undefined;
-      expect(device.maxDailyGust).to.not.be.undefined;
+      expect(device.windGustSpeed).to.not.be.undefined;
+      expect(device.windMaxDailySpeed).to.not.be.undefined;
 
       expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.temperature.service.characteristics[0].value).to.equal("Temperature");
@@ -60,8 +60,8 @@ configs.forEach(config => {
       expect(device.uvIndex.service.characteristics[0].value).to.equal("UV Index");
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Wind Max Daily Speed");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Wind Gust Speed");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Wind Max Daily Speed");
       done();
     });
 
@@ -77,8 +77,8 @@ configs.forEach(config => {
       expect(device.uvIndex.service.characteristics[0].value).to.equal("UV Index 1");
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction 285° (W)");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed 0.0 mph");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Wind Max Daily Speed 1.8 mph");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Wind Max Daily Speed 1.8 mph");
       done();
     });
 
@@ -100,8 +100,8 @@ configs.forEach(config => {
       expect(device.uvIndex.service.characteristics[0].value).to.equal("Test UV Index Name");
       expect(device.windDirection.service.characteristics[0].value).to.equal("Test Wind Direction Name");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Test Wind Speed Name");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Test Wind Gust Speed Name");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Test Wind Max Daily Speed Name");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Test Wind Gust Speed Name");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Test Wind Max Daily Speed Name");
       done();
     });
 
@@ -123,8 +123,8 @@ configs.forEach(config => {
       expect(device.uvIndex).to.be.undefined;
       expect(device.windDirection).to.be.undefined;
       expect(device.windSpeed).to.be.undefined;
-      expect(device.windGust).to.be.undefined;
-      expect(device.maxDailyGust).to.be.undefined;
+      expect(device.windGustSpeed).to.be.undefined;
+      expect(device.windMaxDailySpeed).to.be.undefined;
       done();
     });
 
@@ -146,8 +146,8 @@ configs.forEach(config => {
       expect(device.uvIndex).to.be.undefined;
       expect(device.windDirection).to.be.undefined;
       expect(device.windSpeed).to.be.undefined;
-      expect(device.windGust).to.be.undefined;
-      expect(device.maxDailyGust).to.be.undefined;
+      expect(device.windGustSpeed).to.be.undefined;
+      expect(device.windMaxDailySpeed).to.be.undefined;
       done();
     });
   });

@@ -2,6 +2,7 @@
 
 * Introduce support for Ecowitt Laser Distance Sensor (LDS01)
 * Display service for 'totalRain' data property if present in data report
+* Fix bug with 'rainWeeklyTotal' data property that prevented device hiding
 
 ### 2.10.0
 

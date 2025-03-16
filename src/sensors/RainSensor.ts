@@ -14,24 +14,13 @@ export class RainSensor extends MotionSensor {
   ) {
     super(platform, accessory, id, name);
 
-    // custom characteristic for intensity string
-    if (name.includes('Rate') || name.includes('rate')) {
-      if (!this.service.testCharacteristic(utils.CHAR_INTENSITY_NAME)) {
-        this.service.addCharacteristic(
-          new this.platform.api.hap.Characteristic(utils.CHAR_INTENSITY_NAME, utils.CHAR_INTENSITY_UUID, {
-            format: Formats.STRING,
-            perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
-          }));
-      }
-    }
-
     this.setName(name);
     this.setStatusActive(false);
   }
 
   //----------------------------------------------------------------------------
 
-  public updateRate(ratein: number, threshold: number, time: string) {
+  public updateRate(ratein: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(ratein)) {
       this.platform.log.warn(`Cannot update ${this.name}, rate ${ratein} is NaN`);
       this.updateStatusActive(false);
@@ -58,30 +47,19 @@ export class RainSensor extends MotionSensor {
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(ratemm, thresholdmm, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${rateStr}`);
     this.updateValue(rateStr);
     this.updateIntensity(ratemm);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(ratemm >= thresholdmm);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //----------------------------------------------------------------------------
 
-  public updateTotal(totalin: number, threshold, time: string) {
+  public updateTotal(totalin: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(totalin)) {
       this.platform.log.warn(`Cannot update ${this.name}, total ${totalin} is NaN`);
       this.updateStatusActive(false);
@@ -108,31 +86,30 @@ export class RainSensor extends MotionSensor {
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(totalmm, thresholdmm, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${totalStr}`);
     this.updateValue(totalStr);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(totalmm >= thresholdmm);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //----------------------------------------------------------------------------
 
   private updateIntensity(ratemm: number) {
+    // add custom characteristic for intensity string
+    if (!this.service.testCharacteristic(utils.CHAR_INTENSITY_NAME)) {
+      this.service.addCharacteristic(
+        new this.platform.api.hap.Characteristic(utils.CHAR_INTENSITY_NAME, utils.CHAR_INTENSITY_UUID, {
+          format: Formats.STRING,
+          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+        }));
+    }
+
     const intensity = utils.toRainIntensity(ratemm);
     this.platform.log.debug(`Setting ${this.name} intensity to ${intensity}`);
+
     this.service.updateCharacteristic(
       utils.CHAR_INTENSITY_NAME,
       intensity,

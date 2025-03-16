@@ -21,50 +21,16 @@ export class WH57 extends EcowittAccessory {
 
     this.requiredData = ['wh57batt', 'lightning', 'lightning_num', 'lightning_time'];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor)
 
-    let nameOverride: string | undefined;
+    this.setPrimary('lightningEvents', 'Strike Events', LightningSensor);
+    this.setThresholds('lightningEvents', 'Strike Events', LightningSensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
+    this.setPrimary('lightningDistance', 'Last Strike Distance', LightningSensor);
+    this.setThresholds('lightningDistance', 'Last Strike Distance', LightningSensor);
 
-    if (!utils.includesAny(hidden, ['lightningEvents', `${this.shortServiceId}:lightningEvents`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:lightningEvents`);
-      this.lightningEvents = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningEvents`,
-        nameOverride || 'Strike Events');
-    } else {
-      this.lightningEvents = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningEvents`, 'Strike Events');
-      this.lightningEvents.removeService();
-      this.lightningEvents = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['lightningDistance', `${this.shortServiceId}:lightningDistance`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:lightningDistance`);
-      this.lightningDistance = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningDistance`,
-        nameOverride || 'Last Strike Distance');
-    } else {
-      this.lightningDistance = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningDistance`, 'Last Strike Distance');
-      this.lightningDistance.removeService();
-      this.lightningDistance = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['lightningTime', `${this.shortServiceId}:lightningTime`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:lightningTime`);
-      this.lightningTime = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningTime`,
-        nameOverride || 'Last Strike Time');
-    } else {
-      this.lightningTime = new LightningSensor(platform, accessory, `${this.accessoryId}:lightningTime`, 'Last Strike Time');
-      this.lightningTime.removeService();
-      this.lightningTime = undefined;
-    }
+    this.setPrimary('lightningTime', 'Last Strike Time', LightningSensor);
+    this.setThresholds('lightningTime', 'Last Strike Time', LightningSensor);
   }
 
   //----------------------------------------------------------------------------
@@ -90,22 +56,8 @@ export class WH57 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.lightningEvents?.updateLightningEvent(
-      parseFloat(dataReport['lightning_num']),
-      utils.lookup(this.platform.config?.thresholds, 'lightningEvents'),
-      dataReport.dateutc,
-    );
-
-    this.lightningDistance?.updateLightningDistance(
-      parseFloat(dataReport['lightning']),
-      utils.lookup(this.platform.config?.thresholds, 'lightningDistance'),
-      dataReport.dateutc,
-    );
-
-    this.lightningTime?.updateLightningTime(
-      parseFloat(dataReport['lightning_time']),
-      utils.lookup(this.platform.config?.thresholds, 'lightningTime'),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'updateLightningEvent', 'lightningEvents', 'lightning_num');
+    this.dispatchUpdate(dataReport, 'updateLightningDistance', 'lightningDistance', 'lightning');
+    this.dispatchUpdate(dataReport, 'updateLightningTime', 'lightningTime', 'lightning_time');
   }
 }

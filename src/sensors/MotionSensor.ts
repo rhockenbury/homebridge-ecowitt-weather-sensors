@@ -16,11 +16,11 @@ export class MotionSensor extends Sensor {
 
     super(platform,
       accessory,
-      accessory.services.filter(s => s.subtype === platform.serviceUuid(id))[0]
+      accessory.services.filter(s => s.subtype === id)[0]
       || accessory.addService(
         platform.Service.MotionSensor,
         name,
-        platform.serviceUuid(id)));
+        id));
 
     // custom characteristic for value string
     if (!this.service.testCharacteristic(utils.CHAR_VALUE_NAME)) {
@@ -44,6 +44,94 @@ export class MotionSensor extends Sensor {
     this.service.updateCharacteristic(
       this.platform.Characteristic.MotionDetected,
       motionDetected);
+  }
+
+  //---------------------------------------------------------------------------
+
+  private defaultTrigger(value, priorValue) {
+    let result = false;
+
+    switch (this.platform.config?.additional?.triggerMode) {
+      case 'toZero':
+        if (value === 0 && priorValue > 0) {
+          result = true;
+        }
+        break;
+
+      case 'fromZero':
+        if (priorValue === 0 && value > 0) {
+          result = true;
+        }
+        break;
+
+      case 'tofromZero':
+        if ((value === 0 && priorValue > 0) || (priorValue === 0 && value > 0)) {
+          result = true;
+        }
+        break;
+
+      default:
+      case 'all':
+        if (value !== priorValue) {
+          result = true;
+        }
+        break;
+
+    }
+
+    return result;
+  }
+
+  //---------------------------------------------------------------------------
+
+  private customTrigger(value, threshold, comparator) {
+    if (!Number.isFinite(threshold)) {
+      this.platform.log.warn(`Cannot update ${this.name} threshold detection, ` +
+        `threshold ${threshold} is NaN`);
+      return false;
+    }
+
+    let result = false;
+
+    if (comparator === 'gt') {
+      if (value >= threshold) {
+        result = true;
+      }
+    } else if (comparator === 'lt') {
+      if (value < threshold) {
+        result = true;
+      }
+    } else {
+      this.platform.log.warn(`Cannot update ${this.name} threshold detection, ` +
+        `comparator ${comparator} not recognized`);
+      result = false;
+    }
+
+    return result;
+  }
+
+  //---------------------------------------------------------------------------
+
+  protected checkTrigger(value: number, threshold: number, comparator: string) {
+    if (threshold === undefined || comparator === undefined) {
+      // default threshold triggering
+      this.platform.log.debug(`Threshold or comparator is not defined for ${this.name}, ` +
+        'using default trigger behavior');
+
+      const charValue = String(this.service.getCharacteristic(utils.CHAR_VALUE_NAME)?.value);
+      if (charValue  === undefined || charValue.length === 0) {
+        return false;
+      }
+
+      const priorValue = parseFloat(charValue.split(' ')[0]);
+      return this.defaultTrigger(value, priorValue);
+
+    } else {
+      // user-defined threshold
+      return this.customTrigger(value, threshold, comparator);
+    }
+
+    return false;
   }
 
   //---------------------------------------------------------------------------

@@ -83,6 +83,7 @@ export class AirQualitySensor extends Sensor {
   //---------------------------------------------------------------------------
 
   private updatePM10Density(pm10: number) {
+    this.platform.log.debug(`Setting ${this.name} pm10 density to ${pm10}`);
     this.service.updateCharacteristic(
       this.platform.Characteristic.PM10Density,
       pm10,
@@ -92,6 +93,7 @@ export class AirQualitySensor extends Sensor {
   //---------------------------------------------------------------------------
 
   private updatePM25Density(pm25: number) {
+    this.platform.log.debug(`Setting ${this.name} pm25 density to ${pm25}`);
     this.service.updateCharacteristic(
       this.platform.Characteristic.PM2_5Density,
       pm25,

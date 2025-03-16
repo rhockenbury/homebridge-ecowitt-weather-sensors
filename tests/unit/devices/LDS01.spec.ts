@@ -21,7 +21,6 @@ const dataReport1 = {
 const dataReport2 = {
   "dateutc": "2024-07-24 19:04:22",
   "air_ch1": "2284",
-  "thi_ch1": "0",
   "ldsbatt1": "3.04"
 };
 
