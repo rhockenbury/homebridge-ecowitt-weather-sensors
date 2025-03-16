@@ -3,7 +3,7 @@
     "baseStation": {
         "mac": "00:00:00:00:00:00",
         "port": 8080,
-        "path": "/data/report"
+        "path": "/data/report/"
     },
     "nameOverrides": [
         {
@@ -170,7 +170,8 @@
     "units": {
         "wind": "mph",
         "rain": "in",
-        "distance": "mi",
-        "temperature": "fh"
+        "lightningDistance": "mi",
+        "temperature": "fh",
+        "laserDistance": "in"
     }
 }

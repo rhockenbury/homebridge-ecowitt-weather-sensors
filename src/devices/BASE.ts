@@ -8,10 +8,10 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class BASE extends EcowittAccessory {
-  static readonly properties: string[] = ['indoorTemperature', 'indoorHumidity'];
+  static readonly properties = ['indoorTemperature', 'indoorHumidity'];
 
-  protected temperature: TemperatureSensor | undefined;
-  protected humidity: HumiditySensor | undefined;
+  protected indoorTemperature: TemperatureSensor | undefined;
+  protected indoorHumidity: HumiditySensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -23,28 +23,9 @@ export class BASE extends EcowittAccessory {
     this.requiredData = ['tempinf', 'humidityin'];
     this.unusedData = ['baromrelin', 'baromabsin'];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('indoorTemperature', 'Temperature', TemperatureSensor);
 
-    if (!utils.includesAny(hidden, ['indoorTemperature', `${this.shortServiceId}:indoorTemperature`, `${modelName}:indoorTemperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorTemperature`);
-      this.temperature = new TemperatureSensor(platform, accessory,
-        `${this.accessoryId}:indoorTemperature`, temperatureName || 'Temperature');
-    } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:indoorTemperature`, 'Temperature');
-      this.temperature.removeService();
-      this.temperature = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['indoorHumidity', `${this.shortServiceId}:indoorHumidity`, `${modelName}:indoorHumidity`])) {
-      const humidityName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:indoorHumidity`);
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, humidityName || 'Humidity');
-    } else {
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:indoorHumidity`, 'Humidity');
-      this.humidity.removeService();
-      this.humidity = undefined;
-    }
+    this.setPrimary('indoorHumidity', 'Humidity', HumiditySensor);
   }
 
   //----------------------------------------------------------------------------
@@ -56,14 +37,7 @@ export class BASE extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
-    this.temperature?.update(
-      parseFloat(dataReport.tempinf),
-      dataReport.dateutc,
-    );
-
-    this.humidity?.update(
-      parseFloat(dataReport.humidityin),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'indoorTemperature', 'tempinf');
+    this.dispatchUpdate(dataReport, 'update', 'indoorHumidity', 'humidityin');
   }
 }

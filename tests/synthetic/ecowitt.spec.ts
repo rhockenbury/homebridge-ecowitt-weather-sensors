@@ -149,6 +149,22 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  it('gw1200_ws90_wh51_wh40_wn30_lds sensors are created', (done) => {
+    testData = require('./data/ecowitt/gw1200_ws90_wh51_wh40_wn30_lds.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(6);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1200");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WS90");
+    expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[3].type).to.equal("WH40");
+    expect(platform.baseStationInfo.sensors[4].type).to.equal("WN30");
+    expect(platform.baseStationInfo.sensors[5].type).to.equal("LDS01");
+    expect(platform.unconsumedReportData.length).to.equal(1); // 'srain_piezo'
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // solar radiation maximum
+    done();
+  });
+
   it('gw2000_wh51multi sensors are created', (done) => {
     testData = require('./data/ecowitt/gw2000_wh51multi.json');
     platform = createPlatform("synthetic");

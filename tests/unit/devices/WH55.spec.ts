@@ -35,9 +35,9 @@ configs.forEach(config => {
 
     it('Services are created', (done) => {
       expect(device.battery).to.not.be.undefined;
-      expect(device.leak).to.not.be.undefined;
+      expect(device.waterLeak).to.not.be.undefined;
       expect(device.battery.service.displayName).to.equal('Battery');
-      expect(device.leak.service.characteristics[0].value).to.equal("Water Leak");
+      expect(device.waterLeak.service.characteristics[0].value).to.equal("Water Leak");
       done();
     });
 
@@ -46,7 +46,7 @@ configs.forEach(config => {
 
       expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
       expect(device.battery.service.characteristics[4].value).to.equal(80); // batt percentage
-      expect(device.leak.service.characteristics[0].value).to.equal("Water Leak Not Detected")
+      expect(device.waterLeak.service.characteristics[0].value).to.equal("Water Leak Not Detected")
       done();
     });
 
@@ -55,8 +55,8 @@ configs.forEach(config => {
 
       device = new WH55(platform, accessory, 1);
 
-      expect(device.leak).to.not.be.undefined;
-      expect(device.leak.service.characteristics[0].value).to.equal("Test Leak Name");
+      expect(device.waterLeak).to.not.be.undefined;
+      expect(device.waterLeak.service.characteristics[0].value).to.equal("Test Leak Name");
       done();
     });
 
@@ -65,7 +65,7 @@ configs.forEach(config => {
 
       device = new WH55(platform, accessory, 1);
 
-      expect(device.leak).to.be.undefined;
+      expect(device.waterLeak).to.be.undefined;
       done();
     });
 
@@ -74,7 +74,7 @@ configs.forEach(config => {
 
       device = new WH55(platform, accessory, 1);
 
-      expect(device.leak).to.be.undefined;
+      expect(device.waterLeak).to.be.undefined;
       done();
     });
   });

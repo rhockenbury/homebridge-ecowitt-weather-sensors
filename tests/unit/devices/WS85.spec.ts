@@ -51,28 +51,28 @@ configs.forEach(config => {
       expect(device.battery).to.not.be.undefined;
       expect(device.windDirection).to.not.be.undefined;
       expect(device.windSpeed).to.not.be.undefined;
-      expect(device.windGust).to.not.be.undefined;
-      expect(device.maxDailyGust).to.not.be.undefined;
+      expect(device.windGustSpeed).to.not.be.undefined;
+      expect(device.windMaxDailySpeed).to.not.be.undefined;
       expect(device.rainRate).to.not.be.undefined;
-      expect(device.eventRain).to.not.be.undefined;
-      expect(device.hourlyRain).to.not.be.undefined;
-      expect(device.dailyRain).to.not.be.undefined;
-      expect(device.weeklyRain).to.not.be.undefined;
-      expect(device.monthlyRain).to.not.be.undefined;
-      expect(device.yearlyRain).to.not.be.undefined;
+      expect(device.rainEventTotal).to.not.be.undefined;
+      expect(device.rainHourlyTotal).to.not.be.undefined;
+      expect(device.rainDailyTotal).to.not.be.undefined;
+      expect(device.rainWeeklyTotal).to.not.be.undefined;
+      expect(device.rainMonthlyTotal).to.not.be.undefined;
+      expect(device.rainYearlyTotal).to.not.be.undefined;
 
       expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Wind Max Daily Speed");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Wind Gust Speed");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Wind Max Daily Speed");
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate");
-      expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total");
-      expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total");
-      expect(device.dailyRain.service.characteristics[0].value).to.equal("Rain Daily Total");
-      expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total");
-      expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total");
-      expect(device.yearlyRain.service.characteristics[0].value).to.equal("Rain Yearly Total");
+      expect(device.rainEventTotal.service.characteristics[0].value).to.equal("Rain Event Total");
+      expect(device.rainHourlyTotal.service.characteristics[0].value).to.equal("Rain Hourly Total");
+      expect(device.rainDailyTotal.service.characteristics[0].value).to.equal("Rain Daily Total");
+      expect(device.rainWeeklyTotal.service.characteristics[0].value).to.equal("Rain Weekly Total");
+      expect(device.rainMonthlyTotal.service.characteristics[0].value).to.equal("Rain Monthly Total");
+      expect(device.rainYearlyTotal.service.characteristics[0].value).to.equal("Rain Yearly Total");
       done();
     });
 
@@ -84,15 +84,15 @@ configs.forEach(config => {
       expect(device.battery.service.characteristics[4].value).to.equal(99); // batt percentage
       expect(device.windDirection.service.characteristics[0].value).to.equal("Wind Direction 285° (W)");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Wind Speed 0.0 mph");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Wind Max Daily Speed 1.8 mph");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Wind Gust Speed 5.6 mph");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Wind Max Daily Speed 1.8 mph");
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate 0.0 in/hour");
-      expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total 0.4 in");
-      expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total 0.5 in");
-      expect(device.dailyRain.service.characteristics[0].value).to.equal("Rain Daily Total 0.0 in");
-      expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total 0.3 in");
-      expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total 0.8 in");
-      expect(device.yearlyRain.service.characteristics[0].value).to.equal("Rain Yearly Total 0.8 in");
+      expect(device.rainEventTotal.service.characteristics[0].value).to.equal("Rain Event Total 0.4 in");
+      expect(device.rainHourlyTotal.service.characteristics[0].value).to.equal("Rain Hourly Total 0.5 in");
+      expect(device.rainDailyTotal.service.characteristics[0].value).to.equal("Rain Daily Total 0.0 in");
+      expect(device.rainWeeklyTotal.service.characteristics[0].value).to.equal("Rain Weekly Total 0.3 in");
+      expect(device.rainMonthlyTotal.service.characteristics[0].value).to.equal("Rain Monthly Total 0.8 in");
+      expect(device.rainYearlyTotal.service.characteristics[0].value).to.equal("Rain Yearly Total 0.8 in");
       done();
     });
 
@@ -113,15 +113,15 @@ configs.forEach(config => {
 
       expect(device.windDirection.service.characteristics[0].value).to.equal("Test Wind Direction Name");
       expect(device.windSpeed.service.characteristics[0].value).to.equal("Test Wind Speed Name");
-      expect(device.windGust.service.characteristics[0].value).to.equal("Test Wind Gust Speed Name");
-      expect(device.maxDailyGust.service.characteristics[0].value).to.equal("Test Wind Max Daily Speed Name");
+      expect(device.windGustSpeed.service.characteristics[0].value).to.equal("Test Wind Gust Speed Name");
+      expect(device.windMaxDailySpeed.service.characteristics[0].value).to.equal("Test Wind Max Daily Speed Name");
       expect(device.rainRate.service.characteristics[0].value).to.equal("Test Rain Rate Name");
-      expect(device.eventRain.service.characteristics[0].value).to.equal("Test Rain Event Total Name");
-      expect(device.hourlyRain.service.characteristics[0].value).to.equal("Test Rain Hourly Total Name");
-      expect(device.dailyRain.service.characteristics[0].value).to.equal("Test Rain Daily Total Name");
-      expect(device.weeklyRain.service.characteristics[0].value).to.equal("Test Rain Weekly Total Name");
-      expect(device.monthlyRain.service.characteristics[0].value).to.equal("Test Rain Monthly Total Name");
-      expect(device.yearlyRain.service.characteristics[0].value).to.equal("Test Rain Yearly Total Name");
+      expect(device.rainEventTotal.service.characteristics[0].value).to.equal("Test Rain Event Total Name");
+      expect(device.rainHourlyTotal.service.characteristics[0].value).to.equal("Test Rain Hourly Total Name");
+      expect(device.rainDailyTotal.service.characteristics[0].value).to.equal("Test Rain Daily Total Name");
+      expect(device.rainWeeklyTotal.service.characteristics[0].value).to.equal("Test Rain Weekly Total Name");
+      expect(device.rainMonthlyTotal.service.characteristics[0].value).to.equal("Test Rain Monthly Total Name");
+      expect(device.rainYearlyTotal.service.characteristics[0].value).to.equal("Test Rain Yearly Total Name");
       done();
     });
 
@@ -142,15 +142,15 @@ configs.forEach(config => {
 
       expect(device.windDirection).to.be.undefined;
       expect(device.windSpeed).to.be.undefined;
-      expect(device.windGust).to.be.undefined;
-      expect(device.maxDailyGust).to.be.undefined;
+      expect(device.windGustSpeed).to.be.undefined;
+      expect(device.windMaxDailySpeed).to.be.undefined;
       expect(device.rainRate).to.be.undefined;
-      expect(device.eventRain).to.be.undefined;
-      expect(device.hourlyRain).to.be.undefined;
-      expect(device.dailyRain).to.be.undefined;
-      expect(device.weeklyRain).to.be.undefined;
-      expect(device.monthlyRain).to.be.undefined;
-      expect(device.yearlyRain).to.be.undefined;
+      expect(device.rainEventTotal).to.be.undefined;
+      expect(device.rainHourlyTotal).to.be.undefined;
+      expect(device.rainDailyTotal).to.be.undefined;
+      expect(device.rainWeeklyTotal).to.be.undefined;
+      expect(device.rainMonthlyTotal).to.be.undefined;
+      expect(device.rainYearlyTotal).to.be.undefined;
       done();
     });
 
@@ -171,15 +171,15 @@ configs.forEach(config => {
 
       expect(device.windDirection).to.be.undefined;
       expect(device.windSpeed).to.be.undefined;
-      expect(device.windGust).to.be.undefined;
-      expect(device.maxDailyGust).to.be.undefined;
+      expect(device.windGustSpeed).to.be.undefined;
+      expect(device.windMaxDailySpeed).to.be.undefined;
       expect(device.rainRate).to.be.undefined;
-      expect(device.eventRain).to.be.undefined;
-      expect(device.hourlyRain).to.be.undefined;
-      expect(device.dailyRain).to.be.undefined;
-      expect(device.weeklyRain).to.be.undefined;
-      expect(device.monthlyRain).to.be.undefined;
-      expect(device.yearlyRain).to.be.undefined;
+      expect(device.rainEventTotal).to.be.undefined;
+      expect(device.rainHourlyTotal).to.be.undefined;
+      expect(device.rainDailyTotal).to.be.undefined;
+      expect(device.rainWeeklyTotal).to.be.undefined;
+      expect(device.rainMonthlyTotal).to.be.undefined;
+      expect(device.rainYearlyTotal).to.be.undefined;
       done();
     });
   });
