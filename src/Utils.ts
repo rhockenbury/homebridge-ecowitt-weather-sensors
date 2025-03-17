@@ -446,15 +446,15 @@ export function dataReportTranslator(ambDataReport: any): any {
   const ecoDataReport = JSON.parse(JSON.stringify(ambDataReport));
   let key, value;
 
-  const wh65Prop = ['wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+  const wh65Prop = ['tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
     'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
-    'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
-  const wh67Prop = ['wh65batt', 'tempf', 'humidity', 'winddir', 'windspeedmph',
+    'weeklyrainin', 'monthlyrainin']; // omit 'yearlyrainin'
+  const wh67Prop = ['tempf', 'humidity', 'winddir', 'windspeedmph',
     'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
-    'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
-  const wh80Prop = ['wh80batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+    'weeklyrainin', 'monthlyrainin']; // omit 'yearlyrainin'
+  const wh80Prop = ['tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
     'windgustmph', 'maxdailygust'];
-  const wh90Prop = ['wh90batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
+  const wh90Prop = ['tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
     'windgustmph', 'maxdailygust', 'rrain_piezo', 'erain_piezo', 'hrain_piezo',
     'drain_piezo', 'wrain_piezo', 'mrain_piezo', 'yrain_piezo'];
 
@@ -464,71 +464,47 @@ export function dataReportTranslator(ambDataReport: any): any {
 
     // battout maps to the sensor array battery which depends on the product bundle
     if (key === 'battout') {
-      // verified - from data report
-      if (ambDataReport.stationtype.startsWith('WS1965')) {
-        ecoDataReport.wh65batt = value; // wh67 default
 
-        if (includesAll(Object.keys(ecoDataReport), wh67Prop)) {
-          delete ecoDataReport.battout;
-        } else {
-          delete ecoDataReport.wh65batt;
-        }
-
-        ecoDataReport.model = 'WN1920';
+      if (ambDataReport.stationtype === undefined) {
+        ecoDataReport.stationtype = 'AMBWeather';
       }
 
-      // verified - self-tested
-      if (ambDataReport.stationtype.startsWith('AMBWeatherPro')) { // WS2000, WS2902
-        ecoDataReport.wh65batt = value; // wh65 default
+      // wh40 and wh80/wh90 can look like wh65/wh67
+      const wh40Exists = ambDataReport.battrain !== undefined;
 
-        if (includesAll(Object.keys(ecoDataReport), wh65Prop)) {
-          delete ecoDataReport.battout;
-        } else {
-          delete ecoDataReport.wh65batt;
-        }
+      if (!wh40Exists && includesAll(Object.keys(ecoDataReport), wh65Prop)) { // must be WS2000, or WS2902
+        ecoDataReport.wh65batt = value; // wh65 default
 
         if (ambDataReport.battin !== undefined) {  // WS2000 comes with WH25 for indoor
           ecoDataReport.model = 'HP2550';  // WS2000
         } else {
           ecoDataReport.model = 'WS2900';  // WS2902
         }
+
+        delete ecoDataReport.battout;
+        continue;
       }
 
-      if (ambDataReport.stationtype.startsWith('WS4000')) {
-        ecoDataReport.wh90batt = value; // ws90 default
+      if (!wh40Exists && includesAll(Object.keys(ecoDataReport), wh67Prop)) { // must be WS1965
+        ecoDataReport.wh65batt = value; // wh67 default
+        ecoDataReport.model = 'WN1920';
+        delete ecoDataReport.battout;
+        continue;
+      }
 
-        if (includesAll(Object.keys(ecoDataReport), wh90Prop)) {
-          delete ecoDataReport.battout;
-        } else {
-          delete ecoDataReport.wh90batt;
-        }
-
+      if (includesAll(Object.keys(ecoDataReport), wh90Prop)) { // must be WS4000
+        ecoDataReport.wh90batt = value; // wh90 default
         ecoDataReport.model = 'HP2550';
+        delete ecoDataReport.battout;
+        continue;
+
       }
 
-      if (ambDataReport.stationtype.startsWith('WS5000')) {
-        ecoDataReport.wh80batt = value; // ws80 default
-
-        if (includesAll(Object.keys(ecoDataReport), wh80Prop)) {
-          delete ecoDataReport.battout;
-        } else {
-          delete ecoDataReport.wh80batt;
-        }
-
+      if (includesAll(Object.keys(ecoDataReport), wh80Prop)) { // must be WS5000
+        ecoDataReport.wh80batt = value; // wh80 default
         ecoDataReport.model = 'HP2550';
-      }
-
-      // verified - from data report
-      if (ambDataReport.stationtype.startsWith('OBSERVERIP')) { // WS5000
-        ecoDataReport.wh80batt = value; // ws80 default
-
-        if (includesAll(Object.keys(ecoDataReport), wh80Prop)) {
-          delete ecoDataReport.battout;
-        } else {
-          delete ecoDataReport.wh80batt;
-        }
-
-        ecoDataReport.model = 'OBSERVERIP';
+        delete ecoDataReport.battout;
+        continue;
       }
 
       // if no sensor array matched, then assume outdoor TH sensor

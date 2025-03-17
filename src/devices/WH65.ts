@@ -44,8 +44,8 @@ export class WH65 extends EcowittAccessory {
     this.requiredData = [
       'wh65batt', 'tempf', 'humidity', 'solarradiation', 'uv', 'winddir', 'windspeedmph',
       'windgustmph', 'maxdailygust', 'eventrainin', 'hourlyrainin', 'dailyrainin',
-      'weeklyrainin', 'monthlyrainin', 'yearlyrainin'];
-    this.optionalData = ['rainratein'];
+      'weeklyrainin', 'monthlyrainin'];
+    this.optionalData = ['yearlyrainin', 'rainratein'];
     this.unusedData = ['totalrainin'];
 
     const hideConfig = this.platform.config?.hidden || {};
@@ -136,8 +136,7 @@ export class WH65 extends EcowittAccessory {
       this.maxDailyGust = undefined;
     }
 
-    // current rain rate only appears in ecowitt data reports
-    if (this.platform.isEcowitt() && !utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
+    if (!utils.includesAny(hidden, ['rainrate', `${this.shortServiceId}:rainrate`])) {
       nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainrate`);
       this.rainRate = new RainSensor(platform, accessory, `${this.accessoryId}:rainrate`, nameOverride || 'Rain Rate');
     } else {
@@ -259,11 +258,16 @@ export class WH65 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.rainRate?.updateRate(
-      parseFloat(dataReport.rainratein),
-      utils.lookup(this.platform.config?.thresholds, 'rainRate'),
-      dataReport.dateutc,
-    );
+    if (dataReport.rainratein === undefined) {
+      this.rainRate?.removeService();
+      this.rainRate = undefined;
+    } else {
+      this.rainRate?.updateRate(
+        parseFloat(dataReport.rainratein),
+        utils.lookup(this.platform.config?.thresholds, 'rainRate'),
+        dataReport.dateutc,
+      );
+    }
 
     this.eventRain?.updateTotal(
       parseFloat(dataReport.eventrainin),
@@ -295,10 +299,15 @@ export class WH65 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.yearlyRain?.updateTotal(
-      parseFloat(dataReport.yearlyrainin),
-      utils.lookup(this.platform.config?.thresholds, 'rainYearlyTotal'),
-      dataReport.dateutc,
-    );
+    if (dataReport.yearlyrainin === undefined) {
+      this.yearlyRain?.removeService();
+      this.yearlyRain = undefined;
+    } else {
+      this.yearlyRain?.updateTotal(
+        parseFloat(dataReport.yearlyrainin),
+        utils.lookup(this.platform.config?.thresholds, 'rainYearlyTotal'),
+        dataReport.dateutc,
+      );
+    }
   }
 }
