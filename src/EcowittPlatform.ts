@@ -229,18 +229,19 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         this.baseStationInfo.protocol = utils.ECOWITT;
       }
 
-      try {
-        this.onDataReport(dataReport);
-        res.send();
-      } catch (err) {
-        next(err);
-      }
+      this.onDataReport(dataReport)
+        .then(() => {
+          res.send();
+        }).
+        catch((err) => {
+          next(err);
+        });
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.dataReportServer.use((err, req: Request, res: Response, next: Next) => {
       this.log.warn('An issue occurred while processing a data report. '
-        + `Review the error message below and file a bug report at ${utils.BUG_REPORT_LINK} \n ${err.stack}`);
+        + `Review the error message below and file a bug report at ${utils.BUG_REPORT_LINK} \n${err.stack}`);
       res.status(500).send('Error processing data report');
     });
 
@@ -260,7 +261,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           } else {
             this.log.error(`Unable to start data report service on ${port} '${encodedPath}'. `
               + `Verify plugin configuration with docs at ${utils.GATEWAY_SETUP_LINK}, update plugin configuration, `
-              + `and restart homebridge \n ${err.stack}`);
+              + `and restart homebridge \n${err.stack}`);
           }
         }
       });
@@ -346,15 +347,18 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
         + `${JSON.stringify(dataReport, undefined, 2)}`);
     }
 
-    if (!utils.includesAny(Object.keys(dataReport), this.validatorsReportData) && utils.truthy(this.config?.additional?.validateMac)) {
-      this.log.warn(`Data report must include one of ${this.validatorsReportData} to validate `
-        + 'data report. Check your data report or disable MAC validation in advanced settings');
-      return;
-    }
+    if (utils.truthy(this.config?.additional?.validateMac)) {
 
-    if ((dataReport.PASSKEY !== undefined && dataReport.PASSKEY !== this.baseStationInfo.PASSKEY) ||
-           (dataReport.MAC !== undefined && dataReport.MAC !== this.baseStationInfo.MAC)) {
-      if (utils.truthy(this.config?.additional?.validateMac)) {
+      if (!utils.includesAny(Object.keys(dataReport), this.validatorsReportData)) {
+        this.log.warn(`Data report must include one of ${this.validatorsReportData} to validate `
+          + 'mac. Check your data report or disable MAC validation in advanced settings');
+        return;
+      }
+
+      const validatorKey = dataReport.PASSKEY !== undefined ? 'PASSKEY' : 'MAC';
+
+      if (dataReport[validatorKey] !== this.baseStationInfo.PASSKEY &&
+             dataReport[validatorKey] !== this.baseStationInfo.MAC) {
         if (this.baseStationInfo.deviceIP.length > 0) {
           // attempt to lookup MAC from the IP address from the request
           // to provide user more information for properly setting AMC
@@ -377,8 +381,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           return;
         }
       } else {
-        this.log.debug('Processing data report from unknown MAC address. MAC validation is disabled');
+        this.log.debug('Data report MAC validation was successful');
       }
+    } else {
+      this.log.debug('MAC validation is disabled, not checking MAC or PASSKEY on data report');
     }
 
     if (!utils.includesAll(Object.keys(dataReport), this.requiredReportData)) {
@@ -896,10 +902,11 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
         if (message.includes('Update on') && message.includes('requires data')) {
           this.log.warn(`An issue occurred while updating sensor values for ${sensor.type}. ${message}. ` +
-            `Please file bug reports at ${utils.BUG_REPORT_LINK}`);
+            `If you see this warning repeatedly, use the plugin UI to hide the ${sensor.type} device, ` +
+            `and report a bug to ${utils.BUG_REPORT_LINK}`);
         } else {
           this.log.warn(`An issue occurred while updating sensor values for ${sensor.type}. Review the error message below `
-            + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n ${stack}`);
+            + `and file a bug report if needed at ${utils.BUG_REPORT_LINK} \n${stack}`);
         }
       }
     }

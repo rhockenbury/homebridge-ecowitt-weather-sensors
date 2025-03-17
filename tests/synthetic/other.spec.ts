@@ -44,7 +44,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
     expect(platform.unconsumedReportData.length).to.equal(0);
-    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // solar radiation value
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 
@@ -56,7 +56,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
     expect(platform.unconsumedReportData.length).to.equal(0);
-    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // unable to update WH65
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
     done();
   });
 });

@@ -1,3 +1,7 @@
+### 2.10.1
+
+* Resolve several issues with error handling and data report parsing
+
 ### 2.10.0
 
 * Add support for most Ambient Weather stations and sensors
