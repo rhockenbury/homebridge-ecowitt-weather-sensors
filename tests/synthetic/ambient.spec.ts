@@ -57,13 +57,27 @@ describe('Platform should be configured with accessories', () => {
     platform = createPlatform("synthetic");
     platform.baseStationInfo.protocol = "Ambient";
     platform.onDataReport(testData);
-
     expect(platform.baseStationInfo.sensors.length).to.equal(3);
     expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
     expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WN31");
     expect(platform.unconsumedReportData.length).to.equal(0);
     expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
+    done();
+  });
+
+  // ws2902 is WS2900 and WH65
+  it('ws2902c_wh65 sensors are created', (done) => {
+    testData = require('./data/ambient/ws2902c_wh65.json');
+    platform = createPlatform("synthetic");
+    platform.baseStationInfo.protocol = "Ambient";
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(3);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("WS2900");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH65");
+    expect(platform.baseStationInfo.sensors[2].type).to.equal("WH45");
+    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // unable to udpate WH45
     done();
   });
 
@@ -79,7 +93,7 @@ describe('Platform should be configured with accessories', () => {
     expect(platform.baseStationInfo.sensors[2].type).to.equal("WH40");
     expect(platform.baseStationInfo.sensors[3].type).to.equal("WH25");
     expect(platform.unconsumedReportData.length).to.equal(1); // 'winddir_avg10m'
-    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // solar radiation value
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(1); // base station not created
     done();
   });
 });

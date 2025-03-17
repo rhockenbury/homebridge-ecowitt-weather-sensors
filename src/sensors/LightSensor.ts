@@ -22,6 +22,13 @@ export class LightSensor extends Sensor {
         name,
         platform.serviceUuid(id)));
 
+    // adjust bounds of lux value
+    this.service.getCharacteristic(this.platform.Characteristic.CurrentAmbientLightLevel)
+      .setProps({
+        minValue: 0,
+        maxValue: 150000,
+      });
+
     this.setName(name);
     this.setStatusActive(false);
   }
@@ -39,16 +46,14 @@ export class LightSensor extends Sensor {
     let lux = luxFactor * solarRadiation;
     let luxStr = '';
 
-    if (lux < 0.0001) {  // ambient light characterstic min is 0.0001
-      this.platform.log.warn(`Solar radiation below the minimum of 0.0001lx for ${this.id}`);
-      lux = 0.0001;
+    if (lux < 0.0) {  // ambient light characterstic min is 0
+      this.platform.log.warn(`Solar radiation below the minimum of 0.0lx for ${this.id}`);
+      lux = 0.0;
       luxStr = '0lx';
-    } else if (lux < 0.5) {
-      luxStr = '0lx';
-    } else if (lux > 100000) {  // ambient light characterstic max is 100000
-      this.platform.log.warn(`Solar radiation above the maximum of 100000lx for ${this.id}`);
-      lux = 100000;
-      luxStr = '100000lx';
+    } else if (lux > 150000) {  // ambient light characterstic max is 150000
+      this.platform.log.warn(`Solar radiation above the maximum of 150000lx for ${this.id}`);
+      lux = 150000;
+      luxStr = '150000lx';
     } else {
       luxStr = `${Math.round(lux)}lx`;
     }

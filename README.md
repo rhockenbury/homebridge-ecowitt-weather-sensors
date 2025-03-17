@@ -121,7 +121,7 @@ If your gateway, console and/or sensor is currently not supported, [please open 
 | HP2560 / HP2561 / HP2564 | --- | 7" TFT Color Display Console with Indoor Sensor Antenna | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/HP2560.jpeg" alt="HP2560" width="200"/> |
 | HP3500 (and variants) | WS3000 | 4.3" TFT Color Display Console | *use WN32P for indoor temperature and humidity* | <img src="./docs/assets/HP3500.jpeg" alt="HP3500" width="200"/> |
 | WS2320 / WS2350 | --- | 7" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS2320.jpeg" alt="WS2320" width="200"/> |
-| WS2900 / WS2910 | WS2902 | 6.8" Color LCD Display with Touch Buttons | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS2900.jpeg" alt="WS2900" width="200"/> |
+| WS2900 / WS2910 | WS2902 (A, B, C, and D variants) | 6.8" Color LCD Display with Touch Buttons | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS2900.jpeg" alt="WS2900" width="200"/> |
 | WS3800 / WS3820 | --- | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> | <img src="./docs/assets/WS3800.jpeg" alt="WS3800" width="200"/> |
 | WS3900 / WS3910 | --- | 7.5" LCD Display with IOT Intelligent Linkage Control | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WS3900.jpeg" alt="WS3900" width="200"/> |
 | WN1820 / WN1821 | --- | 4.9" LCD Display | <ul><li>Indoor Temperature</li><li>Indoor Humidity</li></ul> <br> *indoor carbon dioxide not supported* | <img src="./docs/assets/WN1820.jpeg" alt="WN1820" width="200"/> |
