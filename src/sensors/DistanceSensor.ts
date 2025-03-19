@@ -21,7 +21,7 @@ export class DistanceSensor extends MotionSensor {
 
   //---------------------------------------------------------------------------
 
-  public updateDepth(depthmm: number, threshold: number, time: string) {
+  public updateDepth(depthmm: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(depthmm)) {
       this.platform.log.warn(`Cannot update ${this.name}, depth ${depthmm} is NaN`);
       this.updateStatusActive(false);
@@ -55,24 +55,13 @@ export class DistanceSensor extends MotionSensor {
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(depthmm, thresholdmm, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${depthStr}`);
     this.updateValue(depthStr);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(depthmm >= thresholdmm);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //---------------------------------------------------------------------------

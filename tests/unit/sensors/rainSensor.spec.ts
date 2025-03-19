@@ -16,76 +16,78 @@ describe('Rain Sensor Service should be configured for Rain Rate', () => {
   });
 
   it('Characteristics are created and initialized', (done) => {
-    expect(sensor.service.characteristics.length).to.equal(7);
+    expect(sensor.service.characteristics.length).to.equal(6);
+
+    console.log(sensor.service.characteristics);
+
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Rate");
     expect(sensor.service.characteristics[3].value).to.equal(null);
     expect(sensor.service.characteristics[4].value).to.equal(null);
-    expect(sensor.service.characteristics[5].value).to.equal(null);
-    expect(sensor.service.characteristics[6].value).to.equal(false);
+    expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 
   it('Characteristics are updated (in)', (done) => {
     platform.config.units.rain = "in";
-    sensor.updateRate(3, 5, "2024-05-14 19:44:29")
+    sensor.updateRate(3, 5, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in/hour");
-    expect(sensor.service.characteristics[5].value).to.equal("Violent");
-    expect(sensor.service.characteristics[6].value).to.equal(true);
+    expect(sensor.service.characteristics[5].value).to.equal(true);
+    expect(sensor.service.characteristics[6].value).to.equal("Violent");
     done();
   });
 
   it('Motion detected when threshold greater than rate (in)', (done) => {
-    sensor.updateRate(5, 3, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 5.0 in/hour");
+    sensor.updateRate(3, 2, "gt", "2024-05-14 19:44:29")
+    expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();
   });
 
   it('Characteristics are not updated on bad rate value', (done) => {
-    sensor.updateRate(undefined, 3, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 5.0 in/hour");
+    sensor.updateRate(undefined, 3, "gt", "2024-05-14 19:44:29")
+    expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[1].value).to.equal(true)
-    expect(sensor.service.characteristics[2].value).to.equal("Rain Rate 5.0 in/hour");
+    expect(sensor.service.characteristics[2].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
-    expect(sensor.service.characteristics[4].value).to.equal("5.0 in/hour");
-    expect(sensor.service.characteristics[5].value).to.equal("Violent");
-    expect(sensor.service.characteristics[6].value).to.equal(false);
+    expect(sensor.service.characteristics[4].value).to.equal("3.0 in/hour");
+    expect(sensor.service.characteristics[5].value).to.equal(false);
+    expect(sensor.service.characteristics[6].value).to.equal("Violent");
     done();
   });
 
   it('Characteristics are not updated on bad threshold value', (done) => {
-    sensor.updateRate(3, undefined, "2024-05-14 19:44:29")
+    sensor.updateRate(3, undefined, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Rate 3.0 in/hour");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("3.0 in/hour");
-    expect(sensor.service.characteristics[5].value).to.equal("Violent");
-    expect(sensor.service.characteristics[6].value).to.equal(true);
+    expect(sensor.service.characteristics[5].value).to.equal(true);
+    expect(sensor.service.characteristics[6].value).to.equal("Violent");
     done();
   });
 
   it('Characteristics are updated (mm)', (done) => {
     platform.config.units.rain = "mm";
-    sensor.updateRate(1, 30, "2024-05-14 19:44:29")
+    sensor.updateRate(1, 30, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 25.4 mm/hour");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Rate 25.4 mm/hour");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
     expect(sensor.service.characteristics[4].value).to.equal("25.4 mm/hour");
-    expect(sensor.service.characteristics[5].value).to.equal("Heavy");
-    expect(sensor.service.characteristics[6].value).to.equal(true);
+    expect(sensor.service.characteristics[5].value).to.equal(true);
+    expect(sensor.service.characteristics[6].value).to.equal("Heavy");
     done();
   });
 
   it('Motion detected when threshold greater than rate (mm)', (done) => {
-    sensor.updateRate(1, 24, "2024-05-14 19:44:29")
+    sensor.updateRate(1, 24, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Rate 25.4 mm/hour");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();
@@ -114,7 +116,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
 
   it('Characteristics are updated (in)', (done) => {
     platform.config.units.rain = "in";
-    sensor.updateTotal(3, 5, "2024-05-14 19:44:29")
+    sensor.updateTotal(3, 5, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 3.0 in");
@@ -125,25 +127,25 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
   });
 
   it('Motion detected when threshold greater than total (in)', (done) => {
-    sensor.updateTotal(5, 3, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Rain Total 5.0 in");
+    sensor.updateTotal(3, 2, "gt", "2024-05-14 19:44:29")
+    expect(sensor.service.characteristics[0].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();
   });
 
   it('Characteristics are not updated on bad total value', (done) => {
-    sensor.updateTotal(undefined, 3, "2024-05-14 19:44:29")
-    expect(sensor.service.characteristics[0].value).to.equal("Rain Total 5.0 in");
+    sensor.updateTotal(undefined, 3, "gt", "2024-05-14 19:44:29")
+    expect(sensor.service.characteristics[0].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[1].value).to.equal(true)
-    expect(sensor.service.characteristics[2].value).to.equal("Rain Total 5.0 in");
+    expect(sensor.service.characteristics[2].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[3].value).to.equal("2024-05-14 19:44:29 UTC");
-    expect(sensor.service.characteristics[4].value).to.equal("5.0 in");
+    expect(sensor.service.characteristics[4].value).to.equal("3.0 in");
     expect(sensor.service.characteristics[5].value).to.equal(false);
     done();
   });
 
   it('Characteristics are not updated on bad threshold value', (done) => {
-    sensor.updateTotal(3, undefined, "2024-05-14 19:44:29")
+    sensor.updateTotal(3, undefined, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Total 3.0 in");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 3.0 in");
@@ -155,7 +157,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
 
   it('Characteristics are updated (mm)', (done) => {
     platform.config.units.rain = "mm";
-    sensor.updateTotal(1, 30, "2024-05-14 19:44:29")
+    sensor.updateTotal(1, 30, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Total 25.4 mm");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("Rain Total 25.4 mm");
@@ -167,7 +169,7 @@ describe('Rain Sensor Service should be configured for Rain Total', () => {
 
   it('Motion detected when threshold greater than rate (mm)', (done) => {
     platform.config.units.rain = "mm";
-    sensor.updateTotal(1, 24, "2024-05-14 19:44:29")
+    sensor.updateTotal(1, 24, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("Rain Total 25.4 mm");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();

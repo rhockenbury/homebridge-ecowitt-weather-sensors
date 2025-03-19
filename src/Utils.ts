@@ -268,6 +268,12 @@ const kBeaufortScale = [
 
 //------------------------------------------------------------------------------
 
+export function toMm(inches): number {
+  return parseFloat(inches) * 25.4;
+}
+
+//------------------------------------------------------------------------------
+
 export function toKts(mph): number {
   return parseFloat(mph) * 0.86897624;
 }
@@ -316,14 +322,14 @@ export function toWindSector(degrees): string {
 //------------------------------------------------------------------------------
 
 // classifcations from MANOBS (Manual of Surface Weather Observations)
-export function toRainIntensity(ratemm: number): string {
-  if (ratemm <= 0) {
+export function toRainIntensity(ratein: number): string {
+  if (ratein <= 0) {
     return 'None';
-  } else if (ratemm <= 2.5) {
+  } else if (ratein <= 0.1) {
     return 'Light';
-  } else if (ratemm <= 7.5) {
+  } else if (ratein <= 0.3) {
     return 'Moderate';
-  } else if (ratemm <= 50.0) {
+  } else if (ratein <= 2) {
     return 'Heavy';
   } else {
     return 'Violent';
@@ -691,6 +697,49 @@ export function dataReportTranslator(ambDataReport: any): any {
 
   return ecoDataReport;
 }
+
+//------------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function thresholdsRemapper(config: any): PlatformConfig {
+  const remappedConfig = JSON.parse(JSON.stringify(config));
+  let key, value;
+
+  // lightning distance
+  if (config?.units?.distance !== undefined) {
+    remappedConfig.units.lightningDistance = config.units.distance;
+    delete remappedConfig.units.distance;
+  }
+
+  // thresholds
+  if (config.thresholds !== undefined) {
+
+    // only create new config key if it's needed
+    if (config.customThresholds === undefined &&
+          Object.entries(config.thresholds).length > 0) {
+      remappedConfig.customThresholds = [];
+    }
+
+    for (const entry of Object.entries(config.thresholds)) {
+      key = entry[0];
+      value = entry[1];
+
+      const threshold = {
+        name: `${key} > ${value}`,
+        dataProperty: key,
+        comparator: 'gt',
+        value: value,
+      };
+
+      remappedConfig.customThresholds.push(threshold);
+    }
+
+    delete remappedConfig.thresholds;
+  }
+
+  return remappedConfig;
+}
+
 
 //------------------------------------------------------------------------------
 

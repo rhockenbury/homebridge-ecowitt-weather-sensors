@@ -16,6 +16,7 @@ Here's the rough order of things that I recommend when adding support for a new 
 * \[ ] Update `config.schema.json` to add config properties (hidden and thresholds)
 * \[ ] Update the `README.md` to add the device
 * \[ ] Open a PR targeting the `dev` branch
+* \[ ] Check for any needed updates on [project wiki](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki)
 
 #### Validation
 
@@ -29,7 +30,9 @@ Before opening a PR, please ensure that all tests and linting succeeds, and that
 
 * [TypeScript Documentation](https://www.typescriptlang.org/docs/)
 * [Homebridge Developer Docs](https://developers.homebridge.io)
+* [JSON Schema Form](https://github.com/json-schema-form/angular-schema-form/blob/development/docs/index.md)
 * [Homekit Developer Docs](https://developer.apple.com/documentation/homekit/)
+* [Homekit Characteristic Types](https://github.com/apple/HomeKitADK/blob/master/HAP/HAPCharacteristicTypes.h)
 * [Local Homebridge Environment Setup](https://github.com/homebridge/homebridge?tab=readme-ov-file#plugin-development)
 * [Fine Offset Clone Guide](https://meshka.eu/Ecowitt/dokuwiki/doku.php?id=start)
 

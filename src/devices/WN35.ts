@@ -22,27 +22,9 @@ export class WN35 extends EcowittAccessory {
 
     this.requiredData = [`leaf_batt${this.channel}`, `leafwetness_ch${this.channel}`];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['leafWetness', `${this.shortServiceId}:leafWetness`])) {
-      const leafWetnessName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:leafWetness`);
-      this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, leafWetnessName || 'Leaf Wetness');
-    } else {
-      this.leafWetness = new HumiditySensor(platform, accessory, `${this.accessoryId}:leafWetness`, 'Leaf Wetness');
-      this.leafWetness.removeService();
-      this.leafWetness = undefined;
-    }
+    this.setPrimary('leafWetness', 'Leaf Wetness', HumiditySensor);
   }
 
   //----------------------------------------------------------------------------
@@ -68,9 +50,6 @@ export class WN35 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.leafWetness?.update(
-      parseFloat(dataReport[`leafwetness_ch${this.channel}`]),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'leafWetness', `leafwetness_ch${this.channel}`);
   }
 }

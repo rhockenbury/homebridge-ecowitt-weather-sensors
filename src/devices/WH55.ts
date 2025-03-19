@@ -11,7 +11,7 @@ export class WH55 extends EcowittAccessory {
   static readonly properties: string[] = ['waterLeak'];
 
   protected battery: BatterySensor | undefined;
-  protected leak: LeakSensor | undefined;
+  protected waterLeak: LeakSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -22,27 +22,9 @@ export class WH55 extends EcowittAccessory {
 
     this.requiredData = [`leakbatt${this.channel}`, `leak_ch${this.channel}`];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['waterleak', `${this.shortServiceId}:waterleak`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:waterleak`);
-      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, nameOverride || 'Water Leak');
-    } else {
-      this.leak = new LeakSensor(platform, accessory, `${this.accessoryId}:waterleak`, 'Water Leak');
-      this.leak.removeService();
-      this.leak = undefined;
-    }
+    this.setPrimary('waterLeak', 'Water Leak', LeakSensor);
   }
 
   //----------------------------------------------------------------------------
@@ -67,9 +49,6 @@ export class WH55 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.leak?.update(
-      parseFloat(dataReport[`leak_ch${this.channel}`]),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'waterLeak', `leak_ch${this.channel}`);
   }
 }

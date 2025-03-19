@@ -34,18 +34,18 @@ configs.forEach(config => {
     });
 
     it('Services are created', (done) => {
-      expect(device.temperature).to.not.be.undefined;
-      expect(device.humidity).to.not.be.undefined;
-      expect(device.temperature.service.displayName).to.equal("Temperature");
-      expect(device.humidity.service.displayName).to.equal("Humidity");
+      expect(device.indoorTemperature).to.not.be.undefined;
+      expect(device.indoorHumidity).to.not.be.undefined;
+      expect(device.indoorTemperature.service.displayName).to.equal("Temperature");
+      expect(device.indoorHumidity.service.displayName).to.equal("Humidity");
       done();
     });
 
     it('Update is called successfully', (done) => {
       device.update(dataReport);
 
-      expect(device.humidity.service.characteristics[0].value).to.equal("Humidity 49 %")
-      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
+      expect(device.indoorHumidity.service.characteristics[0].value).to.equal("Humidity 49 %")
+      expect(device.indoorTemperature.service.characteristics[0].value).to.equal("Temperature 80.60°F")
       done();
     });
 
@@ -55,10 +55,10 @@ configs.forEach(config => {
 
       device = new BASE(platform, accessory, "GW1000");
 
-      expect(device.temperature).to.not.be.undefined;
-      expect(device.humidity).to.not.be.undefined;
-      expect(device.temperature.service.characteristics[0].value).to.equal("Test Temperature Name");
-      expect(device.humidity.service.characteristics[0].value).to.equal("Test Humidity Name");
+      expect(device.indoorTemperature).to.not.be.undefined;
+      expect(device.indoorHumidity).to.not.be.undefined;
+      expect(device.indoorTemperature.service.characteristics[0].value).to.equal("Test Temperature Name");
+      expect(device.indoorHumidity.service.characteristics[0].value).to.equal("Test Humidity Name");
       done();
     });
 
@@ -68,8 +68,8 @@ configs.forEach(config => {
 
       device = new BASE(platform, accessory, "GW1000");
 
-      expect(device.temperature).to.be.undefined;
-      expect(device.humidity).to.be.undefined;
+      expect(device.indoorTemperature).to.be.undefined;
+      expect(device.indoorHumidity).to.be.undefined;
       done();
     });
 
@@ -79,8 +79,8 @@ configs.forEach(config => {
 
       device = new BASE(platform, accessory, "GW1000");
 
-      expect(device.temperature).to.be.undefined;
-      expect(device.humidity).to.be.undefined;
+      expect(device.indoorTemperature).to.be.undefined;
+      expect(device.indoorHumidity).to.be.undefined;
       done();
     });
   });

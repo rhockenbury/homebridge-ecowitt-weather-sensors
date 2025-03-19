@@ -14,24 +14,13 @@ export class WindSensor extends MotionSensor {
   ) {
     super(platform, accessory, id, name);
 
-    // custom characteristic for intensity string
-    if (name.includes('Speed') || name.includes('speed') || name.includes('Gust') || name.includes('gust')) {
-      if (!this.service.testCharacteristic(utils.CHAR_INTENSITY_NAME)) {
-        this.service.addCharacteristic(
-          new this.platform.api.hap.Characteristic(utils.CHAR_INTENSITY_NAME, utils.CHAR_INTENSITY_UUID, {
-            format: Formats.STRING,
-            perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
-          }));
-      }
-    }
-
     this.setName(name);
     this.setStatusActive(false);
   }
 
   //----------------------------------------------------------------------------
 
-  public updateDirection(windDir: number, time: string) {
+  public updateDirection(windDir: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(windDir)) {
       this.platform.log.warn(`Cannot update ${this.name}, direction ${windDir} is NaN`);
       this.updateStatusActive(false);
@@ -40,75 +29,76 @@ export class WindSensor extends MotionSensor {
 
     const windDirStr = `${windDir.toFixed(0)}° (${utils.toWindSector(windDir)})`;
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(+windDir.toFixed(0), threshold, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${windDirStr}`);
     this.updateValue(windDirStr);
     this.updateTime(time);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //----------------------------------------------------------------------------
 
-  public updateSpeed(windSpeedmph: number, threshold: number, time: string) {
+  public updateSpeed(windSpeedmph: number, threshold: number, comparator: string, time: string) {
     if (!Number.isFinite(windSpeedmph)) {
       this.platform.log.warn(`Cannot update ${this.name}, speed ${windSpeedmph} is NaN`);
       this.updateStatusActive(false);
       return;
     }
 
+    let windSpeed: string;
     let speedStr: string;
-    let thresholdmph: number;
 
     switch (this.platform.config?.units?.wind) {
       case 'kts':
-        thresholdmph = threshold * 1.15078;
-        speedStr = `${utils.toKts(windSpeedmph).toFixed(1)} kts`;
+        windSpeed = utils.toKts(windSpeedmph).toFixed(1);
+        speedStr = `${windSpeed} kts`;
         break;
 
       case 'kph':
-        thresholdmph = threshold * 0.621371;
-        speedStr = `${utils.toKph(windSpeedmph).toFixed(1)} kph`;
+        windSpeed = utils.toKph(windSpeedmph).toFixed(1);
+        speedStr = `${windSpeed} kph`;
         break;
 
       case 'mps':
-        thresholdmph = threshold * 2.23694;
-        speedStr = `${utils.toMps(windSpeedmph).toFixed(1)} mps`;
+        windSpeed = utils.toMps(windSpeedmph).toFixed(1);
+        speedStr = `${windSpeed} mps`;
         break;
 
       default:
       case 'mph':
-        thresholdmph = threshold;
-        speedStr = `${windSpeedmph.toFixed(1)} mph`;
+        windSpeed = windSpeedmph.toFixed(1);
+        speedStr = `${windSpeed} mph`;
         break;
     }
 
     const staticNames = utils.truthy(this.platform.config?.additional?.staticNames);
+    const shouldTrigger = this.checkTrigger(+windSpeed, threshold, comparator);
 
     this.updateStatusActive(true);
     this.updateName(staticNames ? this.name : `${this.name} ${speedStr}`);
     this.updateValue(speedStr);
     this.updateIntensity(windSpeedmph);
     this.updateTime(time);
-
-    if (!Number.isFinite(threshold)) {
-      if (typeof threshold === 'undefined') {
-        this.platform.log.debug(`Cannot update ${this.name} threshold detection, threshold is not set`);
-      } else {
-        this.platform.log.warn(`Cannot update ${this.name} threshold detection, threshold ${threshold} is NaN. `
-          + 'Verify plugin configuration');
-      }
-      this.updateMotionDetected(false);
-      return;
-    }
-
-    this.updateMotionDetected(windSpeedmph >= thresholdmph);
+    this.updateMotionDetected(shouldTrigger);
   }
 
   //----------------------------------------------------------------------------
 
   private updateIntensity(windSpeedmph: number) {
+    // add custom characteristic for intensity string
+    if (!this.service.testCharacteristic(utils.CHAR_INTENSITY_NAME)) {
+      this.service.addCharacteristic(
+        new this.platform.api.hap.Characteristic(utils.CHAR_INTENSITY_NAME, utils.CHAR_INTENSITY_UUID, {
+          format: Formats.STRING,
+          perms: [ Perms.PAIRED_READ, Perms.NOTIFY ],
+        }));
+    }
+
     const beaufort = (utils.toBeafort(windSpeedmph)).description;
     this.platform.log.debug(`Setting ${this.name} intensity to ${beaufort}`);
+
     this.service.updateCharacteristic(
       utils.CHAR_INTENSITY_NAME,
       beaufort,

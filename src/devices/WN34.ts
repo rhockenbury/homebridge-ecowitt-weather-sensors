@@ -22,27 +22,9 @@ export class WN34 extends EcowittAccessory {
 
     this.requiredData = [`tf_batt${this.channel}`, `tf_ch${this.channel}`];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      const batteryName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, batteryName || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
-      const temperatureName = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, temperatureName || 'Temperature');
-    } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
-      this.temperature.removeService();
-      this.temperature = undefined;
-    }
+    this.setPrimary('temperature', 'Temperature', TemperatureSensor);
   }
 
   //----------------------------------------------------------------------------
@@ -68,9 +50,6 @@ export class WN34 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.temperature?.update(
-      parseFloat(dataReport[`tf_ch${this.channel}`]),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'temperature', `tf_ch${this.channel}`);
   }
 }

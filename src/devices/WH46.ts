@@ -12,9 +12,10 @@ import * as utils from './../Utils';
 
 export class WH46 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature', 'humidity', 'airQualityPM25',
-    'airQualityPM25Avg', 'airQualityPM10', 'airQualityPM10Avg', 'airQualityPM1',
-    'airQualityPM1Avg', 'airQualityPM4', 'airQualityPM4Avg', 'carbonDioxide',
+    'airQualityPM25Avg', 'airQualityPM10', 'airQualityPM10Avg', 'carbonDioxide',
     'carbonDioxideAvg'];
+
+  // 'airQualityPM1', 'airQualityPM1Avg', 'airQualityPM4', 'airQualityPM4Avg'
 
   protected battery: BatterySensor | undefined;
   protected temperature: TemperatureSensor | undefined;
@@ -36,98 +37,23 @@ export class WH46 extends EcowittAccessory {
       'pm10_co2', 'pm10_24h_co2', 'co2', 'co2_24h'];
     this.unusedData = ['pm1_co2', 'pm1_24h_co2', 'pm4_co2', 'pm4_24h_co2'];
 
-    const hideConfig = this.platform.config?.hidden || {};
-    const hideConfigCustom = this.platform.config?.customHidden || [];
-    const hidden = Object.keys(hideConfig).filter(k => !!hideConfig[k]).concat(hideConfigCustom);
+    this.setPrimary('battery', 'Battery', BatterySensor);
 
-    let nameOverride: string | undefined;
+    this.setPrimary('temperature', 'Temperature', TemperatureSensor);
 
-    if (!utils.includesAny(hidden, ['battery', `${this.shortServiceId}:battery`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:battery`);
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, nameOverride || 'Battery');
-    } else {
-      this.battery = new BatterySensor(platform, accessory, `${this.accessoryId}:battery`, 'Battery');
-      this.battery.removeService();
-      this.battery = undefined;
-    }
+    this.setPrimary('humidity', 'Humidity', HumiditySensor);
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, nameOverride || 'Temperature');
-    } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
-      this.temperature.removeService();
-      this.temperature = undefined;
-    }
+    this.setPrimary('airQualityPM25', 'PM2.5 Air Quality', AirQualitySensor);
 
-    if (!utils.includesAny(hidden, ['humidity', `${this.shortServiceId}:humidity`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:humidity`);
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, nameOverride || 'Humidity');
-    } else {
-      this.humidity = new HumiditySensor(platform, accessory, `${this.accessoryId}:humidity`, 'Humidity');
-      this.humidity.removeService();
-      this.humidity = undefined;
-    }
+    this.setPrimary('airQualityPM25Avg', 'PM2.5 Air Quality 24h Avg', AirQualitySensor);
 
-    if (!utils.includesAny(hidden, ['airQualityPM25', `${this.shortServiceId}:airQualityPM25`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:airQualityPM25`);
-      this.airQualityPM25 = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM25`,
-        nameOverride || 'PM2.5 Air Quality');
-    } else {
-      this.airQualityPM25 = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM25`, 'airQualityPM25');
-      this.airQualityPM25.removeService();
-      this.airQualityPM25 = undefined;
-    }
+    this.setPrimary('airQualityPM10', 'PM10 Air Quality', AirQualitySensor);
 
-    if (!utils.includesAny(hidden, ['airQualityPM25Avg', `${this.shortServiceId}:airQualityPM25Avg`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:airQualityPM25Avg`);
-      this.airQualityPM25Avg = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM25Avg`,
-        nameOverride || 'PM2.5 Air Quality 24h Avg');
-    } else {
-      this.airQualityPM25Avg = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM25Avg`, 'airQualityPM25Avg');
-      this.airQualityPM25Avg.removeService();
-      this.airQualityPM25Avg = undefined;
-    }
+    this.setPrimary('airQualityPM10Avg', 'PM10 Air Quality 24h Avg', AirQualitySensor);
 
-    if (!utils.includesAny(hidden, ['airQualityPM10', `${this.shortServiceId}:airQualityPM10`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:airQualityPM10`);
-      this.airQualityPM10 = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM10`,
-        nameOverride || 'PM10 Air Quality');
-    } else {
-      this.airQualityPM10 = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM10`, 'airQualityPM10');
-      this.airQualityPM10.removeService();
-      this.airQualityPM10 = undefined;
-    }
+    this.setPrimary('carbonDioxide', 'CO₂ Level', CarbonDioxideSensor);
 
-    if (!utils.includesAny(hidden, ['airQualityPM10Avg', `${this.shortServiceId}:airQualityPM10Avg`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:airQualityPM10Avg`);
-      this.airQualityPM10Avg = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM10Avg`,
-        nameOverride || 'PM10 Air Quality 24h Avg');
-    } else {
-      this.airQualityPM10Avg = new AirQualitySensor(platform, accessory, `${this.accessoryId}:airQualityPM10Avg`, 'airQualityPM10Avg');
-      this.airQualityPM10Avg.removeService();
-      this.airQualityPM10Avg = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['carbonDioxide', `${this.shortServiceId}:carbonDioxide`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:carbonDioxide`);
-      this.carbonDioxide = new CarbonDioxideSensor(platform, accessory, `${this.accessoryId}:carbonDioxide`,
-        nameOverride || 'CO₂ Level');
-    } else {
-      this.carbonDioxide = new CarbonDioxideSensor(platform, accessory, `${this.accessoryId}:carbonDioxide`, 'carbonDioxide');
-      this.carbonDioxide.removeService();
-      this.carbonDioxide = undefined;
-    }
-
-    if (!utils.includesAny(hidden, ['carbonDioxideAvg', `${this.shortServiceId}:carbonDioxideAvg`])) {
-      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:carbonDioxideAvg`);
-      this.carbonDioxideAvg = new CarbonDioxideSensor(platform, accessory, `${this.accessoryId}:carbonDioxideAvg`,
-        nameOverride || 'CO₂ Level 24h Avg');
-    } else {
-      this.carbonDioxideAvg = new CarbonDioxideSensor(platform, accessory, `${this.accessoryId}:carbonDioxideAvg`, 'carbonDioxideAvg');
-      this.carbonDioxideAvg.removeService();
-      this.carbonDioxideAvg = undefined;
-    }
+    this.setPrimary('carbonDioxideAvg', 'CO₂ Level 24h Avg', CarbonDioxideSensor);
   }
 
   //----------------------------------------------------------------------------
@@ -158,44 +84,13 @@ export class WH46 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.temperature?.update(
-      parseFloat(dataReport['tf_co2']),
-      dataReport.dateutc,
-    );
-
-    this.humidity?.update(
-      parseFloat(dataReport['humi_co2']),
-      dataReport.dateutc,
-    );
-
-    this.airQualityPM25?.updatePM25(
-      parseFloat(dataReport['pm25_co2']),
-      dataReport.dateutc,
-    );
-
-    this.airQualityPM25Avg?.updatePM25(
-      parseFloat(dataReport['pm25_24h_co2']),
-      dataReport.dateutc,
-    );
-
-    this.airQualityPM10?.updatePM10(
-      parseFloat(dataReport['pm10_co2']),
-      dataReport.dateutc,
-    );
-
-    this.airQualityPM10Avg?.updatePM10(
-      parseFloat(dataReport['pm10_24h_co2']),
-      dataReport.dateutc,
-    );
-
-    this.carbonDioxide?.update(
-      parseFloat(dataReport['co2']),
-      dataReport.dateutc,
-    );
-
-    this.carbonDioxideAvg?.update(
-      parseFloat(dataReport['co2_24h']),
-      dataReport.dateutc,
-    );
+    this.dispatchUpdate(dataReport, 'update', 'temperature', 'tf_co2');
+    this.dispatchUpdate(dataReport, 'update', 'humidity', 'humi_co2');
+    this.dispatchUpdate(dataReport, 'updatePM25', 'airQualityPM25', 'pm25_co2');
+    this.dispatchUpdate(dataReport, 'updatePM25', 'airQualityPM25Avg', 'pm25_24h_co2');
+    this.dispatchUpdate(dataReport, 'updatePM10', 'airQualityPM10', 'pm10_co2');
+    this.dispatchUpdate(dataReport, 'updatePM10', 'airQualityPM10Avg', 'pm10_24h_co2');
+    this.dispatchUpdate(dataReport, 'update', 'carbonDioxide', 'co2');
+    this.dispatchUpdate(dataReport, 'update', 'carbonDioxideAvg', 'co2_24h');
   }
 }

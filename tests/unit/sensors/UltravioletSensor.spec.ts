@@ -28,7 +28,7 @@ describe('Ultraviolet Sensor Service should be configured for Ultraviolet', () =
   });
 
   it('Characteristics are updated', (done) => {
-    sensor.update(3, 5, "2024-05-14 19:44:29")
+    sensor.update(3, 5, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("UV Index 3");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("UV Index 3");
@@ -40,14 +40,14 @@ describe('Ultraviolet Sensor Service should be configured for Ultraviolet', () =
   });
 
   it('Motion detected when threshold greater than UV', (done) => {
-    sensor.update(8, 5, "2024-05-14 19:44:29")
+    sensor.update(8, 5, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("UV Index 8");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     done();
   });
 
   it('Characteristics are not updated on bad UV value', (done) => {
-    sensor.update(undefined, 5, "2024-05-14 19:44:29")
+    sensor.update(undefined, 5, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("UV Index 8");
     expect(sensor.service.characteristics[1].value).to.equal(true)
     expect(sensor.service.characteristics[2].value).to.equal("UV Index 8");
@@ -59,7 +59,7 @@ describe('Ultraviolet Sensor Service should be configured for Ultraviolet', () =
   });
 
   it('Characteristics are not updated on bad threshold value', (done) => {
-    sensor.update(8, undefined, "2024-05-14 19:44:29")
+    sensor.update(8, undefined, "gt", "2024-05-14 19:44:29")
     expect(sensor.service.characteristics[0].value).to.equal("UV Index 8");
     expect(sensor.service.characteristics[1].value).to.equal(false)
     expect(sensor.service.characteristics[2].value).to.equal("UV Index 8");

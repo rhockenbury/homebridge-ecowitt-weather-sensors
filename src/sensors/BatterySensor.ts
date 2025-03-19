@@ -54,6 +54,7 @@ export class BatterySensor extends Sensor {
   //---------------------------------------------------------------------------
 
   public updateStatusLow(low: boolean, time: string) {
+    this.platform.log.debug(`Setting ${this.name} status low battery to ${low}`);
     this.service.updateCharacteristic(
       this.platform.Characteristic.StatusLowBattery,
       low
@@ -66,6 +67,7 @@ export class BatterySensor extends Sensor {
   //---------------------------------------------------------------------------
 
   public updateChargingState(charging: boolean, time: string) {
+    this.platform.log.debug(`Setting ${this.name} charging state to ${charging}`);
     this.service.updateCharacteristic(
       this.platform.Characteristic.ChargingState,
       charging

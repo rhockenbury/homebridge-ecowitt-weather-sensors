@@ -2,7 +2,7 @@
   "pluginAlias": "Ecowitt",
   "pluginType": "platform",
   "singular": true,
-  "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started\">Getting Started</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#supported-devices\">Supported Devices</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a></p><p align=\"center\">",
+  "headerDisplay": "<p align=\"center\"><img width=\"40%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/ecowitt-logo-text.png\"><br><a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#getting-started\">Getting Started</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#supported-devices\">Supported Devices</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/tree/master?tab=readme-ov-file#configuration\">Configuration Docs</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki\">Wiki</a> | <a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues/new/choose\">Report an Issue</a></p><p align=\"center\">",
   "footerDisplay": "All config changes take effect <em><strong>when a new data report is received</strong></em> after the next Homebridge restart.</p>",
   "schema": {
     "type": "object",
@@ -37,6 +37,8 @@
             "title": "Path",
             "type": "string",
             "pattern": "^/[A-Za-z/]+$",
+            "minLength": 2,
+            "maxLength": 25,
             "required": true,
             "default": "/data/report/",
             "description": "Host path to receive data reports<img width=\"8%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Please ensure that the path entered here exactly matches the path entered for the custom server upload on your gateway device. Alternatively, you can enable 'Accept Any Path' in advanced settings and not specify the path.\">"
@@ -53,12 +55,16 @@
             "key": {
               "title": "Service ID",
               "type": "string",
+              "minLength": 5,
+              "maxLength": 50,
               "required": true,
               "placeholder": "eg. WS85:rainRate, WH51CH1:waterLeak"
             },
             "value": {
               "title": "Name Override",
               "type": "string",
+              "minLength": 3,
+              "maxLength": 100,
               "required": true,
               "placeholder": "eg. Current Precip, Utility Room"
             }
@@ -128,6 +134,15 @@
             "description": "Show the data report in Homebridge logs <br> each time a data report is received",
             "enum": [true, false],
             "enumNames": ["Enabled", "Disabled"]
+          },
+          "triggerMode": {
+            "title": "Trigger Mode",
+            "type": "string",
+            "required": true,
+            "default": "all",
+            "description": "Select the condition for triggering <br> motion detected for motion sensor services",
+            "enum": ["all", "toZero", "fromZero", "tofromZero"],
+            "enumNames": ["All changes", "Changes to zero", "Changes from zero", "Changes to/from zero"]
           }
         }
       },
@@ -144,131 +159,36 @@
               "title": "Threshold Name",
               "type": "string",
               "minLength": 3,
+              "maxLength": 100,
               "required": true,
               "placeholder": "eg. Backyard High Wind Warning"
             },
             "dataProperty": {
               "title": "Data Property",
               "type": "string",
-              "required": true,
               "notitle": true,
-              "default": "windSpeed",
-              "enum": ["windSpeed", "windGustSpeed", "windMaxDailySpeed", "rainRate", "rainEventTotal", "rainHourlyTotal", "rainDailyTotal", "rainWeeklyTotal", "rainMonthlyTotal", "rainYearlyTotal", "uvIndex", "lightningEvents", "lightningDistance", "lightningTime", "airGap", "currentDepth", "totalDepth"],
-              "enumNames": ["Wind Speed", "Wind Gust Speed", "Wind Max Daily Speed", "Rain Rate", "Rain Event Total", "Rain Hourly Total", "Rain Daily Total", "Rain Weekly Total", "Rain Monthly Total", "Rain Yearly Total", "UV Index", "Lightning Events", "Lightning Distance", "Lightning Time", "Air Gap", "Current Depth", "Total Depth"]
+              "default": "none",
+              "required": true,
+              "enum": ["none", "windDirection", "windSpeed", "windGustSpeed", "windMaxDailySpeed", "rainRate", "rainEventTotal", "rainHourlyTotal", "rainDailyTotal", "rainWeeklyTotal", "rainMonthlyTotal", "rainYearlyTotal", "uvIndex", "lightningEvents", "lightningDistance", "lightningTime", "airGap", "currentDepth", "totalDepth"],
+              "enumNames": ["None", "Wind Direction", "Wind Speed", "Wind Gust Speed", "Wind Max Daily Speed", "Rain Rate", "Rain Event Total", "Rain Hourly Total", "Rain Daily Total", "Rain Weekly Total", "Rain Monthly Total", "Rain Yearly Total", "UV Index", "Lightning Events", "Lightning Distance", "Lightning Time", "Air Gap", "Current Depth", "Total Depth"]
             },
             "comparator": {
               "title": "Comparator",
               "type": "string",
-              "required": true,
               "notitle": true,
-              "default": "gt",
-              "enum": ["gt", "lt"],
-              "enumNames": ["Greater than", "Less than"]
+              "default": "none",
+              "required": true,
+              "enum": ["none", "gt", "lt"],
+              "enumNames": ["None", "Greater than", "Less than"]
             },
-            "threshold": {
-              "title": "Threshold",
+            "value": {
+              "title": "Value",
               "type": "number",
+              "minimum": 0,
               "required": true,
               "notitle": true,
               "placeholder": "eg. 12.5"
             }
-          }
-        }
-      },
-      "thresholds": {
-        "type": "object",
-        "properties": {
-          "windSpeed": {
-            "title": "Wind Speed",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "windGustSpeed": {
-            "title": "Wind Gust Speed",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "windMaxDailySpeed": {
-            "title": "Wind Max Daily Speed",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainRate": {
-            "title": "Rain Rate",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainEventTotal": {
-            "title": "Rain Event Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainHourlyTotal": {
-            "title": "Rain Hourly Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainDailyTotal": {
-            "title": "Rain Daily Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainWeeklyTotal": {
-            "title": "Rain Weekly Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainMonthlyTotal": {
-            "title": "Rain Monthly Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainYearlyTotal": {
-            "title": "Rain Yearly Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "rainTotal": {
-            "title": "Rain Total",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "uvIndex": {
-            "title": "UV Index",
-            "type": "number",
-            "notitle": true,
-            "minimum": 1,
-            "maximum": 15,
-            "required": false
-          },
-          "lightningEvents": {
-            "title": "Lightning Events",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "lightningDistance": {
-            "title": "Lightning Distance",
-            "type": "number",
-            "notitle": true,
-            "required": false
-          },
-          "lightningTime": {
-            "title": "Lightning Time",
-            "type": "number",
-            "notitle": true,
-            "required": false
           }
         }
       },
@@ -557,6 +477,8 @@
         "items": {
           "type": "string",
           "title": "Service ID&nbsp;<strong class=\"text-danger\">*</strong>",
+          "minLength": 5,
+          "maxLength": 50,
           "placeholder": "eg. WS85:rainRate, WH51CH1:waterLeak, BASE:indoorTemperature"
         }
       },
@@ -700,7 +622,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure the data report service to receive data reports.</p>"
+          "helpvalue": "<p class=\"help-block\">Configure the plugin to receive data reports.</p>"
         },
         {
           "type": "flex",
@@ -888,8 +810,6 @@
         }
       ]
     },
-
-
     {
       "type": "fieldset",
       "expandable": true,
@@ -899,7 +819,7 @@
       "items": [
         {
           "type": "help",
-          "helpvalue": "<p class=\"help-block\">Configure the thresholds to trigger the motion sensor.<img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Select units first before configuring thresholds.\"></p>"
+          "helpvalue": "<p class=\"help-block\">Configure the thresholds to trigger the motion sensor.<a href=\"https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Threshold-Triggers\" target=\"_blank\"><img width=\"4%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"Select units first before configuring thresholds. Thresholds are only available for data properties represented with Motion Sensor services. More information on threshold triggers can be found by clicking here.\"></a></p>"
         },
         {
           "type": "flex",
@@ -949,30 +869,44 @@
                       "items": [
                         {
                           "type": "help",
+                          "helpvalue": "<strong>the threshold of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
+                          "condition": {
+                            "functionBody": "return model.customThresholds[arrayIndices].dataProperty.startsWith('none');"
+                          }
+                        },
+                        {
+                          "type": "help",
+                          "helpvalue": "<strong>the threshold (deg) of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
+                          "condition": {
+                            "functionBody": "return model.customThresholds[arrayIndices].dataProperty.startsWith('windDirection');"
+                          }
+                        },
+                        {
+                          "type": "help",
                           "helpvalue": "<strong>the threshold (mph) of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
                           "condition": {
-                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'mph');"
+                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.customThresholds[arrayIndices].dataProperty.includes('Speed') && model.units.wind === 'mph');"
                           }
                         },
                         {
                           "type": "help",
                           "helpvalue": "<strong>the threshold (kts) of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
                           "condition": {
-                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'kts');"
+                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.customThresholds[arrayIndices].dataProperty.includes('Speed') && model.units.wind === 'kts');"
                           }
                         },
                         {
                           "type": "help",
                           "helpvalue": "<strong>the threshold (kph) of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
                           "condition": {
-                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'kph');"
+                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.customThresholds[arrayIndices].dataProperty.includes('Speed') && model.units.wind === 'kph');"
                           }
                         },
                         {
                           "type": "help",
                           "helpvalue": "<strong>the threshold (mps) of...<strong>&nbsp;<strong class=\"text-danger\">*</strong>",
                           "condition": {
-                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.units.wind === 'mps');"
+                            "functionBody": "return (model.customThresholds[arrayIndices].dataProperty.startsWith('wind') && model.customThresholds[arrayIndices].dataProperty.includes('Speed') && model.units.wind === 'mps');"
                           }
                         },
                         {
@@ -1052,7 +986,7 @@
                             "functionBody": "return ((model.customThresholds[arrayIndices].dataProperty == 'airGap' || model.customThresholds[arrayIndices].dataProperty.includes('Depth')) && model.units.laserDistance === 'mt');"
                           }
                         },
-                        "customThresholds[].threshold"
+                        "customThresholds[].value"
                       ]
                     }
                   ]
@@ -1063,8 +997,6 @@
         }
       ]
     },
-
-
     {
       "type": "fieldset",
       "expandable": true,
@@ -1126,7 +1058,8 @@
               "items": [
                 "additional.luxFactor",
                 "additional.acceptAnyPath",
-                "additional.removeStaleDevices"
+                "additional.removeStaleDevices",
+                "additional.triggerMode"
               ]
             }
           ]

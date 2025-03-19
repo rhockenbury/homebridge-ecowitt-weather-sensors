@@ -1,7 +1,14 @@
 ### 2.11.0
 
 * Introduce support for Ecowitt Laser Distance Sensor (LDS01)
-* Display service for 'totalRain' data property if present in data report
+* Add "Custom Thresholds" feature for expanded capabilities for thresholds
+* Display service for 'totalRain' data property (only) if present in data report
+* Fix bug with 'rainWeeklyTotal' data property that prevented device hiding
+* Various internal refactoring to reduce code duplication across devices
+
+:warning: BREAKING CHANGES
+
+* If you currently use the thresholds feature, please see https://bit.ly/41zH1kF before upgrading
 
 ### 2.10.0
 
