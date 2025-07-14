@@ -101,6 +101,8 @@ export class WS90 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
+    this.platform.log.error(`accessory HELLO ${JSON.stringify(this.thresholds, undefined, 2)}`);
+
     const batt = parseFloat(dataReport['wh90batt']);
     const batteryLevel = batt / 3.3;
     const lowBattery = batt <= 2.3;

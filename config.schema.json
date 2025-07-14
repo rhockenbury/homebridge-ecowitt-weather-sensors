@@ -58,7 +58,7 @@
               "minLength": 5,
               "maxLength": 50,
               "required": true,
-              "placeholder": "eg. WS85:rainRate, WH51CH1:waterLeak"
+              "placeholder": "eg. WS85:rainRate, WH55CH1:waterLeak"
             },
             "value": {
               "title": "Name Override",
@@ -130,7 +130,7 @@
             "title": "Log Data Reports",
             "type": "string",
             "required": true,
-            "default": false,
+            "default": true,
             "description": "Show the data report in Homebridge logs <br> each time a data report is received",
             "enum": [true, false],
             "enumNames": ["Enabled", "Disabled"]
@@ -479,7 +479,7 @@
           "title": "Service ID&nbsp;<strong class=\"text-danger\">*</strong>",
           "minLength": 5,
           "maxLength": 50,
-          "placeholder": "eg. WS85:rainRate, WH51CH1:waterLeak, BASE:indoorTemperature"
+          "placeholder": "eg. WS85:rainRate, WH55CH1:waterLeak, BASE:indoorTemperature"
         }
       },
       "units": {

@@ -20,7 +20,7 @@ export class WN31 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WN31', 'WN31 Thermo Hygro Sensor', channel);
+    super(platform, accessory, 'WN31', `WN31CH${channel} Thermo Hygro Sensor`, channel);
 
     this.requiredData = [`batt${this.channel}`, `temp${this.channel}f`, `humidity${this.channel}`];
 

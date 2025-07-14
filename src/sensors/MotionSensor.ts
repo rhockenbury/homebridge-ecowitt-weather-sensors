@@ -91,6 +91,9 @@ export class MotionSensor extends Sensor {
       return false;
     }
 
+    this.platform.log.error(`value ${value}`);
+    this.platform.log.error(`threshold ${threshold}`);
+
     let result = false;
 
     if (comparator === 'gt') {
@@ -106,6 +109,8 @@ export class MotionSensor extends Sensor {
         `comparator ${comparator} not recognized`);
       result = false;
     }
+
+    this.platform.log.error(`result ${result}`);
 
     return result;
   }

@@ -18,7 +18,7 @@ export class WH55 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH55', 'WH55 Water Leak Sensor', channel);
+    super(platform, accessory, 'WH55', `WH55CH${channel} Water Leak Sensor`, channel);
 
     this.requiredData = [`leakbatt${this.channel}`, `leak_ch${this.channel}`];
 

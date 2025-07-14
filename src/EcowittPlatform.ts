@@ -153,7 +153,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.config = updatedConfig;
       this.log.warn('Plugin config needs to be updated, an updated version '
         + 'of your plugin configuration has been generated below. Copy and paste this updated config into '
-        + 'the plugin JSON config editor. For more help, see https://bit.ly/41xwHtw. '
+        + `the plugin JSON config editor. For more help, see ${utils.PLUGIN_CONFIG_LINK}`
         + `\n${JSON.stringify(updatedConfig, undefined, 2)}`);
     }
 

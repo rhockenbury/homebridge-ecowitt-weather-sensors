@@ -22,7 +22,7 @@ This plugin runs a server that can receive data reports from your weather statio
 
 * Support for most Fine Offset weather station products and sensors
 * Operates locally (LAN) without the need for any cloud services
-* Detection thresholds for most weather sensor devices to drive automations
+* Detection thresholds for data displayed as Motion Sensors (like wind, rain, uv, etc)
 * Customize units, sensor override names, and whether to show or hide a device
 
 ## Requirements
@@ -31,7 +31,7 @@ This plugin runs a server that can receive data reports from your weather statio
 * For Ecowitt (and most other white-labels), the **WSView Plus** app ([iOS](https://apps.apple.com/us/app/wsview-plus/id1581353359) / [Android](https://play.google.com/store/apps/details?id=com.ost.wsautool))
 * For Ambient products, the **awnet** app ([iOS](https://apps.apple.com/us/app/awnet/id1341994564) / [Android](https://play.google.com/store/apps/details?id=com.dtston.ambienttoolplus))
 
-> :warning: **This plugin uses a few custom characteristics on HomeKit services which are not visible on the HomeKit app. For full functionality, third-party apps such as [Eve](https://www.evehome.com/en-us/eve-app), [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended, but not required.**
+> :warning: **This plugin uses [custom characteristics on HomeKit services](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/Setting-Threshold-Triggers#overview) which are not visible on the HomeKit app. For full functionality, third-party apps such as [Eve](https://www.evehome.com/en-us/eve-app), [Controller for HomeKit](https://controllerforhomekit.com/) or [Home+](https://apps.apple.com/us/app/home-6/id995994352) are recommended, but not required.**
 
 ## Installation
 

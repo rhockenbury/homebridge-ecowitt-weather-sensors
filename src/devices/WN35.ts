@@ -18,7 +18,7 @@ export class WN35 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WN35', 'WN35 Leaf Wetness Sensor', channel);
+    super(platform, accessory, 'WN35', `WN35CH${channel} Leaf Wetness Sensor`, channel);
 
     this.requiredData = [`leaf_batt${this.channel}`, `leafwetness_ch${this.channel}`];
 

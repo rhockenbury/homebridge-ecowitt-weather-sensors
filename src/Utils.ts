@@ -7,6 +7,7 @@ export const BUG_REPORT_LINK = 'https://bit.ly/3yklrWZ';
 export const FEATURE_REQ_LINK = 'https://bit.ly/4fzeAtj';
 export const GATEWAY_SETUP_LINK = 'https://bit.ly/3YGnYVU';
 export const MIGRATION_GUIDE_LINK = 'https://bit.ly/4d4K8oh';
+export const PLUGIN_CONFIG_LINK = 'https://bit.ly/41xwHtw';
 
 //------------------------------------------------------------------------------
 

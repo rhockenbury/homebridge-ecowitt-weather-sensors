@@ -22,8 +22,8 @@ export class EcowittAccessory {
   protected readonly accessoryId: string;
   protected readonly shortServiceId: string;
 
-  protected readonly hidden: string[] = [];
-  protected readonly thresholds: Threshold[] = [];
+  protected hidden: string[] = [];
+  protected thresholds: Threshold[] = [];
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -172,7 +172,12 @@ export class EcowittAccessory {
       this[id] = sensor;
     });
 
+    this.platform.log.debug(`Pushing to thresholds '${JSON.stringify(thresholds, undefined, 2)}'`);
+
     this.thresholds.push(...thresholds);
+
+    //this.platform.log.debug(`Thresholds after push '${JSON.stringify(this.thresholds, undefined, 2)}'`);
+
 
     // remove any unneeded thresholds
     const existingThresholds = this.accessory.services.filter(s => s.subtype?.startsWith(`threshold:${property}`));
@@ -187,14 +192,32 @@ export class EcowittAccessory {
   //---------------------------------------------------------------------------
 
   protected dispatchUpdate(dataReport, handler, property, data) {
+    this.platform.log.warn(`this ${Object.keys(this)}`);
     Object.keys(this).filter(id => id.includes(property)).forEach(id => {
+
+      this.platform.log.warn(`id ${id}`);
+
+      this.platform.log.warn(`thresholds ${JSON.stringify(this.thresholds, undefined, 2)}`);
+
       const threshold = this.thresholds.filter(t => t.id === id)[0];
-      this[id]?.[handler](
-        parseFloat(dataReport[data]),
-        threshold?.value,
-        threshold?.comparator,
-        dataReport.dateutc,
-      );
+
+      this.platform.log.warn(`threshold ${threshold}`);
+      this.platform.log.warn(`motion ${this[id]?.service.constructor.name}`);
+
+      // motion sensor dispatched with threshold
+      if (this[id]?.service.constructor.name === 'MotionSensor') {
+        this[id]?.[handler](
+          parseFloat(dataReport[data]),
+          threshold?.value,
+          threshold?.comparator,
+          dataReport.dateutc,
+        );
+      } else {
+        this[id]?.[handler](
+          parseFloat(dataReport[data]),
+          dataReport.dateutc,
+        );
+      }
     });
   }
 
@@ -204,22 +227,30 @@ export class EcowittAccessory {
       if (dataReport[data] === undefined) {
         if (id.startsWith('threshold') && threshold !== undefined) {
           this.platform.log.warn(`Threshold '${threshold.name}' for optional property '${property}' ` +
-          ' will not be displayed because that property is not available on the data report');
+          ' will not be displayed because property is not available on the data report');
         } else {
           this.platform.log.debug(`Note that optional property '${property}' will not be displayed ` +
-            'because that property is not available on the data report');
+            'because property is not available on the data report');
         }
 
         // clean up service since there's no data for it
         this[id]?.removeService();
         this[id] = undefined;
       } else {
-        this[id]?.[handler](
-          parseFloat(dataReport[data]),
-          threshold?.value,
-          threshold?.comparator,
-          dataReport.dateutc,
-        );
+        // motion sensor dispatched with threshold
+        if (this[id]?.service.constructor.name === 'MotionSensor') {
+          this[id]?.[handler](
+            parseFloat(dataReport[data]),
+            threshold?.value,
+            threshold?.comparator,
+            dataReport.dateutc,
+          );
+        } else {
+          this[id]?.[handler](
+            parseFloat(dataReport[data]),
+            dataReport.dateutc,
+          );
+        }
       }
     });
   }

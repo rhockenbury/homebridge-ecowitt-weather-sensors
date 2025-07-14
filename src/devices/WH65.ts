@@ -105,6 +105,8 @@ export class WH65 extends EcowittAccessory {
       this.platform.log.debug(`Updating accessory ${this.accessoryId}`);
     }
 
+    this.platform.log.error(`accessory HELLO ${JSON.stringify(this.thresholds, undefined, 2)}`);
+
     this.battery?.updateStatusLow(
       dataReport.wh65batt === '1',
       dataReport.dateutc,

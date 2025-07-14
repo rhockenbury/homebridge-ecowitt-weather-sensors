@@ -5,9 +5,9 @@ const definitions = require('./definitions');
 
 // load the simulation track
 let simTracks = {};
-const trackFiles = fs.readdirSync('tests/synthetic/data/').filter(file => path.extname(file) === '.json');
+const trackFiles = fs.readdirSync('tests/synthetic/data/ecowitt/').filter(file => path.extname(file) === '.json');
 trackFiles.forEach(file => {
-  const fileData = fs.readFileSync(path.join('tests/synthetic/data/', file));
+  const fileData = fs.readFileSync(path.join('tests/synthetic/data/ecowitt/', file));
   simTracks[file.split('.')[0]] = JSON.parse(fileData.toString());
 });
 

@@ -19,7 +19,7 @@ export class WH41 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH41', 'WH41 PM2.5 Air Quality Sensor', channel);
+    super(platform, accessory, 'WH41', `WH41CH${channel} PM2.5 Air Quality Sensor`, channel);
 
     this.requiredData = [`pm25batt${this.channel}`, `pm25_ch${this.channel}`, `pm25_avg_24h_ch${this.channel}`];
 
