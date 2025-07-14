@@ -1,3 +1,7 @@
+### 2.10.2
+
+* Fix bug to support up to 16 WH51 sensors
+
 ### 2.10.1
 
 * Resolve several issues with error handling and data report parsing

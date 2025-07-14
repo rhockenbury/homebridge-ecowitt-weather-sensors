@@ -2,7 +2,7 @@
   "private": false,
   "displayName": "Homebridge Ecowitt Weather Sensors",
   "name": "homebridge-ecowitt-weather-sensors",
-  "version": "2.10.1",
+  "version": "2.10.2",
   "description": "Homebridge support for your Fine Offset weather station (Ecowitt, Ambient, Froggit, GoGen, and more)",
   "license": "Apache-2.0",
   "homepage": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors#readme",
