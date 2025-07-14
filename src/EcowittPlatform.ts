@@ -548,7 +548,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     if (!utils.includesAny(hidden, ['WH51']) && !utils.includesAll(hidden, WH51.properties)) {
-      for (let channel = 1; channel <= 8; channel++) {
+      for (let channel = 1; channel <= 16; channel++) {
         if (!utils.includesAny(hidden, [`WH51CH${channel}`])) {
           this.addSensorType(
             dataReport[`soilbatt${channel}`] !== undefined,
