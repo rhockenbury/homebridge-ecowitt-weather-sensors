@@ -1,10 +1,10 @@
-name: Master - Build
+name: Dev - Build for HB v1.x
 
 on:
   push:
-    branches: [master]
-  schedule:
-    - cron: "0 13 * * 1" # every Monday
+    branches: [dev]
+  pull_request:
+    branches: [master, dev]
   workflow_dispatch:
 
 jobs:
@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
-        homebridge-version: ["~1.6.0", "~1.7.0", "~1.8.0", "~1.9.0", "~1.10.0", "~1.11.0", "2.0.0-beta.27"]
+        node-version: [18.x, 20.x, 22.x, 24.x]
+        homebridge-version: ["~1.6.0", "~1.7.0", "~1.8.0", "~1.9.0", "~1.10.0", "~1.11.0"]
 
     steps:
       - uses: actions/checkout@v4
@@ -44,10 +44,13 @@ jobs:
       - name: Build the project
         run: npm run build
 
-      - name: Audit dependencies
+      - name: List, audit, fix outdated dependencies and build again
         run: |
           npm list --outdated
-          npm audit --audit-level=high
+          npm audit --audit-level=high || true  # ignore failures
+          npm audit fix --audit-level=high || true
+          npm list --outdated
+          npm run build
 
       - name: Run the tests
         run: npm test

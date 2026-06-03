@@ -19,8 +19,8 @@
     "url": "https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/issues"
   },
   "engines": {
-    "node": "^18.20.4 || ^20.18.0 || ^22.10.0",
-    "homebridge": "^1.6.0 || ^2.0.0-beta.0"
+    "node": "^18.20.4 || ^20.18.0 || ^22.10.0 || ^24.0.0",
+    "homebridge": "^1.6.0 || ^1.8.0 || ^2.0.0"
   },
   "main": "dist/index.js",
   "scripts": {
@@ -84,7 +84,7 @@
     "eslint": "^8.56.0",
     "hap-nodejs": "^1.1.0",
     "homebridge": "^1.8.4",
-    "mocha": "^10.7.3",
+    "mocha": "^11.3.0",
     "mockdate": "^3.0.5",
     "nodemon": "^3.1.4",
     "remark-cli": "^12.0.1",
