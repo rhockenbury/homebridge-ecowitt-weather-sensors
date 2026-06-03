@@ -1,0 +1,54 @@
+name: Master - Build for HB v2.x
+
+on:
+  push:
+    branches: [master]
+  schedule:
+    - cron: "0 13 * * 1" # every Monday
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # Node.js v18 and v20 are no longer supported. Homebridge v2 requires Node.js v22 or v24.
+        node-version: [22.x, 24.x]
+        homebridge-version: ["^2.0.0"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install homebridge ${{ matrix.homebridge-version  }}
+        run: npm install homebridge@${{ matrix.homebridge-version }}
+
+      - name: Show node and homebridge version
+        run: node -v && npm list homebridge
+
+      - name: Install dependencies
+        run: |
+          npm install
+          npm list --depth=1
+
+      - name: Lint the project
+        run: npm run lint
+
+      - name: Validate project links
+        run: npm run remark
+
+      - name: Build the project
+        run: npm run build
+
+      - name: Audit dependencies
+        run: |
+          npm list --outdated
+          npm audit --audit-level=high
+
+      - name: Run the tests
+        run: npm test
