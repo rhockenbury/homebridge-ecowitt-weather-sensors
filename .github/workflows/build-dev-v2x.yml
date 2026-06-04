@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         # Node.js v18 and v20 are no longer supported. Homebridge v2 requires Node.js v22 or v24.
-        node-version: [22.x, 24.x]
+        node-version: [22.x, 24.x, 26.x]
         homebridge-version: ["^2.0.0"]
 
     steps:

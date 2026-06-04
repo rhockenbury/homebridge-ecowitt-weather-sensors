@@ -13,8 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x, 24.x]
-        homebridge-version: ["~1.6.0", "~1.7.0", "~1.8.0", "~1.9.0", "~1.10.0", "~1.11.0"]
+        node-version: [20.x, 22.x, 24.x]
+        homebridge-version: ["~1.8.0", "~1.9.0", "~1.10.0", "~1.11.0"]
 
     steps:
       - uses: actions/checkout@v4
