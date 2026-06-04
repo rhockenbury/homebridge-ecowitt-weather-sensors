@@ -76,8 +76,8 @@ interface BaseStationInfoType {
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class EcowittPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service = this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
+  public readonly Service: typeof Service; //= this.api.hap.Service;
+  public readonly Characteristic: typeof Characteristic; // = this.api.hap.Characteristic;
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
@@ -114,6 +114,9 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     public readonly config: PlatformConfig,
     public readonly api: API,
   ) {
+    this.Service = this.api.hap.Service;
+    this.Characteristic = this.api.hap.Characteristic;
+
     let mac = this.config?.baseStation?.mac || this.config?.mac;
 
     if (typeof mac === 'undefined' || !arp.isMAC(mac)) {
