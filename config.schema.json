@@ -70,7 +70,7 @@
             "title": "Static Names",
             "type": "string",
             "required": true,
-            "default": false,
+            "default": true,
             "description": "Enable or disable weather metric values <br> in the service names",
             "enum": [true, false],
             "enumNames": ["Enabled", "Disabled"]
