@@ -49,7 +49,7 @@ export function truthy(val): boolean {
   if (typeof val === 'undefined') {
     return false;
   }
-  return String(val).toLowerCase() === 'true' || String(val).toLowerCase() === '1';
+  return String(val).toLowerCase() === 'true' || String(val).toLowerCase() === '1' || String(val).toLowerCase() === 'enabled';
 }
 
 //------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ export function falsy(val): boolean {
   if (typeof val === 'undefined') {
     return true;
   }
-  return String(val).toLowerCase() === 'false' || String(val).toLowerCase() === '0';
+  return String(val).toLowerCase() === 'false' || String(val).toLowerCase() === '0' || String(val).toLowerCase() === 'disabled';
 }
 
 //------------------------------------------------------------------------------
@@ -696,6 +696,32 @@ export function baseStationRemapper(config: any): PlatformConfig {
 
       if (key[0] === 'GW1000' || key[0] === 'GW2000' || key[0] === 'GW3000' || key[0] === 'HP2560') {
         remappedConfig.nameOverrides[i].key = `BASE:${key[1]}`;
+      }
+    }
+  }
+
+  return remappedConfig;
+}
+
+//------------------------------------------------------------------------------
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function advancedSettingsRemapper(config: any): PlatformConfig {
+  const remappedConfig = JSON.parse(JSON.stringify(config));
+  let key, value;
+
+  // advanced settings
+  if (config.additional !== undefined ) {
+    for (const entry of Object.entries(config.additional)) {
+      key = entry[0];
+      value = entry[1];
+
+      if (value === 'true') {
+        remappedConfig.additional[key] = 'enabled';
+      }
+
+      if (value === 'false') {
+        remappedConfig.additional[key] = 'disabled';
       }
     }
   }
