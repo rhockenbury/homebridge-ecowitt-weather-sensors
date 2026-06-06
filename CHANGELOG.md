@@ -1,3 +1,8 @@
+### 2.11.0
+
+* Fix Plugin UI validation issue
+* Update dependencies and node v22 and node v24 compatibility support
+
 ### 2.10.2
 
 * Fix bug to support up to 16 WH51 sensors
