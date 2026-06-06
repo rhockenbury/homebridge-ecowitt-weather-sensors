@@ -136,12 +136,12 @@
         }
     ],
     "additional": {
+        "staticNames": "disabled",
+        "validateMac": "enabled",
         "luxFactor": 126.7,
-        "staticNames": "false",
-        "validateMac": "true",
-        "acceptAnyPath": "false",
-        "validateTimestamp": "true",
-        "removeStaleDevices": "true"
+        "acceptAnyPath": "disabled",
+        "validateTimestamp": "enabled",
+        "removeStaleDevices": "enabled"
     },
     "thresholds": {
         "uvIndex": 6,

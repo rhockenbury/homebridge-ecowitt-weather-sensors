@@ -6,12 +6,12 @@
         "path": "/data/report"
     },
     "additional": {
-        "staticNames": "false",
-        "validateMac": "true",
+        "staticNames": "disabled",
+        "validateMac": "enabled",
         "luxFactor": 126.7,
-        "acceptAnyPath": "false",
-        "validateTimestamp": "false",
-        "removeStaleDevices": "true"
+        "acceptAnyPath": "disabled",
+        "validateTimestamp": "disabled",
+        "removeStaleDevices": "enabled"
     },
     "units": {
         "wind": "mph",

@@ -144,9 +144,19 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     }
 
     // structure of base station changed in v2.7.0 and prior versions need to be remapped
-    const updatedConfig = utils.baseStationRemapper(this.config);
+    let updatedConfig = utils.baseStationRemapper(this.config);
     if (JSON.stringify(updatedConfig) === JSON.stringify(this.config)) {
       this.log.debug('Plugin configuration migration for base station not required');
+    } else {
+      this.config = updatedConfig;
+      this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
+        + `of your plugin configuration has been generated below \n${JSON.stringify(updatedConfig, undefined, 2)}`);
+    }
+
+    // structure of advanced settings changed in v2.11.0 and prior versions need to be remapped
+    updatedConfig = utils.advancedSettingsRemapper(this.config);
+    if (JSON.stringify(updatedConfig) === JSON.stringify(this.config)) {
+      this.log.debug('Plugin configuration migration for advanced settings not required');
     } else {
       this.config = updatedConfig;
       this.log.warn('Plugin config needs to be migrated, an auto-migrated version '

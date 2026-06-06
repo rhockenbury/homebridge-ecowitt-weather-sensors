@@ -45,10 +45,10 @@
       },
       "nameOverrides": {
         "type": "array",
+        "title": "Name Override",
+        "labelHtmlClass": "d-none",
         "items": {
-          "title": "Name Override",
           "type": "object",
-          "notitle": true,
           "properties": {
             "key": {
               "title": "Service ID",
@@ -70,18 +70,18 @@
             "title": "Static Names",
             "type": "string",
             "required": true,
-            "default": true,
+            "default": "enabled",
             "description": "Enable or disable weather metric values <br> in the service names",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
           "validateMac": {
             "title": "MAC Address Validation",
             "type": "string",
             "required": true,
-            "default": true,
+            "default": "enabled",
             "description": "Verify the MAC address in each received <br> data report",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
           "luxFactor": {
@@ -95,36 +95,36 @@
             "title": "Accept Any Path",
             "type": "string",
             "required": true,
-            "default": false,
+            "default": "disabled",
             "description": "Process any data report regardless <br> of URL path received on",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
           "validateTimestamp": {
             "title": "Timestamp Validation",
             "type": "string",
             "required": true,
-            "default": true,
+            "default": "enabled",
             "description": "Verify the timestamp in each received <br> data report",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
           "removeStaleDevices": {
             "title": "Stale Device Removal",
             "type": "string",
             "required": true,
-            "default": true,
+            "default": "enabled",
             "description": "Remove an accessory if it is no longer <br> discovered from a data report",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           },
           "logDataReports": {
             "title": "Log Data Reports",
             "type": "string",
             "required": true,
-            "default": false,
+            "default": "disabled",
             "description": "Show the data report in Homebridge logs <br> each time a data report is received",
-            "enum": [true, false],
+            "enum": ["enabled", "disabled"],
             "enumNames": ["Enabled", "Disabled"]
           }
         }
@@ -135,66 +135,77 @@
           "windSpeed": {
             "title": "Wind Speed",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "windGustSpeed": {
             "title": "Wind Gust Speed",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "windMaxDailySpeed": {
             "title": "Wind Max Daily Speed",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainRate": {
             "title": "Rain Rate",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainEventTotal": {
             "title": "Rain Event Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainHourlyTotal": {
             "title": "Rain Hourly Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainDailyTotal": {
             "title": "Rain Daily Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainWeeklyTotal": {
             "title": "Rain Weekly Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainMonthlyTotal": {
             "title": "Rain Monthly Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "rainYearlyTotal": {
             "title": "Rain Monthly Total",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "uvIndex": {
             "title": "UV Index",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "minimum": 1,
             "maximum": 15,
@@ -203,18 +214,21 @@
           "lightningEvents": {
             "title": "Lightning Events",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "lightningDistance": {
             "title": "Lightning Distance",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           },
           "lightningTime": {
             "title": "Lightning Time",
             "type": "number",
+            "labelHtmlClass": "d-none",
             "notitle": true,
             "required": false
           }
@@ -477,6 +491,8 @@
       },
       "customHidden": {
         "type": "array",
+        "title": "Service ID",
+        "labelHtmlClass": "d-none",
         "items": {
           "type": "string",
           "title": "Service ID",
@@ -629,6 +645,7 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "3 3",
+          "notitle": true,
           "items": [
             "units.wind",
             "units.distance"
@@ -638,6 +655,7 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "3 3",
+          "notitle": true,
           "items": [
             "units.temperature",
             "units.rain"
@@ -660,9 +678,11 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "2 2",
+          "notitle": true,
           "items": [
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.windDirection",
                 "hidden.windSpeed",
@@ -678,6 +698,7 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.rainYearlyTotal",
                 "hidden.solarRadiation",
@@ -693,6 +714,7 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.airQualityPM10",
                 "hidden.airQualityPM10Avg",
@@ -716,9 +738,11 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "2 2",
+          "notitle": true,
           "items": [
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.BASE",
                 "hidden.WH25",
@@ -731,6 +755,7 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.WH40",
                 "hidden.WH41",
@@ -743,6 +768,7 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "hidden.WH65",
                 "hidden.WN67",
@@ -785,13 +811,16 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "3 3",
+          "notitle": true,
           "items": [
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Speed (mph)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mph';"
                   }
@@ -799,6 +828,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Speed (kts)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kts';"
                   }
@@ -806,6 +836,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Speed (kph)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kph';"
                   }
@@ -813,6 +844,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Speed (mps)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mps';"
                   }
@@ -821,6 +853,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Gust Speed (mph)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mph';"
                   }
@@ -828,6 +861,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Gust Speed (kts)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kts';"
                   }
@@ -835,6 +869,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Gust Speed (kph)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kph';"
                   }
@@ -842,6 +877,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Gust Speed (mps)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mps';"
                   }
@@ -850,6 +886,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Max Daily Speed (mph)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mph';"
                   }
@@ -857,6 +894,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Max Daily Speed (kts)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kts';"
                   }
@@ -864,6 +902,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Max Daily Speed (kph)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'kph';"
                   }
@@ -871,6 +910,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Wind Max Daily Speed (mps)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.wind === 'mps';"
                   }
@@ -879,6 +919,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Rate (in/h)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -886,6 +927,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Rate (mm/h)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -894,6 +936,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Event Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -901,6 +944,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Event Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -909,6 +953,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Hourly Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -916,6 +961,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Hourly Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -924,6 +970,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Daily Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -931,6 +978,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Daily Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -940,10 +988,12 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Weekly Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -951,6 +1001,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Weekly Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -959,6 +1010,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Monthly Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -966,6 +1018,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Monthly Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -974,6 +1027,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Yearly Total (in)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'in';"
                   }
@@ -981,6 +1035,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Yearly Total (mm)<strong>",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.rain === 'mm';"
                   }
@@ -988,17 +1043,20 @@
                 "thresholds.rainYearlyTotal",
                 {
                   "type": "help",
-                  "helpvalue": "<strong>UV Index<strong>"
+                  "helpvalue": "<strong>UV Index<strong>",
+                  "htmlClass": "mb-0"
                 },
                 "thresholds.uvIndex",
                 {
                   "type": "help",
-                  "helpvalue": "<strong>Lightning Events<strong>"
+                  "helpvalue": "<strong>Lightning Events<strong>",
+                  "htmlClass": "mb-0"
                 },
                 "thresholds.lightningEvents",
                 {
                   "type": "help",
-                  "helpvalue": "<strong>Lightning Distance (mi)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
+                  "helpvalue": "<strong>Lightning Distance (mi)<strong>&nbsp;<img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.distance === 'mi';"
                   }
@@ -1006,6 +1064,7 @@
                 {
                   "type": "help",
                   "helpvalue": "<strong>Lightning Distance (km)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">",
+                  "htmlClass": "mb-0",
                   "condition": {
                     "functionBody": "return model.units.distance === 'km';"
                   }
@@ -1013,6 +1072,7 @@
                 "thresholds.lightningDistance",
                 {
                   "type": "help",
+                  "htmlClass": "mb-0",
                   "helpvalue": "<strong>Lightning Time (secs)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the weather data property is greater than the threshold.\">"
                 },
                 "thresholds.lightningTime"
@@ -1038,10 +1098,12 @@
           "add": "Add Another Override",
           "notitle": true,
           "type": "flex",
+          "startEmpty": true,
           "items": [
             {
               "type": "flex",
               "flex-flow": "row wrap",
+              "notitle": true,
               "flex": "3 3",
               "items": [
                 "nameOverrides[].key",
@@ -1067,9 +1129,11 @@
           "type": "flex",
           "flex-flow": "row wrap",
           "flex": "3 3",
+          "notitle": true,
           "items": [
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "additional.staticNames",
                 "additional.validateMac",
@@ -1079,6 +1143,7 @@
             },
             {
               "type": "flex",
+              "notitle": true,
               "items": [
                 "additional.luxFactor",
                 "additional.acceptAnyPath",
