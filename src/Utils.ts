@@ -671,7 +671,7 @@ export function dataReportTranslator(ambDataReport: any): any {
 //------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function baseStationRemapper(config: any): PlatformConfig {
+export function v27ConfigRemapper(config: any): PlatformConfig {
   const remappedConfig = JSON.parse(JSON.stringify(config));
   let key, value;
 
@@ -706,11 +706,11 @@ export function baseStationRemapper(config: any): PlatformConfig {
 //------------------------------------------------------------------------------
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function advancedSettingsRemapper(config: any): PlatformConfig {
+export function v211ConfigRemapper(config: any): PlatformConfig {
   const remappedConfig = JSON.parse(JSON.stringify(config));
   let key, value;
 
-  // advanced settings
+  // advanced settings, convert true/false strings to enabled/disabled
   if (config.additional !== undefined ) {
     for (const entry of Object.entries(config.additional)) {
       key = entry[0];
@@ -723,6 +723,24 @@ export function advancedSettingsRemapper(config: any): PlatformConfig {
       if (value === 'false') {
         remappedConfig.additional[key] = 'disabled';
       }
+    }
+  }
+
+  // units, distance converted to lightningDistance, and add laserDistance
+  if (config.units !== undefined ) {
+    let laserDistance = 'in';
+
+    if (config.units.distance !== undefined) {
+      delete remappedConfig.units.distance;
+      remappedConfig.units.lightningDistance = config.units.distance;
+
+      if (config.units.distance === 'km') { // set to metric if lightningDistance in metrics
+        laserDistance = 'mm';
+      }
+    }
+
+    if (config.units.laserDistance === undefined) {
+      remappedConfig.units.laserDistance = laserDistance;
     }
   }
 
@@ -962,11 +980,11 @@ export function v1ConfigRemapper(v1Config: any): PlatformConfig {
     v2Config.additional.luxFactor = v1Config?.ws?.solarradiation?.luxFactor || 126.7;
   }
 
-  v2Config.additional.staticNames = 'false';
-  v2Config.additional.validateMac = 'true';
-  v2Config.additional.acceptAnyPath = 'false';
-  v2Config.additional.validateTimestamp = 'true';
-  v2Config.additional.removeStaleDevices = 'true';
+  v2Config.additional.staticNames = 'disabled';
+  v2Config.additional.validateMac = 'enabled';
+  v2Config.additional.acceptAnyPath = 'disabled';
+  v2Config.additional.validateTimestamp = 'enabled';
+  v2Config.additional.removeStaleDevices = 'enabled';
 
   // ensure nameOverrides is array so v1 v2 merge concats overrides
   if (!Array.isArray(v1Config?.nameOverrides)) {

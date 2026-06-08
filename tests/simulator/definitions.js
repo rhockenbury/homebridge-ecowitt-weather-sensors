@@ -191,5 +191,23 @@ module.exports = {
     "max": 100,
     "minIncrement": 0,
     "maxIncrement": 3
+  },
+  "air": {
+    "min": 0,
+    "max": 1000,
+    "minIncrement": 1,
+    "maxIncrement": 4
+  },
+  "depth": {
+    "min": 0,
+    "max": 1000,
+    "minIncrement": 1,
+    "maxIncrement": 4
+  },
+  "thi": {
+    "min": 0,
+    "max": 1000,
+    "minIncrement": 1,
+    "maxIncrement": 4
   }
 }
