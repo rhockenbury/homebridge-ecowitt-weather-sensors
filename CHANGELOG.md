@@ -1,9 +1,9 @@
 ### 2.11.0
 
-* Fix Plugin UI validation issue
-* Update dependencies and node v22 and node v24 compatibility support
 * Introduce support for Ecowitt Laser Distance Sensor (LDS01)
 * Display service for 'totalRain' data property if present in data report
+* Update plugin dependencies and node v22 and node v24 compatibility support
+* Resolve issue with Plugin UI validation
 
 ### 2.10.2
 
@@ -14,8 +14,6 @@
 * Resolve several issues with error handling and data report parsing
 
 ### 2.10.0
-
-s
 
 * Add support for most Ambient Weather stations and sensors
 * Add logic to create accessory for base station even if station model is not recognized

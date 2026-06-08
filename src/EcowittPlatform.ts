@@ -77,8 +77,8 @@ interface BaseStationInfoType {
  * parse the user config and discover/register accessories with Homebridge.
  */
 export class EcowittPlatform implements DynamicPlatformPlugin {
-  public readonly Service: typeof Service; //= this.api.hap.Service;
-  public readonly Characteristic: typeof Characteristic; // = this.api.hap.Characteristic;
+  public readonly Service: typeof Service;
+  public readonly Characteristic: typeof Characteristic;
 
   // this is used to track restored cached accessories
   public readonly accessories: PlatformAccessory[] = [];
@@ -124,7 +124,7 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       if (typeof this.config?.additional === 'undefined') {
         this.config.additional = {};
       }
-      this.config.additional.validateMac = false;
+      this.config.additional.validateMac = 'disabled';
       mac = '00:00:00:00:00:00';
       this.log.warn('Disabling MAC validation because MAC address was not provided or MAC address is invalid. '
         + 'Provide a valid MAC address to have MAC validation enabled');
@@ -144,20 +144,14 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.log.debug(`Plugin config has been auto-migrated to v2 \n${JSON.stringify(this.config, undefined, 2)}`);
     }
 
-    // structure of base station changed in v2.7.0 and prior versions need to be remapped
-    let updatedConfig = utils.baseStationRemapper(this.config);
-    if (JSON.stringify(updatedConfig) === JSON.stringify(this.config)) {
-      this.log.debug('Plugin configuration migration for base station not required');
-    } else {
-      this.config = updatedConfig;
-      this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
-        + `of your plugin configuration has been generated below \n${JSON.stringify(updatedConfig, undefined, 2)}`);
-    }
+    // structure of base station changed in v2.7.0, and prior versions need to be remapped
+    let updatedConfig = utils.v27ConfigRemapper(this.config);
 
-    // structure of advanced settings changed in v2.11.0 and prior versions need to be remapped
-    updatedConfig = utils.advancedSettingsRemapper(this.config);
+    // structure of advanced settings and units changed in v2.11.0, and prior versions need to be remapped
+    updatedConfig = utils.v211ConfigRemapper(this.config);
+
     if (JSON.stringify(updatedConfig) === JSON.stringify(this.config)) {
-      this.log.debug('Plugin configuration migration for advanced settings not required');
+      this.log.debug('Plugin config compatible with current plugin version, no migration required');
     } else {
       this.config = updatedConfig;
       this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
@@ -654,8 +648,6 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
     if (!utils.includesAny(hidden, ['WH25']) && !utils.includesAll(hidden, WH25.properties)) {
       this.addSensorType(dataReport.wh25batt !== undefined, 'WH25');
     }
-
-    console.log(dataReport);
 
     if (!utils.includesAny(hidden, ['LDS01']) && !utils.includesAll(hidden, LDS01.properties)) {
       for (let channel = 1; channel <= 4; channel++) {
