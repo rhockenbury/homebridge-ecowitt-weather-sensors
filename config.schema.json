@@ -132,6 +132,27 @@
       "thresholds": {
         "type": "object",
         "properties": {
+          "airGap": {
+            "title": "Air Gap",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
+          "currentDepth": {
+            "title": "Current Depth",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
+          "totalDepth": {
+            "title": "Total Depth",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
           "windSpeed": {
             "title": "Wind Speed",
             "type": "number",
@@ -1057,13 +1078,7 @@
                     "functionBody": "return model.units.rain === 'mm';"
                   }
                 },
-                "thresholds.rainDailyTotal"
-              ]
-            },
-            {
-              "type": "flex",
-              "notitle": true,
-              "items": [
+                "thresholds.rainDailyTotal",
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Weekly Total (in)<strong>",
@@ -1097,7 +1112,13 @@
                     "functionBody": "return model.units.rain === 'mm';"
                   }
                 },
-                "thresholds.rainMonthlyTotal",
+                "thresholds.rainMonthlyTotal"
+              ]
+            },
+            {
+              "type": "flex",
+              "notitle": true,
+              "items": [
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Yearly Total (in)<strong>",
@@ -1115,6 +1136,23 @@
                   }
                 },
                 "thresholds.rainYearlyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Total (in)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Total (mm)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainTotal",
                 {
                   "type": "help",
                   "helpvalue": "<strong>UV Index<strong>",
@@ -1149,7 +1187,106 @@
                   "htmlClass": "mb-0",
                   "helpvalue": "<strong>Lightning Time (secs)<strong><img width=\"6%\" src=\"https://raw.githubusercontent.com/rhockenbury/homebridge-ecowitt-weather-sensors/master/docs/assets/tooltip.png\" title=\"The value of the weather data property for Lightning Distance and Lightning Time must be less than the threshold to trigger the accessory (motion detected). All other accessories are triggered when the data property is greater than the threshold.\">"
                 },
-                "thresholds.lightningTime"
+                "thresholds.lightningTime",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Air Gap (in)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Air Gap (ft)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'ft';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Air Gap (mm)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mm';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Air Gap (m)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mt';"
+                  }
+                },
+                "thresholds.airGap",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Current Depth (in)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Current Depth (ft)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'ft';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Current Depth (mm)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mm';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Current Depth (m)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mt';"
+                  }
+                },
+                "thresholds.currentDepth",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Total Depth (in)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Total Depth (ft)<strong>&nbsp;&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'ft';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Total Depth (mm)<strong>&nbsp;",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mm';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Total Depth (m)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.laserDistance === 'mt';"
+                  }
+                },
+                "thresholds.totalDepth"
               ]
             }
           ]

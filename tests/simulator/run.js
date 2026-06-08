@@ -5,14 +5,17 @@ const definitions = require('./definitions');
 
 // load the simulation track
 let simTracks = {};
-const trackFiles = fs.readdirSync('tests/synthetic/data/').filter(file => path.extname(file) === '.json');
+const trackFiles = fs.readdirSync('tests/synthetic/data/ecowitt').filter(file => path.extname(file) === '.json');
 trackFiles.forEach(file => {
-  const fileData = fs.readFileSync(path.join('tests/synthetic/data/', file));
+  const fileData = fs.readFileSync(path.join('tests/synthetic/data/ecowitt', file));
   simTracks[file.split('.')[0]] = JSON.parse(fileData.toString());
 });
 
 const simTrackName = process.argv[2] || 'gw2000';
 const simTrackCandidates = Object.keys(simTracks).filter(t => t.includes(simTrackName));
+
+const targetHost = process.argv[3] || 'localhost';
+const targetPort = process.argv[4] || 8082;
 
 // select a sim track at random from candidates
 let simTrack = {};
@@ -29,7 +32,7 @@ const SKIP_FIELDS = ['PASSKEY', 'stationtype', 'dateutc', 'model', 'freq', 'runt
 
 // send the data to the plugin endpoint
 function postData(dataReport) {
-  request.post('http://localhost:8085/data/report')
+  request.post(`http://${targetHost}:${targetPort}/data/report`)
     .send(dataReport)
     .then((response) => {
       console.log(response.text);
