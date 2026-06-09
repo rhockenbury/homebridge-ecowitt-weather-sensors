@@ -154,8 +154,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.log.debug('Plugin config compatible with current plugin version, no migration required');
     } else {
       this.config = updatedConfig;
-      this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
-        + `of your plugin configuration has been generated below \n${JSON.stringify(updatedConfig, undefined, 2)}`);
+      this.log.warn('Plugin config needs to be updated, an updated version '
+        + 'of your plugin configuration has been generated below. Copy and paste this updated config into '
+        + 'the plugin JSON config editor. For more help, see https://bit.ly/41xwHtw. '
+        + `\n${JSON.stringify(updatedConfig, undefined, 2)}`);
     }
 
     let encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report/');
