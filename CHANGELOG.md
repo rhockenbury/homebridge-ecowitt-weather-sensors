@@ -1,3 +1,7 @@
+### 2.11.1
+
+* Fix bug with 'rainWeeklyTotal' data property that prevented device hiding
+
 ### 2.11.0
 
 * Introduce support for Ecowitt Laser Distance Sensor (LDS01)
