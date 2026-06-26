@@ -500,6 +500,11 @@
             "type": "boolean",
             "required": false
           },
+          "WH52": {
+            "title": "WH52",
+            "type": "boolean",
+            "required": false
+          },
           "WH55": {
             "title": "WH55",
             "type": "boolean",
@@ -857,6 +862,7 @@
                 "hidden.WH45",
                 "hidden.WH46",
                 "hidden.WH51",
+                "hidden.WH52",
                 "hidden.WH55"
               ]
             },

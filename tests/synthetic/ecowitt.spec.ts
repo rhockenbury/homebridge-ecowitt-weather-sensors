@@ -174,6 +174,33 @@ describe('Platform should be configured with accessories', () => {
     done();
   });
 
+  it('gw1200_wh52multi_wh51multi sensors are created', (done) => {
+    testData = require('./data/ecowitt/gw1200_wh52multi_wh51multi.json');
+    platform = createPlatform("synthetic");
+    platform.onDataReport(testData);
+    expect(platform.baseStationInfo.sensors.length).to.equal(17);
+    expect(platform.baseStationInfo.sensors[0].type).to.equal("GW1200");
+    expect(platform.baseStationInfo.sensors[1].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[2].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[3].type).to.equal("WH51");
+    expect(platform.baseStationInfo.sensors[4].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[5].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[6].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[7].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[8].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[9].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[10].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[11].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[12].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[13].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[14].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[15].type).to.equal("WH52");
+    expect(platform.baseStationInfo.sensors[16].type).to.equal("WH52");
+    expect(platform.unconsumedReportData.length).to.equal(0);
+    expect(platform.log._readableState.pipes[1].logs.filter(log => log.level === 'warn').length).to.equal(0);
+    done();
+  });
+
   it('gw1200_ws90_wh51_wh40_wn30_lds sensors are created', (done) => {
     testData = require('./data/ecowitt/gw1200_ws90_wh51_wh40_wn30_lds.json');
     platform = createPlatform("synthetic");
