@@ -37,10 +37,10 @@ configs.forEach(config => {
     it('Services are created', (done) => {
       expect(device.battery).to.not.be.undefined;
       expect(device.soilMoisture).to.not.be.undefined;
-      expect(device.temperature).to.not.be.undefined;
+      expect(device.soilTemperature).to.not.be.undefined;
       expect(device.battery.service.displayName).to.equal('Battery');
       expect(device.soilMoisture.service.displayName).to.equal("Soil Moisture");
-      expect(device.temperature.service.displayName).to.equal("Temperature");
+      expect(device.soilTemperature.service.displayName).to.equal("Soil Temperature");
       done();
     });
 
@@ -50,42 +50,42 @@ configs.forEach(config => {
       expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
       expect(device.battery.service.characteristics[4].value).to.equal(87); // batt percentage
       expect(device.soilMoisture.service.characteristics[0].value).to.equal("Soil Moisture 42 %");
-      expect(device.temperature.service.characteristics[0].value).to.equal("Temperature 82.40°F");
+      expect(device.soilTemperature.service.characteristics[0].value).to.equal("Soil Temperature 82.40°F");
       done();
     });
 
     it('Services are created with name overrides', (done) => {
       platform.config.nameOverrides[0] = {"key": "WH52CH1:soilmoisture", "value": "Test Soil Moisture Name"};
-      platform.config.nameOverrides[1] = {"key": "WH52CH1:temperature", "value": "Test Temperature Name"};
+      platform.config.nameOverrides[1] = {"key": "WH52CH1:soiltemperature", "value": "Test Soil Temperature Name"};
 
       device = new WH52(platform, accessory, 1);
 
       expect(device.soilMoisture).to.not.be.undefined;
-      expect(device.temperature).to.not.be.undefined;
+      expect(device.soilTemperature).to.not.be.undefined;
       expect(device.soilMoisture.service.characteristics[0].value).to.equal("Test Soil Moisture Name");
-      expect(device.temperature.service.characteristics[0].value).to.equal("Test Temperature Name");
+      expect(device.soilTemperature.service.characteristics[0].value).to.equal("Test Soil Temperature Name");
       done();
     });
 
     it('Services are not created when hidden with general override', (done) => {
       platform.config.hidden["soilmoisture"] = true;
-      platform.config.hidden["temperature"] = true;
+      platform.config.hidden["soiltemperature"] = true;
 
       device = new WH52(platform, accessory, 1);
 
       expect(device.soilMoisture).to.be.undefined;
-      expect(device.temperature).to.be.undefined;
+      expect(device.soilTemperature).to.be.undefined;
       done();
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
       platform.config.hidden["WH52CH1:soilmoisture"] = true;
-      platform.config.hidden["WH52CH1:temperature"] = true;
+      platform.config.hidden["WH52CH1:soiltemperature"] = true;
 
       device = new WH52(platform, accessory, 1);
 
       expect(device.soilMoisture).to.be.undefined;
-      expect(device.temperature).to.be.undefined;
+      expect(device.soilTemperature).to.be.undefined;
       done();
     });
   });

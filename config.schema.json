@@ -375,6 +375,11 @@
             "type": "boolean",
             "required": false
           },
+          "soilTemperature": {
+            "title": "Soil Temperature",
+            "type": "boolean",
+            "required": false
+          },
           "waterLeak": {
             "title": "Water Leak",
             "type": "boolean",
@@ -804,6 +809,7 @@
                 "hidden.indoorHumidity",
                 "hidden.humidity",
                 "hidden.soilMoisture",
+                "hidden.soilTemperature",
                 "hidden.waterLeak",
                 "hidden.leafWetness",
                 "hidden.airQualityPM10",

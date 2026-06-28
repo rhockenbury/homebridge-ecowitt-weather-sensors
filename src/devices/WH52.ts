@@ -9,11 +9,11 @@ import * as utils from './../Utils';
 //------------------------------------------------------------------------------
 
 export class WH52 extends EcowittAccessory {
-  static readonly properties: string[] = ['soilMoisture', 'temperature'];
+  static readonly properties: string[] = ['soilMoisture', 'soilTemperature'];
 
   protected battery: BatterySensor | undefined;
   protected soilMoisture: HumiditySensor | undefined;
-  protected temperature: TemperatureSensor | undefined;
+  protected soilTemperature: TemperatureSensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -47,13 +47,18 @@ export class WH52 extends EcowittAccessory {
       this.soilMoisture = undefined;
     }
 
-    if (!utils.includesAny(hidden, ['temperature', `${this.shortServiceId}:temperature`])) {
-      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:temperature`);
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, nameOverride || 'Temperature');
+    if (!utils.includesAny(hidden, ['soiltemperature', `${this.shortServiceId}:soiltemperature`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:soiltemperature`);
+      this.soilTemperature = new TemperatureSensor(
+        platform,
+        accessory,
+        `${this.accessoryId}:soiltemperature`,
+        nameOverride || 'Soil Temperature',
+      );
     } else {
-      this.temperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:temperature`, 'Temperature');
-      this.temperature.removeService();
-      this.temperature = undefined;
+      this.soilTemperature = new TemperatureSensor(platform, accessory, `${this.accessoryId}:soiltemperature`, 'Soil Temperature');
+      this.soilTemperature.removeService();
+      this.soilTemperature = undefined;
     }
   }
 
@@ -85,7 +90,7 @@ export class WH52 extends EcowittAccessory {
       dataReport.dateutc,
     );
 
-    this.temperature?.update(
+    this.soilTemperature?.update(
       parseFloat(dataReport[`soil_ec_temp${this.channel}`]),
       dataReport.dateutc,
     );
