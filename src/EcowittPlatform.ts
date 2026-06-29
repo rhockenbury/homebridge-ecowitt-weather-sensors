@@ -23,6 +23,7 @@ import { WH41 } from './devices/WH41';
 import { WH45 } from './devices/WH45';
 import { WH46 } from './devices/WH46';
 import { WH51 } from './devices/WH51';
+import { WH52 } from './devices/WH52';
 import { WH55 } from './devices/WH55';
 import { WH57 } from './devices/WH57';
 import { WH65 } from './devices/WH65';
@@ -569,6 +570,18 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
+    if (!utils.includesAny(hidden, ['WH52']) && !utils.includesAll(hidden, WH52.properties)) {
+      for (let channel = 1; channel <= 16; channel++) {
+        if (!utils.includesAny(hidden, [`WH52CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`soil_ec_batt${channel}`] !== undefined,
+            'WH52',
+            channel,
+          );
+        }
+      }
+    }
+
     // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
     if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
       this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
@@ -836,6 +849,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       case 'WH51':
         sensor.accessory = new WH51(this, accessory, sensor.channel);
+        break;
+
+      case 'WH52':
+        sensor.accessory = new WH52(this, accessory, sensor.channel);
         break;
 
       case 'WH55':
