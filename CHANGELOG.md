@@ -1,5 +1,6 @@
-### 2.11.1
+### 2.12.0
 
+* Add support for Ecowitt WH52 (contrib from [@joshuaappleman](https://github.com/joshuaappleman))
 * Fix bug with 'rainWeeklyTotal' data property that prevented device hiding
 
 ### 2.11.0

@@ -855,14 +855,14 @@
                 "hidden.WH26",
                 "hidden.WN30",
                 "hidden.WN31",
-                "hidden.WN34"
+                "hidden.WN34",
+                "hidden.WN35"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
-                "hidden.WN35",
                 "hidden.WH40",
                 "hidden.WH41",
                 "hidden.WH45",
