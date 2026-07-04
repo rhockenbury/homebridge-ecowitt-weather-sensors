@@ -23,6 +23,7 @@ import { WH41 } from './devices/WH41';
 import { WH45 } from './devices/WH45';
 import { WH46 } from './devices/WH46';
 import { WH51 } from './devices/WH51';
+import { WH52 } from './devices/WH52';
 import { WH55 } from './devices/WH55';
 import { WH57 } from './devices/WH57';
 import { WH65 } from './devices/WH65';
@@ -154,8 +155,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.log.debug('Plugin config compatible with current plugin version, no migration required');
     } else {
       this.config = updatedConfig;
-      this.log.warn('Plugin config needs to be migrated, an auto-migrated version '
-        + `of your plugin configuration has been generated below \n${JSON.stringify(updatedConfig, undefined, 2)}`);
+      this.log.warn('Plugin config needs to be updated, an updated version '
+        + 'of your plugin configuration has been generated below. Copy and paste this updated config into '
+        + 'the plugin JSON config editor. For more help, see https://bit.ly/41xwHtw. '
+        + `\n${JSON.stringify(updatedConfig, undefined, 2)}`);
     }
 
     let encodedPath = encodeURI(this.config?.baseStation?.path || '/data/report/');
@@ -567,6 +570,18 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       }
     }
 
+    if (!utils.includesAny(hidden, ['WH52']) && !utils.includesAll(hidden, WH52.properties)) {
+      for (let channel = 1; channel <= 16; channel++) {
+        if (!utils.includesAny(hidden, [`WH52CH${channel}`])) {
+          this.addSensorType(
+            dataReport[`soil_ec_batt${channel}`] !== undefined,
+            'WH52',
+            channel,
+          );
+        }
+      }
+    }
+
     // WH45 and WH46 are the same sensor type, except WH45 does not have PM1.0 and PM4.0
     if (!utils.includesAny(hidden, ['WH46']) && !utils.includesAll(hidden, WH46.properties)) {
       this.addSensorType(dataReport.co2_batt !== undefined && dataReport.pm1_co2 !== undefined, 'WH46');
@@ -834,6 +849,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       case 'WH51':
         sensor.accessory = new WH51(this, accessory, sensor.channel);
+        break;
+
+      case 'WH52':
+        sensor.accessory = new WH52(this, accessory, sensor.channel);
         break;
 
       case 'WH55':

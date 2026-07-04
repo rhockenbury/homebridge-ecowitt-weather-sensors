@@ -7,7 +7,7 @@ import * as utils from './../Utils';
 
 export class WH40 extends EcowittAccessory {
   static readonly properties: string[] = ['rainRate', 'rainEventTotal', 'rainHourlyTotal',
-    'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal', 'rainYearlyTotal', 'rainTotal'];
+    'rainDailyTotal', 'rainWeeklyTotal', 'rainMonthlyTotal', 'rainYearlyTotal', 'rainTotal'];
 
   protected battery: BatterySensor | undefined;
   protected rainRate: RainSensor | undefined;

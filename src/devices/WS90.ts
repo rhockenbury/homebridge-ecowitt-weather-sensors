@@ -15,7 +15,7 @@ import * as utils from './../Utils';
 export class WS90 extends EcowittAccessory {
   static readonly properties: string[] = ['temperature', 'humidity', 'solarRadiation',
     'uvIndex', 'windDirection', 'windSpeed', 'windGustSpeed', 'windMaxDailySpeed', 'rainRate',
-    'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeekyTotal', 'rainMonthlyTotal',
+    'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal', 'rainWeeklyTotal', 'rainMonthlyTotal',
     'rainYearlyTotal'];
 
   protected battery: BatterySensor | undefined;

@@ -144,6 +144,24 @@ module.exports = {
     "minIncrement": 0,
     "maxIncrement": 5
   },
+  "soil_ec_hum": {
+    "min": 0,
+    "max": 100,
+    "minIncrement": 0,
+    "maxIncrement": 3
+  },
+  "soil_ec_temp": {
+    "min": 20,
+    "max": 100,
+    "minIncrement": 1,
+    "maxIncrement": 5
+  },
+  "soil_ec": {
+    "min": 0,
+    "max": 2000,
+    "minIncrement": 0,
+    "maxIncrement": 20
+  },
   "pm25": {
     "min": 0,
     "max": 75,
