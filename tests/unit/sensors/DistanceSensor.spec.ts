@@ -38,7 +38,7 @@ describe('Lightning Sensor Service should be configured for Lightning Events', (
     done();
   });
 
-  it('Motion detected when threshold greater than events', (done) => {
+  it('Motion detected when threshold greater than distance', (done) => {
     sensor.updateDepth(25, 0.5, "2024-05-14 19:44:29");
     expect(sensor.service.characteristics[0].value).to.equal("Laser Distance 1.0 in");;
     expect(sensor.service.characteristics[1].value).to.equal(true)
