@@ -73,6 +73,8 @@
 
 ### 2.4.1
 
+BREAKING: See [v2 migration guide](https://github.com/rhockenbury/homebridge-ecowitt-weather-sensors/wiki/V2-Migration-Guide)
+
 * Promote v2 to GA
 * Improve data report simulator with parameters set in definitions file
 * Improve error handling for missing required parameters on a sensor

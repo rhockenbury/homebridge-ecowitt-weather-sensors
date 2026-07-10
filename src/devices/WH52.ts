@@ -3,17 +3,19 @@ import { EcowittPlatform } from './../EcowittPlatform';
 import { EcowittAccessory } from './../EcowittAccessory';
 import { HumiditySensor } from './../sensors/HumiditySensor';
 import { TemperatureSensor } from './../sensors/TemperatureSensor';
+import { ConductivitySensor } from './../sensors/ConductivitySensor';
 import { BatterySensor } from './../sensors/BatterySensor';
 import * as utils from './../Utils';
 
 //------------------------------------------------------------------------------
 
 export class WH52 extends EcowittAccessory {
-  static readonly properties: string[] = ['soilMoisture', 'soilTemperature'];
+  static readonly properties: string[] = ['soilMoisture', 'soilTemperature', 'soilConductivity'];
 
   protected battery: BatterySensor | undefined;
   protected soilMoisture: HumiditySensor | undefined;
   protected soilTemperature: TemperatureSensor | undefined;
+  protected soilConductivity: ConductivitySensor | undefined;
 
   constructor(
     protected readonly platform: EcowittPlatform,
@@ -22,8 +24,9 @@ export class WH52 extends EcowittAccessory {
   ) {
     super(platform, accessory, 'WH52', 'WH52 Soil Moisture/Temperature Sensor', channel);
 
-    this.requiredData = [`soil_ec_batt${this.channel}`, `soil_ec_hum${this.channel}`, `soil_ec_temp${this.channel}`];
-    this.unusedData = [`soil_ec_hum_ad${this.channel}`, `soil_ec${this.channel}`, `soil_ec_ad${this.channel}`];
+    this.requiredData = [`soil_ec_batt${this.channel}`, `soil_ec_hum${this.channel}`, `soil_ec_temp${this.channel}`,
+      `soil_ec${this.channel}`];
+    this.unusedData = [`soil_ec_hum_ad${this.channel}`, `soil_ec_ad${this.channel}`];
 
     const hideConfig = this.platform.config?.hidden || {};
     const hideConfigCustom = this.platform.config?.customHidden || [];
@@ -60,6 +63,16 @@ export class WH52 extends EcowittAccessory {
       this.soilTemperature.removeService();
       this.soilTemperature = undefined;
     }
+
+    if (!utils.includesAny(hidden, ['soilconductivity', `${this.shortServiceId}:soilconductivity`])) {
+      const nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:soilconductivity`);
+      this.soilConductivity = new ConductivitySensor(platform, accessory, `${this.accessoryId}:soilconductivity`,
+        nameOverride || 'Soil Conductivity');
+    } else {
+      this.soilConductivity = new ConductivitySensor(platform, accessory, `${this.accessoryId}:soilconductivity`, 'Soil Conductivity');
+      this.soilConductivity.removeService();
+      this.soilConductivity = undefined;
+    }
   }
 
   //----------------------------------------------------------------------------
@@ -92,6 +105,12 @@ export class WH52 extends EcowittAccessory {
 
     this.soilTemperature?.update(
       parseFloat(dataReport[`soil_ec_temp${this.channel}`]),
+      dataReport.dateutc,
+    );
+
+    this.soilConductivity?.update(
+      parseFloat(dataReport[`soil_ec${this.channel}`]),
+      utils.lookup(this.platform.config?.thresholds, 'soilConductivity'),
       dataReport.dateutc,
     );
   }

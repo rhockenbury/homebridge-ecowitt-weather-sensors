@@ -153,6 +153,13 @@
             "notitle": true,
             "required": false
           },
+          "soilConductivity": {
+            "title": "Soil Conductivity",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
           "windSpeed": {
             "title": "Wind Speed",
             "type": "number",
@@ -399,6 +406,11 @@
           },
           "soilTemperature": {
             "title": "Soil Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "soilConductivity": {
+            "title": "Soil Conductivity",
             "type": "boolean",
             "required": false
           },
@@ -720,6 +732,26 @@
                 ]
               }
             ]
+          },
+          "soilConductivity": {
+            "title": "Soil Conductivity",
+            "type": "string",
+            "default": "microspcm",
+            "required": true,
+            "oneOf": [
+              {
+                "title": "Millisiemens / Centimeter",
+                "enum": [
+                  "millispcm"
+                ]
+              },
+              {
+                "title": "Microsiemens / Centimeter",
+                "enum": [
+                  "microspcm"
+                ]
+              }
+            ]
           }
         }
       }
@@ -788,7 +820,8 @@
               "notitle": true,
               "items": [
                 "units.rain",
-                "units.lightningDistance"
+                "units.lightningDistance",
+                "units.soilConductivity"
               ]
             }
           ]
@@ -845,15 +878,16 @@
                 "hidden.humidity",
                 "hidden.soilMoisture",
                 "hidden.soilTemperature",
+                "hidden.soilConductivity",
                 "hidden.waterLeak",
-                "hidden.leafWetness",
-                "hidden.airQualityPM10"
+                "hidden.leafWetness"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.airQualityPM10",
                 "hidden.airQualityPM10Avg",
                 "hidden.airQualityPM25",
                 "hidden.airQualityPM25Avg",
@@ -1352,7 +1386,24 @@
                     "functionBody": "return model.units.laserDistance === 'mt';"
                   }
                 },
-                "thresholds.totalDepth"
+                "thresholds.totalDepth",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Soil Conductivity (mS/cm)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.soilConductivity === 'millispcm';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Soil Conductivity (μS/cm)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.soilConductivity === 'microspcm';"
+                  }
+                },
+                "thresholds.soilConductivity"
               ]
             }
           ]
