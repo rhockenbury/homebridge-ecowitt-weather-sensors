@@ -1,12 +1,12 @@
 import { expect } from 'chai';
-import { WH40 } from './../../../src/devices/WH40';
+import { WN20 } from './../../../src/devices/WN20';
 import { createPlatform, api } from './../../driver';
 
 //------------------------------------------------------------------------------
 
 let platform = null;
 let accessory = null;
-const sensor = null;
+let device = null;
 
 const dataReport1 = {
   'dateutc': '2024-07-24 19:04:22',
@@ -19,7 +19,7 @@ const dataReport1 = {
   'monthlyrainin': '6.600',
   'yearlyrainin': '7.700',
   'totalrainin': '8.800',
-  'wh40batt': '1.2',
+  'wn20batt': '2.4',
 };
 
 const dataReport2 = {
@@ -30,13 +30,13 @@ const dataReport2 = {
   'weeklyrainin': '5.500',
   'monthlyrainin': '6.600',
   'yearlyrainin': '7.700',
-  'wh40batt': '1.2',
+  'wn20batt': '2.4',
 };
 
 const configs = ['v1Default', 'v1Full', 'v2Default', 'v2Full'];
 
 configs.forEach(config => {
-  describe(`WH40 device should be configured ${config}`, () => {
+  describe(`WN20 device should be configured ${config}`, () => {
     before('Initialize device', () => {
       platform = createPlatform(config);
       accessory = new api.platformAccessory('Accessory', '5746853e-4fee-4e47-97dd-53065ef1de03');
@@ -44,7 +44,7 @@ configs.forEach(config => {
       platform.config.nameOverrides = [];
       platform.config.hidden = {};
 
-      device = new WH40(platform, accessory);
+      device = new WN20(platform, accessory);
     });
 
     beforeEach('Reset config', () => {
@@ -80,8 +80,8 @@ configs.forEach(config => {
     it('Update is called successfully', (done) => {
       device.update(dataReport1);
 
-      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
-      expect(device.battery.service.characteristics[4].value).to.equal(75); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // not low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(73); // batt percentage
       expect(device.rainRate.service.characteristics[0].value).to.equal('Rain Rate 1.1 in/hour');
       expect(device.eventRain.service.characteristics[0].value).to.equal('Rain Event Total 2.2 in');
       expect(device.hourlyRain.service.characteristics[0].value).to.equal('Rain Hourly Total 3.3 in');
@@ -97,8 +97,8 @@ configs.forEach(config => {
     it('Update is called successfully with no optional data', (done) => {
       device.update(dataReport2);
 
-      expect(device.battery.service.characteristics[1].value).to.equal(0); // low batt
-      expect(device.battery.service.characteristics[4].value).to.equal(75); // batt percentage
+      expect(device.battery.service.characteristics[1].value).to.equal(0); // not low batt
+      expect(device.battery.service.characteristics[4].value).to.equal(73); // batt percentage
       expect(device.eventRain.service.characteristics[0].value).to.equal('Rain Event Total 2.2 in');
       expect(device.hourlyRain.service.characteristics[0].value).to.equal('Rain Hourly Total 3.3 in');
       expect(device.dailyRain.service.characteristics[0].value).to.equal('Rain Daily Total 4.4 in');
@@ -114,17 +114,17 @@ configs.forEach(config => {
     });
 
     it('Services are created with name overrides', (done) => {
-      platform.config.nameOverrides[0] = {'key': 'WH40:rainRate', 'value': 'Test Rain Rate Name'};
-      platform.config.nameOverrides[1] = {'key': 'WH40:rainEventTotal', 'value': 'Test Rain Event Total Name'};
-      platform.config.nameOverrides[2] = {'key': 'WH40:rainHourlyTotal', 'value': 'Test Rain Hourly Total Name'};
-      platform.config.nameOverrides[3] = {'key': 'WH40:rainLast24hTotal', 'value': 'Test Rain Last 24h Total Name'};
-      platform.config.nameOverrides[4] = {'key': 'WH40:rainDailyTotal', 'value': 'Test Rain Daily Total Name'};
-      platform.config.nameOverrides[5] = {'key': 'WH40:rainWeeklyTotal', 'value': 'Test Rain Weekly Total Name'};
-      platform.config.nameOverrides[6] = {'key': 'WH40:rainMonthlyTotal', 'value': 'Test Rain Monthly Total Name'};
-      platform.config.nameOverrides[7] = {'key': 'WH40:rainYearlyTotal', 'value': 'Test Rain Yearly Total Name'};
-      platform.config.nameOverrides[8] = {'key': 'WH40:rainTotal', 'value': 'Test Rain Total Name'};
+      platform.config.nameOverrides[0] = {'key': 'WN20:rainRate', 'value': 'Test Rain Rate Name'};
+      platform.config.nameOverrides[1] = {'key': 'WN20:rainEventTotal', 'value': 'Test Rain Event Total Name'};
+      platform.config.nameOverrides[2] = {'key': 'WN20:rainHourlyTotal', 'value': 'Test Rain Hourly Total Name'};
+      platform.config.nameOverrides[3] = {'key': 'WN20:rainLast24hTotal', 'value': 'Test Rain Last 24h Total Name'};
+      platform.config.nameOverrides[4] = {'key': 'WN20:rainDailyTotal', 'value': 'Test Rain Daily Total Name'};
+      platform.config.nameOverrides[5] = {'key': 'WN20:rainWeeklyTotal', 'value': 'Test Rain Weekly Total Name'};
+      platform.config.nameOverrides[6] = {'key': 'WN20:rainMonthlyTotal', 'value': 'Test Rain Monthly Total Name'};
+      platform.config.nameOverrides[7] = {'key': 'WN20:rainYearlyTotal', 'value': 'Test Rain Yearly Total Name'};
+      platform.config.nameOverrides[8] = {'key': 'WN20:rainTotal', 'value': 'Test Rain Total Name'};
 
-      device = new WH40(platform, accessory);
+      device = new WN20(platform, accessory);
 
       expect(device.rainRate.service.characteristics[0].value).to.equal('Test Rain Rate Name');
       expect(device.eventRain.service.characteristics[0].value).to.equal('Test Rain Event Total Name');
@@ -149,7 +149,7 @@ configs.forEach(config => {
       platform.config.hidden['rainYearlyTotal'] = true;
       platform.config.hidden['rainTotal'] = true;
 
-      device = new WH40(platform, accessory);
+      device = new WN20(platform, accessory);
 
       expect(device.rainRate).to.be.undefined;
       expect(device.eventRain).to.be.undefined;
@@ -164,17 +164,17 @@ configs.forEach(config => {
     });
 
     it('Services are not created when hidden with device-specific override', (done) => {
-      platform.config.hidden['WH40:rainRate'] = true;
-      platform.config.hidden['WH40:rainEventTotal'] = true;
-      platform.config.hidden['WH40:rainHourlyTotal'] = true;
-      platform.config.hidden['WH40:rainLast24hTotal'] = true;
-      platform.config.hidden['WH40:rainDailyTotal'] = true;
-      platform.config.hidden['WH40:rainWeeklyTotal'] = true;
-      platform.config.hidden['WH40:rainMonthlyTotal'] = true;
-      platform.config.hidden['WH40:rainYearlyTotal'] = true;
-      platform.config.hidden['WH40:rainTotal'] = true;
+      platform.config.hidden['WN20:rainRate'] = true;
+      platform.config.hidden['WN20:rainEventTotal'] = true;
+      platform.config.hidden['WN20:rainHourlyTotal'] = true;
+      platform.config.hidden['WN20:rainLast24hTotal'] = true;
+      platform.config.hidden['WN20:rainDailyTotal'] = true;
+      platform.config.hidden['WN20:rainWeeklyTotal'] = true;
+      platform.config.hidden['WN20:rainMonthlyTotal'] = true;
+      platform.config.hidden['WN20:rainYearlyTotal'] = true;
+      platform.config.hidden['WN20:rainTotal'] = true;
 
-      device = new WH40(platform, accessory);
+      device = new WN20(platform, accessory);
 
       expect(device.rainRate).to.be.undefined;
       expect(device.eventRain).to.be.undefined;
