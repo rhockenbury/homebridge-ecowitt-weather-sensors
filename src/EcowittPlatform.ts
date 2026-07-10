@@ -12,12 +12,14 @@ import { PLATFORM_NAME, PLUGIN_NAME } from './settings';
 
 import { BASE } from './devices/BASE';
 import { LDS01 } from './devices/LDS01';
+import { WN20 } from './devices/WN20';
 import { WH25 } from './devices/WH25';
 import { WH26 } from './devices/WH26';
 import { WN30 } from './devices/WN30';
 import { WN31 } from './devices/WN31';
 import { WN34 } from './devices/WN34';
 import { WN35 } from './devices/WN35';
+import { WN38 } from './devices/WN38';
 import { WH40 } from './devices/WH40';
 import { WH41 } from './devices/WH41';
 import { WH45 } from './devices/WH45';
@@ -607,6 +609,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
       this.addSensorType(dataReport.wh40batt !== undefined, 'WH40');
     }
 
+    if (!utils.includesAny(hidden, ['WN20']) && !utils.includesAll(hidden, WN20.properties)) {
+      this.addSensorType(dataReport.wn20batt !== undefined, 'WN20');
+    }
+
     if (!utils.includesAny(hidden, ['WN35']) && !utils.includesAll(hidden, WN35.properties)) {
       for (let channel = 1; channel <= 8; channel++) {
         if (!utils.includesAny(hidden, [`WN35CH${channel}`])) {
@@ -617,6 +623,10 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
           );
         }
       }
+    }
+
+    if (!utils.includesAny(hidden, ['WN38']) && !utils.includesAll(hidden, WN38.properties)) {
+      this.addSensorType(dataReport.bgtbatt !== undefined, 'WN38');
     }
 
     if (!utils.includesAny(hidden, ['WN34']) && !utils.includesAll(hidden, WN34.properties)) {
@@ -829,6 +839,14 @@ export class EcowittPlatform implements DynamicPlatformPlugin {
 
       case 'WN35':
         sensor.accessory = new WN35(this, accessory, sensor.channel);
+        break;
+
+      case 'WN38':
+        sensor.accessory = new WN38(this, accessory);
+        break;
+
+      case 'WN20':
+        sensor.accessory = new WN20(this, accessory);
         break;
 
       case 'WH40':
