@@ -1,231 +1,237 @@
 
 module.exports = {
-  "temp": {
-    "min": 20,
-    "max": 100,
-    "minIncrement": 1,
-    "maxIncrement": 5
+  'temp': {
+    'min': 20,
+    'max': 100,
+    'minIncrement': 1,
+    'maxIncrement': 5,
   },
-  "humidity": {
-    "min": 0,
-    "max": 100,
-    "minIncrement": 0,
-    "maxIncrement": 5
+  'humidity': {
+    'min': 0,
+    'max': 100,
+    'minIncrement': 0,
+    'maxIncrement': 5,
   },
-  "winddir": {
-    "min": 0,
-    "max": 360,
-    "minIncrement": 0,
-    "maxIncrement": 2
+  'winddir': {
+    'min': 0,
+    'max': 360,
+    'minIncrement': 0,
+    'maxIncrement': 2,
   },
-  "windspeedmph": {
-    "min": 0,
-    "max": 50,
-    "minIncrement": 0,
-    "maxIncrement": 2
+  'windspeedmph': {
+    'min': 0,
+    'max': 50,
+    'minIncrement': 0,
+    'maxIncrement': 2,
   },
-  "windgustmph": {
-    "min": 0,
-    "max": 50,
-    "minIncrement": 0,
-    "maxIncrement": 2
+  'windgustmph': {
+    'min': 0,
+    'max': 50,
+    'minIncrement': 0,
+    'maxIncrement': 2,
   },
-  "maxdailygust": {
-    "min": 0,
-    "max": 50,
-    "minIncrement": 0,
-    "maxIncrement": 2
+  'maxdailygust': {
+    'min': 0,
+    'max': 50,
+    'minIncrement': 0,
+    'maxIncrement': 2,
   },
-  "solarradiation": {
-    "min": 0,
-    "max": 700,
-    "minIncrement": 1,
-    "maxIncrement": 50
+  'solarradiation': {
+    'min': 0,
+    'max': 700,
+    'minIncrement': 1,
+    'maxIncrement': 50,
   },
-  "uv": {
-    "min": 0,
-    "max": 1,
-    "minIncrement": 0,
-    "maxIncrement": 1
+  'uv': {
+    'min': 0,
+    'max': 1,
+    'minIncrement': 0,
+    'maxIncrement': 1,
   },
-  "rainratein": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'rainratein': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "eventrainin": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'eventrainin': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "hourlyrainin": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'hourlyrainin': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "dailyrainin": {
-    "min": 0,
-    "max": 10,
-    "minIncrement": 0,
-    "maxIncrement": 0.5
+  'last24hrainin': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "weeklyrainin": {
-    "min": 0,
-    "max": 10,
-    "minIncrement": 0,
-    "maxIncrement": 0.5
+  'dailyrainin': {
+    'min': 0,
+    'max': 10,
+    'minIncrement': 0,
+    'maxIncrement': 0.5,
   },
-  "monthlyrainin": {
-    "min": 0,
-    "max": 10,
-    "minIncrement": 0,
-    "maxIncrement": 0.5
+  'weeklyrainin': {
+    'min': 0,
+    'max': 10,
+    'minIncrement': 0,
+    'maxIncrement': 0.5,
   },
-  "yearlyrainin": {
-    "min": 0,
-    "max": 30,
-    "minIncrement": 0,
-    "maxIncrement": 1
+  'monthlyrainin': {
+    'min': 0,
+    'max': 10,
+    'minIncrement': 0,
+    'maxIncrement': 0.5,
   },
-  "rrain_piezo": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'yearlyrainin': {
+    'min': 0,
+    'max': 30,
+    'minIncrement': 0,
+    'maxIncrement': 1,
   },
-  "erain_piezo": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'rrain_piezo': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "hrain_piezo": {
-    "min": 0,
-    "max": 4,
-    "minIncrement": 0,
-    "maxIncrement": 0.25
+  'erain_piezo': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "drain_piezo": {
-    "min": 0,
-    "max": 10,
-    "minIncrement": 0,
-    "maxIncrement": 0.5
+  'hrain_piezo': {
+    'min': 0,
+    'max': 4,
+    'minIncrement': 0,
+    'maxIncrement': 0.25,
   },
-  "wrain_piezo": {
-    "min": 0,
-    "max": 10,
-    "minIncrement": 0,
-    "maxIncrement": 0.5
+  'drain_piezo': {
+    'min': 0,
+    'max': 10,
+    'minIncrement': 0,
+    'maxIncrement': 0.5,
   },
-  "mrain_piezo": {
-    "min": 0,
-    "max": 30,
-    "minIncrement": 0,
-    "maxIncrement": 1
+  'wrain_piezo': {
+    'min': 0,
+    'max': 10,
+    'minIncrement': 0,
+    'maxIncrement': 0.5,
   },
-  "yrain_piezo": {
-    "min": 0,
-    "max": 30,
-    "minIncrement": 0,
-    "maxIncrement": 1
+  'mrain_piezo': {
+    'min': 0,
+    'max': 30,
+    'minIncrement': 0,
+    'maxIncrement': 1,
   },
-  "soilmoisture": {
-    "min": 0,
-    "max": 100,
-    "minIncrement": 0,
-    "maxIncrement": 3
+  'yrain_piezo': {
+    'min': 0,
+    'max': 30,
+    'minIncrement': 0,
+    'maxIncrement': 1,
   },
-  "soilad": {
-    "min": 70,
-    "max": 500,
-    "minIncrement": 0,
-    "maxIncrement": 5
+  'soilmoisture': {
+    'min': 0,
+    'max': 100,
+    'minIncrement': 0,
+    'maxIncrement': 3,
   },
-  "soil_ec_hum": {
-    "min": 0,
-    "max": 100,
-    "minIncrement": 0,
-    "maxIncrement": 3
+  'soilad': {
+    'min': 70,
+    'max': 500,
+    'minIncrement': 0,
+    'maxIncrement': 5,
   },
-  "soil_ec_temp": {
-    "min": 20,
-    "max": 100,
-    "minIncrement": 1,
-    "maxIncrement": 5
+  'soil_ec_hum': {
+    'min': 0,
+    'max': 100,
+    'minIncrement': 0,
+    'maxIncrement': 3,
   },
-  "soil_ec": {
-    "min": 0,
-    "max": 2000,
-    "minIncrement": 0,
-    "maxIncrement": 20
+  'soil_ec_temp': {
+    'min': 20,
+    'max': 100,
+    'minIncrement': 1,
+    'maxIncrement': 5,
   },
-  "pm25": {
-    "min": 0,
-    "max": 75,
-    "minIncrement": 0,
-    "maxIncrement": 2
+  'soil_ec': {
+    'min': 0,
+    'max': 2000,
+    'minIncrement': 0,
+    'maxIncrement': 20,
   },
-  "pm10": {
-    "min": 0,
-    "max": 120,
-    "minIncrement": 0,
-    "maxIncrement": 3
+  'pm25': {
+    'min': 0,
+    'max': 75,
+    'minIncrement': 0,
+    'maxIncrement': 2,
   },
-  "tf": {
-    "min": 20,
-    "max": 100,
-    "minIncrement": 1,
-    "maxIncrement": 5
+  'pm10': {
+    'min': 0,
+    'max': 120,
+    'minIncrement': 0,
+    'maxIncrement': 3,
   },
-  "humi": {
-    "min": 0,
-    "max": 100,
-    "minIncrement": 0,
-    "maxIncrement": 5
+  'tf': {
+    'min': 20,
+    'max': 100,
+    'minIncrement': 1,
+    'maxIncrement': 5,
   },
-  "lightning_num": {
-    "min": 0,
-    "max": 5,
-    "minIncrement": 1,
-    "maxIncrement": 1
+  'humi': {
+    'min': 0,
+    'max': 100,
+    'minIncrement': 0,
+    'maxIncrement': 5,
   },
-  "lightning_time": {
-    "min": 300,
-    "max": 604800000 ,
-    "minIncrement": 300,
-    "maxIncrement": 50000
+  'lightning_num': {
+    'min': 0,
+    'max': 5,
+    'minIncrement': 1,
+    'maxIncrement': 1,
   },
-  "leak": {
-    "min": 0,
-    "max": 1,
-    "minIncrement": 1,
-    "maxIncrement": 1
+  'lightning_time': {
+    'min': 300,
+    'max': 604800000,
+    'minIncrement': 300,
+    'maxIncrement': 50000,
   },
-  "leafwetness": {
-    "min": 0,
-    "max": 100,
-    "minIncrement": 0,
-    "maxIncrement": 3
+  'leak': {
+    'min': 0,
+    'max': 1,
+    'minIncrement': 1,
+    'maxIncrement': 1,
   },
-  "air": {
-    "min": 0,
-    "max": 1000,
-    "minIncrement": 1,
-    "maxIncrement": 4
+  'leafwetness': {
+    'min': 0,
+    'max': 100,
+    'minIncrement': 0,
+    'maxIncrement': 3,
   },
-  "depth": {
-    "min": 0,
-    "max": 1000,
-    "minIncrement": 1,
-    "maxIncrement": 4
+  'air': {
+    'min': 0,
+    'max': 1000,
+    'minIncrement': 1,
+    'maxIncrement': 4,
   },
-  "thi": {
-    "min": 0,
-    "max": 1000,
-    "minIncrement": 1,
-    "maxIncrement": 4
-  }
-}
+  'depth': {
+    'min': 0,
+    'max': 1000,
+    'minIncrement': 1,
+    'maxIncrement': 4,
+  },
+  'thi': {
+    'min': 0,
+    'max': 1000,
+    'minIncrement': 1,
+    'maxIncrement': 4,
+  },
+};

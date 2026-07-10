@@ -22,7 +22,7 @@ export class WH52 extends EcowittAccessory {
     protected readonly accessory: PlatformAccessory,
     protected channel: number,
   ) {
-    super(platform, accessory, 'WH52', 'WH52 Soil Moisture/Temperature Sensor', channel);
+    super(platform, accessory, 'WH52', 'WH52 3-in-1 SoilSensor', channel);
 
     this.requiredData = [`soil_ec_batt${this.channel}`, `soil_ec_hum${this.channel}`, `soil_ec_temp${this.channel}`,
       `soil_ec${this.channel}`];
