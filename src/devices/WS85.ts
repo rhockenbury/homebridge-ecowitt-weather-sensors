@@ -10,8 +10,8 @@ import * as utils from './../Utils';
 
 export class WS85 extends EcowittAccessory {
   static readonly properties: string[] = ['windDirection', 'windSpeed', 'windGustSpeed',
-    'windMaxDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainDailyTotal',
-    'rainWeeklyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
+    'windMaxDailySpeed', 'rainRate', 'rainEventTotal', 'rainHourlyTotal', 'rainLast24hTotal',
+    'rainDailyTotal', 'rainWeeklyTotal', 'rainMonthlyTotal', 'rainYearlyTotal'];
 
   protected battery: BatterySensor | undefined;
   protected windDirection: WindSensor | undefined;
@@ -21,6 +21,7 @@ export class WS85 extends EcowittAccessory {
   protected rainRate: RainSensor | undefined;
   protected eventRain: RainSensor | undefined;
   protected hourlyRain: RainSensor | undefined;
+  protected last24hRain: RainSensor | undefined;
   protected dailyRain: RainSensor | undefined;
   protected weeklyRain: RainSensor | undefined;
   protected monthlyRain: RainSensor | undefined;
@@ -37,6 +38,7 @@ export class WS85 extends EcowittAccessory {
       'rrain_piezo', 'erain_piezo', 'hrain_piezo', 'drain_piezo', 'wrain_piezo',
       'mrain_piezo', 'yrain_piezo',
     ];
+    this.optionalData = ['last24hrain_piezo'];
     this.unusedData = ['ws85cap_volt', 'ws85_ver'];
 
     const hideConfig = this.platform.config?.hidden || {};
@@ -116,6 +118,15 @@ export class WS85 extends EcowittAccessory {
       this.hourlyRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainhourlytotal`, 'Rain Hourly Total');
       this.hourlyRain.removeService();
       this.hourlyRain = undefined;
+    }
+
+    if (!utils.includesAny(hidden, ['rainLast24hTotal', `${this.shortServiceId}:rainLast24hTotal`])) {
+      nameOverride = utils.lookup(this.platform.config?.nameOverrides, `${this.shortServiceId}:rainLast24hTotal`);
+      this.last24hRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainLast24hTotal`, nameOverride || 'Rain Last 24h Total');
+    } else {
+      this.last24hRain = new RainSensor(platform, accessory, `${this.accessoryId}:rainLast24hTotal`, 'Rain Last 24h Total');
+      this.last24hRain.removeService();
+      this.last24hRain = undefined;
     }
 
     if (!utils.includesAny(hidden, ['raindailytotal', `${this.shortServiceId}:raindailytotal`])) {
@@ -218,6 +229,18 @@ export class WS85 extends EcowittAccessory {
       utils.lookup(this.platform.config?.thresholds, 'rainHourlyTotal'),
       dataReport.dateutc,
     );
+
+    // optional
+    if (dataReport.last24hrain_piezo === undefined) {
+      this.last24hRain?.removeService();
+      this.last24hRain = undefined;
+    } else {
+      this.last24hRain?.updateTotal(
+        parseFloat(dataReport.last24hrain_piezo),
+        utils.lookup(this.platform.config?.thresholds, 'rainLast24hTotal'),
+        dataReport.dateutc,
+      );
+    }
 
     this.dailyRain?.updateTotal(
       parseFloat(dataReport.drain_piezo),

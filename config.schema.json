@@ -202,6 +202,13 @@
             "notitle": true,
             "required": false
           },
+          "rainLast24hTotal": {
+            "title": "Rain Last 24h Total",
+            "type": "number",
+            "labelHtmlClass": "d-none",
+            "notitle": true,
+            "required": false
+          },
           "rainWeeklyTotal": {
             "title": "Rain Weekly Total",
             "type": "number",
@@ -315,6 +322,11 @@
             "type": "boolean",
             "required": false
           },
+          "rainLast24hTotal": {
+            "title": "Rain Last 24h Total",
+            "type": "boolean",
+            "required": false
+          },
           "rainDailyTotal": {
             "title": "Rain Daily Total",
             "type": "boolean",
@@ -357,6 +369,16 @@
           },
           "temperature": {
             "title": "Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "blackGlobeTemperature": {
+            "title": "Black Globe Temperature",
+            "type": "boolean",
+            "required": false
+          },
+          "wetBulbGlobeTemperature": {
+            "title": "Wet Bulb Globe Temperature",
             "type": "boolean",
             "required": false
           },
@@ -450,6 +472,11 @@
             "type": "boolean",
             "required": false
           },
+          "WN20": {
+            "title": "WN20",
+            "type": "boolean",
+            "required": false
+          },
           "WH25": {
             "title": "WH25",
             "type": "boolean",
@@ -477,6 +504,11 @@
           },
           "WN35": {
             "title": "WN35",
+            "type": "boolean",
+            "required": false
+          },
+          "WN38": {
+            "title": "WN38",
             "type": "boolean",
             "required": false
           },
@@ -791,6 +823,7 @@
                 "hidden.rainRate",
                 "hidden.rainEventTotal",
                 "hidden.rainHourlyTotal",
+                "hidden.rainLast24hTotal",
                 "hidden.rainDailyTotal",
                 "hidden.rainWeeklyTotal",
                 "hidden.rainMonthlyTotal",
@@ -806,20 +839,22 @@
                 "hidden.uvIndex",
                 "hidden.indoorTemperature",
                 "hidden.temperature",
+                "hidden.blackGlobeTemperature",
+                "hidden.wetBulbGlobeTemperature",
                 "hidden.indoorHumidity",
                 "hidden.humidity",
                 "hidden.soilMoisture",
                 "hidden.soilTemperature",
                 "hidden.waterLeak",
                 "hidden.leafWetness",
-                "hidden.airQualityPM10",
-                "hidden.airQualityPM10Avg"
+                "hidden.airQualityPM10"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.airQualityPM10Avg",
                 "hidden.airQualityPM25",
                 "hidden.airQualityPM25Avg",
                 "hidden.carbonDioxide",
@@ -851,31 +886,33 @@
               "items": [
                 "hidden.BASE",
                 "hidden.LDS01",
+                "hidden.WN20",
                 "hidden.WH25",
                 "hidden.WH26",
                 "hidden.WN30",
                 "hidden.WN31",
-                "hidden.WN34",
-                "hidden.WN35"
+                "hidden.WN34"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.WN35",
+                "hidden.WN38",
                 "hidden.WH40",
                 "hidden.WH41",
                 "hidden.WH45",
                 "hidden.WH46",
                 "hidden.WH51",
-                "hidden.WH52",
-                "hidden.WH55"
+                "hidden.WH52"
               ]
             },
             {
               "type": "flex",
               "notitle": true,
               "items": [
+                "hidden.WH55",
                 "hidden.WH57",
                 "hidden.WH65",
                 "hidden.WN67",
@@ -1074,6 +1111,23 @@
                   }
                 },
                 "thresholds.rainHourlyTotal",
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Last 24h Total (in)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'in';"
+                  }
+                },
+                {
+                  "type": "help",
+                  "helpvalue": "<strong>Rain Last 24h Total (mm)<strong>",
+                  "htmlClass": "mb-0",
+                  "condition": {
+                    "functionBody": "return model.units.rain === 'mm';"
+                  }
+                },
+                "thresholds.rainLast24hTotal",
                 {
                   "type": "help",
                   "helpvalue": "<strong>Rain Daily Total (in)<strong>",

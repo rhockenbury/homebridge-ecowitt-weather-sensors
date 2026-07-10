@@ -19,6 +19,7 @@ const dataReport1 = {
   "rainratein": "0.03",
   "eventrainin": "0.4",
   "hourlyrainin": "0.5",
+  "last24hrainin": "0.450",
   "dailyrainin": "0.000",
   "weeklyrainin": "0.272",
   "monthlyrainin": "0.819",
@@ -93,6 +94,7 @@ configs.forEach(config => {
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total");
+      expect(device.last24hRain.service.characteristics[0].value).to.equal("Rain Last 24h Total");
       expect(device.dailyRain.service.characteristics[0].value).to.equal("Rain Daily Total");
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total");
@@ -116,6 +118,7 @@ configs.forEach(config => {
       expect(device.rainRate.service.characteristics[0].value).to.equal("Rain Rate 0.0 in/hour");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Rain Event Total 0.4 in");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Rain Hourly Total 0.5 in");
+      expect(device.last24hRain.service.characteristics[0].value).to.equal("Rain Last 24h Total 0.5 in");
       expect(device.dailyRain.service.characteristics[0].value).to.equal("Rain Daily Total 0.0 in");
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Rain Weekly Total 0.3 in");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Rain Monthly Total 0.8 in");
@@ -143,6 +146,7 @@ configs.forEach(config => {
 
       // optional
       expect(device.rainRate).to.be.undefined;
+      expect(device.last24hRain).to.be.undefined;
       expect(device.totalRain).to.be.undefined;
       done();
     });
@@ -160,8 +164,13 @@ configs.forEach(config => {
       platform.config.nameOverrides[9] = {"key": "WN67:rainDailyTotal", "value": "Test Rain Daily Total Name"};
       platform.config.nameOverrides[10] = {"key": "WN67:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
       platform.config.nameOverrides[11] = {"key": "WN67:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
-      platform.config.nameOverrides[12] = {"key": "WN67:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
-      platform.config.nameOverrides[13] = {"key": "WN67:rainTotal", "value": "Test Rain Total Name"};
+      platform.config.nameOverrides[12] = {"key": "WN67:rainHourlyTotal", "value": "Test Rain Hourly Total Name"};
+      platform.config.nameOverrides[13] = {"key": "WN67:rainLast24hTotal", "value": "Test Rain Last 24h Total Name"};
+      platform.config.nameOverrides[14] = {"key": "WN67:rainDailyTotal", "value": "Test Rain Daily Total Name"};
+      platform.config.nameOverrides[15] = {"key": "WN67:rainWeeklyTotal", "value": "Test Rain Weekly Total Name"};
+      platform.config.nameOverrides[16] = {"key": "WN67:rainMonthlyTotal", "value": "Test Rain Monthly Total Name"};
+      platform.config.nameOverrides[17] = {"key": "WN67:rainYearlyTotal", "value": "Test Rain Yearly Total Name"};
+      platform.config.nameOverrides[18] = {"key": "WN67:rainTotal", "value": "Test Rain Total Name"};
 
       device = new WN67(platform, accessory);
 
@@ -174,6 +183,7 @@ configs.forEach(config => {
       expect(device.rainRate.service.characteristics[0].value).to.equal("Test Rain Rate Name");
       expect(device.eventRain.service.characteristics[0].value).to.equal("Test Rain Event Total Name");
       expect(device.hourlyRain.service.characteristics[0].value).to.equal("Test Rain Hourly Total Name");
+      expect(device.last24hRain.service.characteristics[0].value).to.equal("Test Rain Last 24h Total Name");
       expect(device.dailyRain.service.characteristics[0].value).to.equal("Test Rain Daily Total Name");
       expect(device.weeklyRain.service.characteristics[0].value).to.equal("Test Rain Weekly Total Name");
       expect(device.monthlyRain.service.characteristics[0].value).to.equal("Test Rain Monthly Total Name");
@@ -192,6 +202,7 @@ configs.forEach(config => {
       platform.config.hidden["rainRate"] = true;
       platform.config.hidden["rainEventTotal"] = true;
       platform.config.hidden["rainHourlyTotal"] = true;
+      platform.config.hidden["rainLast24hTotal"] = true;
       platform.config.hidden["rainDailyTotal"] = true;
       platform.config.hidden["rainWeeklyTotal"] = true;
       platform.config.hidden["rainMonthlyTotal"] = true;
@@ -209,6 +220,7 @@ configs.forEach(config => {
       expect(device.rainRate).to.be.undefined;
       expect(device.eventRain).to.be.undefined;
       expect(device.hourlyRain).to.be.undefined;
+      expect(device.last24hRain).to.be.undefined;
       expect(device.dailyRain).to.be.undefined;
       expect(device.weeklyRain).to.be.undefined;
       expect(device.monthlyRain).to.be.undefined;
@@ -227,6 +239,7 @@ configs.forEach(config => {
       platform.config.hidden["WN67:rainRate"] = true;
       platform.config.hidden["WN67:rainEventTotal"] = true;
       platform.config.hidden["WN67:rainHourlyTotal"] = true;
+      platform.config.hidden["WN67:rainLast24hTotal"] = true;
       platform.config.hidden["WN67:rainDailyTotal"] = true;
       platform.config.hidden["WN67:rainWeeklyTotal"] = true;
       platform.config.hidden["WN67:rainMonthlyTotal"] = true;
@@ -244,6 +257,7 @@ configs.forEach(config => {
       expect(device.rainRate).to.be.undefined;
       expect(device.eventRain).to.be.undefined;
       expect(device.hourlyRain).to.be.undefined;
+      expect(device.last24hRain).to.be.undefined;
       expect(device.dailyRain).to.be.undefined;
       expect(device.weeklyRain).to.be.undefined;
       expect(device.monthlyRain).to.be.undefined;

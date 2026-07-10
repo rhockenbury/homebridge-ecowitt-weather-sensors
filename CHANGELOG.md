@@ -1,3 +1,10 @@
+### 2.13.0
+
+* Add support for Ecowitt Black Globe Temperature Sensor (WN38)
+* Add support for Ecowitt Mini Rain Gauge (WN20)
+* Implement soil conductivity characteristic for WH52
+* Display service for `last24hrain` data property if present in data report
+
 ### 2.12.0
 
 * Add support for Ecowitt WH52 (contrib from [@joshuaappleman](https://github.com/joshuaappleman))
