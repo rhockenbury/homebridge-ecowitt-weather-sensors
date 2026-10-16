@@ -1,3 +1,7 @@
+### 2.13.1
+
+* Add node v26 support
+
 ### 2.13.0
 
 * Add support for Ecowitt Black Globe Temperature Sensor (WN38)
